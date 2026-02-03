@@ -1,0 +1,773 @@
+{
+    "courseName": "Web Development Basics",
+    "language": "HTML/CSS/JavaScript",
+    "category": "Web Development",
+    "totalQuestions": 20,
+    "questions": [
+        {
+            "id": "WEB001",
+            "number": 801,
+            "title": "HTML Basic Structure",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Create a basic HTML page with proper doctype, html, head, and body tags.\n\nThe page should have a title 'My First Page' and display 'Hello, World!' in a paragraph.",
+            "inputFormat": "N/A - Create HTML from scratch",
+            "outputFormat": "Valid HTML with title and paragraph",
+            "constraints": "Must include DOCTYPE, html, head, title, body, p tags",
+            "sampleInput": "N/A",
+            "sampleOutput": "<!DOCTYPE html><html><head><title>My First Page</title></head><body><p>Hello, World!</p></body></html>",
+            "explanation": "Basic HTML structure with proper nesting and required elements.",
+            "testCases": [
+                {
+                    "input": "check_doctype",
+                    "expectedOutput": "<!DOCTYPE html>",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_title",
+                    "expectedOutput": "My First Page",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_paragraph",
+                    "expectedOutput": "Hello, World!",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_structure",
+                    "expectedOutput": "valid_structure",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB002",
+            "number": 802,
+            "title": "CSS Flexbox Centering",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Write CSS to center a div both horizontally and vertically within its parent container using Flexbox.\n\nThe parent container has class 'container' and the child has class 'box'.",
+            "inputFormat": "N/A - Write CSS only",
+            "outputFormat": "CSS rules for centering",
+            "constraints": "Must use display: flex with justify-content and align-items",
+            "sampleInput": "N/A",
+            "sampleOutput": ".container { display: flex; justify-content: center; align-items: center; height: 100vh; }",
+            "explanation": "Flexbox with center properties on both axes.",
+            "testCases": [
+                {
+                    "input": "check_display_flex",
+                    "expectedOutput": "display: flex",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_justify",
+                    "expectedOutput": "justify-content: center",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_align",
+                    "expectedOutput": "align-items: center",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_result",
+                    "expectedOutput": "centered",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB003",
+            "number": 803,
+            "title": "JavaScript Variable Declaration",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Declare three variables: a const 'PI' with value 3.14159, a let 'count' with value 0, and log 'PI is: ' followed by PI value.",
+            "inputFormat": "N/A",
+            "outputFormat": "Console output: 'PI is: 3.14159'",
+            "constraints": "Use const and let appropriately",
+            "sampleInput": "N/A",
+            "sampleOutput": "PI is: 3.14159",
+            "explanation": "const for constants, let for mutable variables.",
+            "testCases": [
+                {
+                    "input": "run_code",
+                    "expectedOutput": "PI is: 3.14159",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_const",
+                    "expectedOutput": "const_used",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_let",
+                    "expectedOutput": "let_used",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "try_reassign_const",
+                    "expectedOutput": "error",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB004",
+            "number": 804,
+            "title": "HTML Form Creation",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Create an HTML form with:\n- Text input for 'name' (required)\n- Email input for 'email' (required)\n- Submit button with text 'Submit'\n\nForm should have action='/submit' and method='post'.",
+            "inputFormat": "N/A",
+            "outputFormat": "Valid HTML form",
+            "constraints": "All inputs must have proper name and type attributes",
+            "sampleInput": "N/A",
+            "sampleOutput": "<form action='/submit' method='post'>...</form>",
+            "explanation": "Form with proper input types and attributes.",
+            "testCases": [
+                {
+                    "input": "check_form_action",
+                    "expectedOutput": "/submit",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_method",
+                    "expectedOutput": "post",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_name_input",
+                    "expectedOutput": "type=text required",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_email_input",
+                    "expectedOutput": "type=email required",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_submit",
+                    "expectedOutput": "Submit",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB005",
+            "number": 805,
+            "title": "CSS Box Model",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Style an element with class 'card' to have:\n- Width: 300px\n- Padding: 20px\n- Border: 2px solid #333\n- Margin: 10px\n- Box-sizing: border-box",
+            "inputFormat": "N/A",
+            "outputFormat": "CSS rules for box model",
+            "constraints": "Total visible width should be 300px due to border-box",
+            "sampleInput": "N/A",
+            "sampleOutput": ".card { width: 300px; padding: 20px; ... }",
+            "explanation": "Box model with border-box sizing.",
+            "testCases": [
+                {
+                    "input": "check_width",
+                    "expectedOutput": "300px",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_padding",
+                    "expectedOutput": "20px",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_border",
+                    "expectedOutput": "2px solid #333",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_box_sizing",
+                    "expectedOutput": "border-box",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB006",
+            "number": 806,
+            "title": "JavaScript Array Methods",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Given array [1, 2, 3, 4, 5], use array methods to:\n1. Double each number\n2. Filter only numbers > 4\n3. Sum the remaining numbers\n\nPrint the final sum.",
+            "inputFormat": "Array [1, 2, 3, 4, 5]",
+            "outputFormat": "Sum of doubled numbers > 4",
+            "constraints": "Use map, filter, reduce methods",
+            "sampleInput": "[1, 2, 3, 4, 5]",
+            "sampleOutput": "24",
+            "explanation": "Doubled: [2,4,6,8,10]. Filtered (>4): [6,8,10]. Sum: 24.",
+            "testCases": [
+                {
+                    "input": "[1, 2, 3, 4, 5]",
+                    "expectedOutput": "24",
+                    "visibility": "public"
+                },
+                {
+                    "input": "[1, 2, 3]",
+                    "expectedOutput": "6",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "[5, 6, 7]",
+                    "expectedOutput": "36",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "[1, 1, 1, 1, 1]",
+                    "expectedOutput": "0",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB007",
+            "number": 807,
+            "title": "CSS Grid Layout",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Create a CSS Grid layout for a container with:\n- 3 columns of equal width\n- 20px gap between items\n- Container fills full width",
+            "inputFormat": "N/A",
+            "outputFormat": "CSS grid rules",
+            "constraints": "Use display: grid with grid-template-columns",
+            "sampleInput": "N/A",
+            "sampleOutput": ".grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }",
+            "explanation": "Grid with 3 equal columns using fr units.",
+            "testCases": [
+                {
+                    "input": "check_display",
+                    "expectedOutput": "grid",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_columns",
+                    "expectedOutput": "3 equal",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_gap",
+                    "expectedOutput": "20px",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_fr_units",
+                    "expectedOutput": "1fr",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB008",
+            "number": 808,
+            "title": "JavaScript DOM Manipulation",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Write JavaScript to:\n1. Create a new div element\n2. Set its inner text to 'Dynamic Content'\n3. Add class 'highlight'\n4. Append it to body",
+            "inputFormat": "N/A",
+            "outputFormat": "Div added to body with text and class",
+            "constraints": "Use createElement, textContent, classList, appendChild",
+            "sampleInput": "N/A",
+            "sampleOutput": "<div class='highlight'>Dynamic Content</div> in body",
+            "explanation": "DOM manipulation to create and insert elements.",
+            "testCases": [
+                {
+                    "input": "check_element_created",
+                    "expectedOutput": "div",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_text_content",
+                    "expectedOutput": "Dynamic Content",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_class",
+                    "expectedOutput": "highlight",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_parent",
+                    "expectedOutput": "body",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB009",
+            "number": 809,
+            "title": "CSS Responsive Media Query",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Write CSS that:\n- For screens 768px and above: 3-column grid layout\n- For screens below 768px: single column layout\n- Container class: '.responsive-grid'",
+            "inputFormat": "N/A",
+            "outputFormat": "Responsive CSS with media query",
+            "constraints": "Mobile-first approach encouraged",
+            "sampleInput": "N/A",
+            "sampleOutput": "@media (min-width: 768px) { .responsive-grid { grid-template-columns: repeat(3, 1fr); } }",
+            "explanation": "Responsive design with breakpoint at 768px.",
+            "testCases": [
+                {
+                    "input": "check_mobile_layout",
+                    "expectedOutput": "1 column",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_desktop_layout",
+                    "expectedOutput": "3 columns",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_breakpoint",
+                    "expectedOutput": "768px",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_media_query_syntax",
+                    "expectedOutput": "valid",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB010",
+            "number": 810,
+            "title": "JavaScript Event Handling",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Create a button that:\n1. Starts with text 'Click me'\n2. On click, changes to 'Clicked!'\n3. After 2 seconds, reverts to 'Click me'\n\nWrite the complete JavaScript code.",
+            "inputFormat": "Button with id='myBtn'",
+            "outputFormat": "Interactive button behavior",
+            "constraints": "Use addEventListener and setTimeout",
+            "sampleInput": "Button click",
+            "sampleOutput": "Text changes: Click me → Clicked! → Click me",
+            "explanation": "Event listener with timeout for reset.",
+            "testCases": [
+                {
+                    "input": "initial_state",
+                    "expectedOutput": "Click me",
+                    "visibility": "public"
+                },
+                {
+                    "input": "after_click",
+                    "expectedOutput": "Clicked!",
+                    "visibility": "public"
+                },
+                {
+                    "input": "after_2_seconds",
+                    "expectedOutput": "Click me",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_event_listener",
+                    "expectedOutput": "addEventListener used",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB011",
+            "number": 811,
+            "title": "HTML Semantic Structure",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Create a semantic HTML page structure with:\n- Header with nav containing 3 links\n- Main content with article and aside\n- Footer with copyright\n\nUse appropriate semantic tags.",
+            "inputFormat": "N/A",
+            "outputFormat": "Semantic HTML structure",
+            "constraints": "Use header, nav, main, article, aside, footer tags",
+            "sampleInput": "N/A",
+            "sampleOutput": "Complete semantic structure",
+            "explanation": "Proper use of HTML5 semantic elements.",
+            "testCases": [
+                {
+                    "input": "check_header",
+                    "expectedOutput": "header with nav",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_main",
+                    "expectedOutput": "main with article aside",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_footer",
+                    "expectedOutput": "footer present",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_nav_links",
+                    "expectedOutput": "3 links",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "semantic_score",
+                    "expectedOutput": "valid",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB012",
+            "number": 812,
+            "title": "CSS Animation",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Create a CSS animation that:\n- Fades an element in from 0 to 1 opacity\n- Takes 0.5 seconds\n- Uses ease-in-out timing\n- Apply to class '.fade-in'",
+            "inputFormat": "N/A",
+            "outputFormat": "CSS animation keyframes and rules",
+            "constraints": "Use @keyframes and animation property",
+            "sampleInput": "N/A",
+            "sampleOutput": "@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }",
+            "explanation": "CSS keyframe animation for fade effect.",
+            "testCases": [
+                {
+                    "input": "check_keyframes",
+                    "expectedOutput": "fadeIn defined",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_duration",
+                    "expectedOutput": "0.5s",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_timing",
+                    "expectedOutput": "ease-in-out",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_opacity_values",
+                    "expectedOutput": "0 to 1",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB013",
+            "number": 813,
+            "title": "JavaScript Fetch API",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Write a function that:\n1. Fetches data from '/api/users'\n2. Parses JSON response\n3. Returns array of user names\n4. Handles errors gracefully\n\nUse async/await syntax.",
+            "inputFormat": "API endpoint /api/users",
+            "outputFormat": "Array of user names or error message",
+            "constraints": "Use async/await with try/catch",
+            "sampleInput": "fetch('/api/users')",
+            "sampleOutput": "['John', 'Jane', 'Bob']",
+            "explanation": "Async function with fetch and error handling.",
+            "testCases": [
+                {
+                    "input": "success_response",
+                    "expectedOutput": "array of names",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_async_await",
+                    "expectedOutput": "async/await used",
+                    "visibility": "public"
+                },
+                {
+                    "input": "error_handling",
+                    "expectedOutput": "error caught",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "json_parsing",
+                    "expectedOutput": "valid",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB014",
+            "number": 814,
+            "title": "CSS Pseudo-classes Styling",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Style a navigation menu where:\n- Links are dark gray by default\n- On hover, turn orange\n- Active/current page link is bold orange\n- First link has extra margin-left\n\nUse appropriate pseudo-classes.",
+            "inputFormat": "Nav with multiple links",
+            "outputFormat": "CSS with pseudo-class selectors",
+            "constraints": "Use :hover, :active, :first-child",
+            "sampleInput": "N/A",
+            "sampleOutput": "nav a:hover { color: orange; }",
+            "explanation": "Pseudo-classes for interactive styling.",
+            "testCases": [
+                {
+                    "input": "check_default_color",
+                    "expectedOutput": "dark gray",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_hover",
+                    "expectedOutput": "orange",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_first_child",
+                    "expectedOutput": "margin-left",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "check_active",
+                    "expectedOutput": "bold orange",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB015",
+            "number": 815,
+            "title": "JavaScript LocalStorage",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement functions to:\n1. saveData(key, obj) - Store object as JSON\n2. loadData(key) - Retrieve and parse object\n3. clearData(key) - Remove item\n\nHandle cases where key doesn't exist.",
+            "inputFormat": "Key-value pairs",
+            "outputFormat": "LocalStorage operations",
+            "constraints": "Use JSON.stringify and JSON.parse",
+            "sampleInput": "saveData('user', {name: 'John'})",
+            "sampleOutput": "Data stored/retrieved correctly",
+            "explanation": "LocalStorage CRUD operations with JSON.",
+            "testCases": [
+                {
+                    "input": "save_and_load",
+                    "expectedOutput": "object matches",
+                    "visibility": "public"
+                },
+                {
+                    "input": "load_missing_key",
+                    "expectedOutput": "null or default",
+                    "visibility": "public"
+                },
+                {
+                    "input": "clear_data",
+                    "expectedOutput": "item removed",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "complex_object",
+                    "expectedOutput": "nested preserved",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB016",
+            "number": 816,
+            "title": "CSS Variables and Theming",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Create a theme system using CSS variables:\n- Define --primary-color, --secondary-color, --text-color, --bg-color in :root\n- Create dark theme with different values in .dark-theme class\n- Style buttons and text using these variables",
+            "inputFormat": "N/A",
+            "outputFormat": "CSS with custom properties and theme class",
+            "constraints": "Use var() function for all colors",
+            "sampleInput": "N/A",
+            "sampleOutput": ":root { --primary-color: #3498db; } .dark-theme { --primary-color: #2980b9; }",
+            "explanation": "CSS custom properties for themeable design.",
+            "testCases": [
+                {
+                    "input": "check_root_vars",
+                    "expectedOutput": "4 variables defined",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_dark_theme",
+                    "expectedOutput": "overrides present",
+                    "visibility": "public"
+                },
+                {
+                    "input": "check_var_usage",
+                    "expectedOutput": "var() used",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "theme_switch_works",
+                    "expectedOutput": "colors change",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "contrast_valid",
+                    "expectedOutput": "readable",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB017",
+            "number": 817,
+            "title": "JavaScript Form Validation",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Create a form validator that:\n1. Validates email format with regex\n2. Password: min 8 chars, 1 number, 1 uppercase\n3. Confirm password matches\n4. Shows appropriate error messages\n5. Prevents submit if invalid",
+            "inputFormat": "Form with email, password, confirmPassword fields",
+            "outputFormat": "Validation results and error messages",
+            "constraints": "Use regex for validation, display inline errors",
+            "sampleInput": "email: test@test.com, password: Pass123word",
+            "sampleOutput": "Valid form submitted",
+            "explanation": "Complete client-side form validation.",
+            "testCases": [
+                {
+                    "input": "valid_email",
+                    "expectedOutput": "pass",
+                    "visibility": "public"
+                },
+                {
+                    "input": "invalid_email",
+                    "expectedOutput": "error shown",
+                    "visibility": "public"
+                },
+                {
+                    "input": "weak_password",
+                    "expectedOutput": "error shown",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "password_mismatch",
+                    "expectedOutput": "error shown",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "all_valid",
+                    "expectedOutput": "submit allowed",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "prevent_default",
+                    "expectedOutput": "form not submitted on error",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB018",
+            "number": 818,
+            "title": "CSS Flexbox Complex Layout",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Create a dashboard layout with:\n- Fixed sidebar (250px wide)\n- Flexible main content area\n- Header that spans both\n- Sidebar items stack vertically with space-between\n- Main content uses remaining width",
+            "inputFormat": "N/A",
+            "outputFormat": "Complete flexbox layout",
+            "constraints": "Use flex properties only, no grid",
+            "sampleInput": "N/A",
+            "sampleOutput": "Dashboard layout with sidebar and main area",
+            "explanation": "Complex flexbox layout for applications.",
+            "testCases": [
+                {
+                    "input": "sidebar_width",
+                    "expectedOutput": "250px",
+                    "visibility": "public"
+                },
+                {
+                    "input": "main_flexible",
+                    "expectedOutput": "flex: 1 or similar",
+                    "visibility": "public"
+                },
+                {
+                    "input": "header_spans",
+                    "expectedOutput": "full width",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "sidebar_items_layout",
+                    "expectedOutput": "space-between",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "responsive_behavior",
+                    "expectedOutput": "adjusts properly",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB019",
+            "number": 819,
+            "title": "JavaScript Debounce Implementation",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Implement a debounce function that:\n1. Delays function execution by specified time\n2. Resets timer on subsequent calls\n3. Returns debounced function\n4. Apply to a search input (300ms delay)",
+            "inputFormat": "Function and delay time",
+            "outputFormat": "Debounced function",
+            "constraints": "Use closures and setTimeout/clearTimeout",
+            "sampleInput": "debounce(searchFn, 300)",
+            "sampleOutput": "Function executes once after 300ms of inactivity",
+            "explanation": "Debounce implementation for performance optimization.",
+            "testCases": [
+                {
+                    "input": "single_call",
+                    "expectedOutput": "executes after delay",
+                    "visibility": "public"
+                },
+                {
+                    "input": "multiple_rapid_calls",
+                    "expectedOutput": "executes once",
+                    "visibility": "public"
+                },
+                {
+                    "input": "timer_reset",
+                    "expectedOutput": "resets on new call",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "different_delays",
+                    "expectedOutput": "respects delay param",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "preserves_context",
+                    "expectedOutput": "this and args correct",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "WEB020",
+            "number": 820,
+            "title": "Complete Todo App",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Build a todo app with HTML, CSS, and JS that:\n1. Add new todos with input and button\n2. Mark todos as complete (strikethrough)\n3. Delete todos\n4. Persist to localStorage\n5. Clean, responsive UI",
+            "inputFormat": "User interactions",
+            "outputFormat": "Functioning todo application",
+            "constraints": "Vanilla JS only, no frameworks",
+            "sampleInput": "Add 'Buy milk', complete it, delete it",
+            "sampleOutput": "Todo added, marked complete, removed",
+            "explanation": "Full CRUD application with persistence.",
+            "testCases": [
+                {
+                    "input": "add_todo",
+                    "expectedOutput": "appears in list",
+                    "visibility": "public"
+                },
+                {
+                    "input": "complete_todo",
+                    "expectedOutput": "strikethrough applied",
+                    "visibility": "public"
+                },
+                {
+                    "input": "delete_todo",
+                    "expectedOutput": "removed from list",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "refresh_page",
+                    "expectedOutput": "todos persist",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "empty_input",
+                    "expectedOutput": "no empty todo added",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "ui_responsive",
+                    "expectedOutput": "mobile friendly",
+                    "visibility": "hidden"
+                }
+            ]
+        }
+    ]
+}

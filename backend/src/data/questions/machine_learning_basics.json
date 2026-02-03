@@ -1,0 +1,566 @@
+{
+    "courseName": "Machine Learning Basics",
+    "language": "Python",
+    "category": "ML/AI",
+    "totalQuestions": 18,
+    "questions": [
+        {
+            "id": "ML001",
+            "number": 1401,
+            "title": "Mean and Standard Deviation",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Calculate the mean and standard deviation of a given dataset.\n\nUse the population standard deviation formula.",
+            "inputFormat": "First line: N.\nSecond line: N space-separated numbers.",
+            "outputFormat": "Mean and standard deviation (2 decimal places).",
+            "constraints": "1 <= N <= 10^5\n-10^6 <= values <= 10^6",
+            "sampleInput": "5\n10 20 30 40 50",
+            "sampleOutput": "30.00 14.14",
+            "explanation": "Mean = 30. Variance = 200. StdDev = √200 ≈ 14.14.",
+            "testCases": [
+                {
+                    "input": "5\n10 20 30 40 50",
+                    "expectedOutput": "30.00 14.14",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n2 4 6 8",
+                    "expectedOutput": "5.00 2.24",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1\n100",
+                    "expectedOutput": "100.00 0.00",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "3\n-10 0 10",
+                    "expectedOutput": "0.00 8.16",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML002",
+            "number": 1402,
+            "title": "Euclidean Distance",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Calculate the Euclidean distance between two points in N-dimensional space.",
+            "inputFormat": "First line: N dimensions.\nSecond line: N coordinates of point A.\nThird line: N coordinates of point B.",
+            "outputFormat": "Euclidean distance (2 decimal places).",
+            "constraints": "1 <= N <= 100",
+            "sampleInput": "3\n1 2 3\n4 5 6",
+            "sampleOutput": "5.20",
+            "explanation": "√((4-1)² + (5-2)² + (6-3)²) = √27 ≈ 5.20",
+            "testCases": [
+                {
+                    "input": "3\n1 2 3\n4 5 6",
+                    "expectedOutput": "5.20",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n0 0\n3 4",
+                    "expectedOutput": "5.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1\n0\n10",
+                    "expectedOutput": "10.00",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "4\n1 1 1 1\n2 2 2 2",
+                    "expectedOutput": "2.00",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML003",
+            "number": 1403,
+            "title": "Normalize Data (Min-Max)",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Normalize an array using min-max normalization to range [0, 1].\n\nFormula: (x - min) / (max - min)",
+            "inputFormat": "First line: N.\nSecond line: N values.",
+            "outputFormat": "N normalized values (2 decimal places).",
+            "constraints": "2 <= N <= 1000\nValues are not all same.",
+            "sampleInput": "5\n10 20 30 40 50",
+            "sampleOutput": "0.00 0.25 0.50 0.75 1.00",
+            "explanation": "Min=10, Max=50. (10-10)/40=0, (20-10)/40=0.25, etc.",
+            "testCases": [
+                {
+                    "input": "5\n10 20 30 40 50",
+                    "expectedOutput": "0.00 0.25 0.50 0.75 1.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n0 50 100 150",
+                    "expectedOutput": "0.00 0.33 0.67 1.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n-10 0 10",
+                    "expectedOutput": "0.00 0.50 1.00",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML004",
+            "number": 1404,
+            "title": "Sigmoid Function",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Apply sigmoid function to each value in an array.\n\nSigmoid(x) = 1 / (1 + e^(-x))",
+            "inputFormat": "First line: N.\nSecond line: N values.",
+            "outputFormat": "N sigmoid outputs (4 decimal places).",
+            "constraints": "1 <= N <= 100\n-100 <= values <= 100",
+            "sampleInput": "5\n-2 -1 0 1 2",
+            "sampleOutput": "0.1192 0.2689 0.5000 0.7311 0.8808",
+            "explanation": "Sigmoid maps any value to (0, 1).",
+            "testCases": [
+                {
+                    "input": "5\n-2 -1 0 1 2",
+                    "expectedOutput": "0.1192 0.2689 0.5000 0.7311 0.8808",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n0 0 0",
+                    "expectedOutput": "0.5000 0.5000 0.5000",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n-10 10",
+                    "expectedOutput": "0.0000 1.0000",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML005",
+            "number": 1405,
+            "title": "ReLU Activation",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Apply ReLU (Rectified Linear Unit) activation function.\n\nReLU(x) = max(0, x)",
+            "inputFormat": "First line: N.\nSecond line: N values.",
+            "outputFormat": "N ReLU outputs.",
+            "constraints": "1 <= N <= 1000",
+            "sampleInput": "6\n-3 -1 0 1 2 5",
+            "sampleOutput": "0 0 0 1 2 5",
+            "explanation": "Negative values become 0, positives stay same.",
+            "testCases": [
+                {
+                    "input": "6\n-3 -1 0 1 2 5",
+                    "expectedOutput": "0 0 0 1 2 5",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n-10 -5 5 10",
+                    "expectedOutput": "0 0 5 10",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n0 0 0",
+                    "expectedOutput": "0 0 0",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML006",
+            "number": 1406,
+            "title": "Confusion Matrix Metrics",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Calculate accuracy, precision, recall, and F1-score from confusion matrix.\n\nGiven TP, TN, FP, FN values.",
+            "inputFormat": "Four integers: TP TN FP FN",
+            "outputFormat": "Accuracy Precision Recall F1 (2 decimal places each).",
+            "constraints": "0 <= values <= 10^6\nTotal > 0",
+            "sampleInput": "50 40 10 20",
+            "sampleOutput": "0.75 0.83 0.71 0.77",
+            "explanation": "Accuracy=(TP+TN)/Total. Precision=TP/(TP+FP). Recall=TP/(TP+FN). F1=2*P*R/(P+R).",
+            "testCases": [
+                {
+                    "input": "50 40 10 20",
+                    "expectedOutput": "0.75 0.83 0.71 0.77",
+                    "visibility": "public"
+                },
+                {
+                    "input": "100 100 0 0",
+                    "expectedOutput": "1.00 1.00 1.00 1.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "80 70 20 30",
+                    "expectedOutput": "0.75 0.80 0.73 0.76",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML007",
+            "number": 1407,
+            "title": "Simple Gradient Descent",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement gradient descent for linear regression on 1D data.\n\nFind optimal w and b for y = wx + b that minimizes MSE.",
+            "inputFormat": "First line: N, learning_rate, iterations.\nNext N lines: x y pairs.",
+            "outputFormat": "Final w and b values (4 decimal places).",
+            "constraints": "1 <= N <= 1000\n0.001 <= lr <= 1\n1 <= iterations <= 10000",
+            "sampleInput": "4 0.1 100\n1 2\n2 4\n3 6\n4 8",
+            "sampleOutput": "2.0000 0.0000",
+            "explanation": "Perfect linear relationship y = 2x.",
+            "testCases": [
+                {
+                    "input": "4 0.1 100\n1 2\n2 4\n3 6\n4 8",
+                    "expectedOutput": "2.0000 0.0000",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 0.1 1000\n0 1\n1 3\n2 5",
+                    "expectedOutput": "2.0000 1.0000",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 0.1 500\n0 0\n1 1",
+                    "expectedOutput": "1.0000 0.0000",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML008",
+            "number": 1408,
+            "title": "K-Nearest Neighbors",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement KNN classification. Classify a test point based on K nearest training points.\n\nUse Euclidean distance. In case of tie, pick smaller class label.",
+            "inputFormat": "First line: N K dimensions.\nNext N lines: features... class.\nLast line: Test point features.",
+            "outputFormat": "Predicted class.",
+            "constraints": "1 <= N <= 1000\n1 <= K <= N",
+            "sampleInput": "6 3 2\n1 1 0\n2 1 0\n3 1 0\n5 5 1\n6 5 1\n7 5 1\n4 3",
+            "sampleOutput": "0",
+            "explanation": "3 nearest to (4,3) are class 0 points.",
+            "testCases": [
+                {
+                    "input": "6 3 2\n1 1 0\n2 1 0\n3 1 0\n5 5 1\n6 5 1\n7 5 1\n4 3",
+                    "expectedOutput": "0",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4 1 2\n0 0 0\n0 1 0\n1 0 1\n1 1 1\n0.5 0.5",
+                    "expectedOutput": "0",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4 3 1\n1 0\n2 0\n8 1\n9 1\n5",
+                    "expectedOutput": "0",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML009",
+            "number": 1409,
+            "title": "K-Means Clustering",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement K-Means clustering for one iteration.\n\nGiven initial centroids and data points, assign points to nearest centroid and output new centroids.",
+            "inputFormat": "First line: N K dimensions.\nNext N lines: Point coordinates.\nNext K lines: Initial centroid coordinates.",
+            "outputFormat": "K new centroid coordinates (2 decimal places).",
+            "constraints": "1 <= N <= 1000\n1 <= K <= 10",
+            "sampleInput": "4 2 2\n1 1\n1 2\n5 5\n6 6\n0 0\n10 10",
+            "sampleOutput": "1.00 1.50\n5.50 5.50",
+            "explanation": "Points (1,1),(1,2) -> centroid 1. Points (5,5),(6,6) -> centroid 2.",
+            "testCases": [
+                {
+                    "input": "4 2 2\n1 1\n1 2\n5 5\n6 6\n0 0\n10 10",
+                    "expectedOutput": "1.00 1.50\n5.50 5.50",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 1 1\n1\n2\n3\n0",
+                    "expectedOutput": "2.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4 2 1\n1\n2\n9\n10\n0\n12",
+                    "expectedOutput": "1.50\n9.50",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML010",
+            "number": 1410,
+            "title": "Decision Tree Split",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Find the best split for a decision tree node using Gini impurity.\n\nGiven feature values and labels, find threshold that minimizes weighted Gini.",
+            "inputFormat": "First line: N.\nNext N lines: feature_value label (0 or 1).",
+            "outputFormat": "Best threshold and resulting Gini (2 decimal places).",
+            "constraints": "2 <= N <= 1000",
+            "sampleInput": "6\n1 0\n2 0\n3 0\n7 1\n8 1\n9 1",
+            "sampleOutput": "5.00 0.00",
+            "explanation": "Split at 5.0 gives perfect separation. Gini = 0.",
+            "testCases": [
+                {
+                    "input": "6\n1 0\n2 0\n3 0\n7 1\n8 1\n9 1",
+                    "expectedOutput": "5.00 0.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n1 0\n2 1\n3 0\n4 1",
+                    "expectedOutput": "1.50 0.50",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n1 0\n2 0\n3 1",
+                    "expectedOutput": "2.50 0.00",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML011",
+            "number": 1411,
+            "title": "Softmax Function",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Apply softmax function to convert logits to probabilities.\n\nSoftmax(xi) = e^xi / Σ(e^xj)",
+            "inputFormat": "First line: N.\nSecond line: N logit values.",
+            "outputFormat": "N softmax probabilities (4 decimal places).",
+            "constraints": "1 <= N <= 100",
+            "sampleInput": "3\n1 2 3",
+            "sampleOutput": "0.0900 0.2447 0.6652",
+            "explanation": "Softmax converts to probability distribution summing to 1.",
+            "testCases": [
+                {
+                    "input": "3\n1 2 3",
+                    "expectedOutput": "0.0900 0.2447 0.6652",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n0 0",
+                    "expectedOutput": "0.5000 0.5000",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n1 1 1 1",
+                    "expectedOutput": "0.2500 0.2500 0.2500 0.2500",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML012",
+            "number": 1412,
+            "title": "Cross-Entropy Loss",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Calculate cross-entropy loss for classification.\n\nL = -Σ y*log(p) where y is one-hot label, p is prediction.",
+            "inputFormat": "First line: N (number of classes).\nSecond line: N true labels (one-hot).\nThird line: N predicted probabilities.",
+            "outputFormat": "Cross-entropy loss (4 decimal places).",
+            "constraints": "2 <= N <= 100",
+            "sampleInput": "3\n0 1 0\n0.1 0.7 0.2",
+            "sampleOutput": "0.3567",
+            "explanation": "Loss = -log(0.7) ≈ 0.3567",
+            "testCases": [
+                {
+                    "input": "3\n0 1 0\n0.1 0.7 0.2",
+                    "expectedOutput": "0.3567",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n1 0\n0.9 0.1",
+                    "expectedOutput": "0.1054",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n1 0 0\n0.33 0.33 0.34",
+                    "expectedOutput": "1.1087",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML013",
+            "number": 1413,
+            "title": "Batch Normalization",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Implement batch normalization.\n\nNormalize batch to mean=0, var=1, then scale and shift with gamma and beta.",
+            "inputFormat": "First line: N (batch size).\nSecond line: N values.\nThird line: gamma beta epsilon.",
+            "outputFormat": "N normalized outputs (4 decimal places).",
+            "constraints": "2 <= N <= 1000",
+            "sampleInput": "4\n1 2 3 4\n1.0 0.0 0.0001",
+            "sampleOutput": "-1.3416 -0.4472 0.4472 1.3416",
+            "explanation": "Normalize to zero mean unit variance.",
+            "testCases": [
+                {
+                    "input": "4\n1 2 3 4\n1.0 0.0 0.0001",
+                    "expectedOutput": "-1.3416 -0.4472 0.4472 1.3416",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n10 20 30\n2.0 5.0 0.0001",
+                    "expectedOutput": "2.5508 5.0000 7.4492",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n0 100\n1.0 0.0 0.0001",
+                    "expectedOutput": "-1.0000 1.0000",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML014",
+            "number": 1414,
+            "title": "Dropout Layer",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Implement dropout with given drop probability and seed for reproducibility.\n\nDuring training, zero out dropped neurons and scale remaining by 1/(1-p).",
+            "inputFormat": "First line: N (neurons), drop_probability, seed.\nSecond line: N activation values.",
+            "outputFormat": "N outputs after dropout (4 decimal places).",
+            "constraints": "0 <= p < 1",
+            "sampleInput": "5 0.4 42\n1.0 2.0 3.0 4.0 5.0",
+            "sampleOutput": "1.6667 0.0000 5.0000 0.0000 8.3333",
+            "explanation": "40% dropped, rest scaled by 1/0.6 ≈ 1.6667.",
+            "testCases": [
+                {
+                    "input": "5 0.4 42\n1.0 2.0 3.0 4.0 5.0",
+                    "expectedOutput": "1.6667 0.0000 5.0000 0.0000 8.3333",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4 0.0 1\n1.0 2.0 3.0 4.0",
+                    "expectedOutput": "1.0000 2.0000 3.0000 4.0000",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 0.5 123\n2.0 4.0 6.0",
+                    "expectedOutput": "4.0000 0.0000 12.0000",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML015",
+            "number": 1415,
+            "title": "Backpropagation Single Layer",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Compute gradients for a single fully-connected layer.\n\nGiven input, weights, and upstream gradient, calculate dW and dX.",
+            "inputFormat": "First line: Input size, output size.\nSecond line: Input values.\nNext output_size lines: Weight matrix rows.\nLast line: Upstream gradient.",
+            "outputFormat": "dW matrix, then dX vector (4 decimal places).",
+            "constraints": "1 <= sizes <= 10",
+            "sampleInput": "2 2\n1.0 2.0\n0.5 0.5\n0.3 0.7\n1.0 1.0",
+            "sampleOutput": "1.0000 2.0000\n1.0000 2.0000\n0.8000 1.0000",
+            "explanation": "dW = outer(dY, X). dX = W.T @ dY.",
+            "testCases": [
+                {
+                    "input": "2 2\n1.0 2.0\n0.5 0.5\n0.3 0.7\n1.0 1.0",
+                    "expectedOutput": "1.0000 2.0000\n1.0000 2.0000\n0.8000 1.0000",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 1\n1.0 1.0\n0.5 0.5\n2.0",
+                    "expectedOutput": "2.0000 2.0000\n1.0000 1.0000",
+                    "visibility": "public"
+                }
+            ]
+        },
+        {
+            "id": "ML016",
+            "number": 1416,
+            "title": "Convolution Operation",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Perform 2D convolution on a matrix with given kernel.\n\nNo padding, stride = 1.",
+            "inputFormat": "First line: Input rows, cols.\nNext rows lines: Input matrix.\nNext line: Kernel rows, cols.\nNext k_rows lines: Kernel matrix.",
+            "outputFormat": "Output matrix after convolution.",
+            "constraints": "Kernel size <= Input size",
+            "sampleInput": "4 4\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16\n2 2\n1 0\n0 1",
+            "sampleOutput": "7 9 11\n15 17 19\n23 25 27",
+            "explanation": "2x2 kernel slides over 4x4 input producing 3x3 output.",
+            "testCases": [
+                {
+                    "input": "4 4\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16\n2 2\n1 0\n0 1",
+                    "expectedOutput": "7 9 11\n15 17 19\n23 25 27",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3\n1 2 3\n4 5 6\n7 8 9\n2 2\n1 1\n1 1",
+                    "expectedOutput": "12 16\n24 28",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3\n0 0 0\n0 1 0\n0 0 0\n3 3\n0 0 0\n0 1 0\n0 0 0",
+                    "expectedOutput": "1",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML017",
+            "number": 1417,
+            "title": "Max Pooling",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement 2D max pooling with given pool size and stride.",
+            "inputFormat": "First line: rows, cols, pool_size, stride.\nNext rows lines: Input matrix.",
+            "outputFormat": "Output matrix after max pooling.",
+            "constraints": "pool_size >= 1, stride >= 1",
+            "sampleInput": "4 4 2 2\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16",
+            "sampleOutput": "6 8\n14 16",
+            "explanation": "2x2 max pooling with stride 2 on 4x4 gives 2x2 output.",
+            "testCases": [
+                {
+                    "input": "4 4 2 2\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16",
+                    "expectedOutput": "6 8\n14 16",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3 2 1\n1 5 3\n4 2 6\n7 8 9",
+                    "expectedOutput": "5 6\n8 9",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 2 2 2\n1 2\n3 4",
+                    "expectedOutput": "4",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "ML018",
+            "number": 1418,
+            "title": "Adam Optimizer Step",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Implement one step of Adam optimizer.\n\nGiven gradient, update m, v, and compute parameter update.",
+            "inputFormat": "First line: lr, beta1, beta2, epsilon, t (timestep).\nSecond line: Current param value.\nThird line: Gradient.\nFourth line: m (first moment).\nFifth line: v (second moment).",
+            "outputFormat": "Updated param, m, v (6 decimal places).",
+            "constraints": "0 < lr, beta1, beta2 < 1",
+            "sampleInput": "0.001 0.9 0.999 1e-8 1\n1.0\n0.5\n0.0\n0.0",
+            "sampleOutput": "0.900000 0.050000 0.000250",
+            "explanation": "Adam update with bias correction.",
+            "testCases": [
+                {
+                    "input": "0.001 0.9 0.999 1e-8 1\n1.0\n0.5\n0.0\n0.0",
+                    "expectedOutput": "0.900000 0.050000 0.000250",
+                    "visibility": "public"
+                },
+                {
+                    "input": "0.01 0.9 0.999 1e-8 10\n0.0\n1.0\n0.5\n0.01",
+                    "expectedOutput": "-0.018931 0.550000 0.010990",
+                    "visibility": "public"
+                }
+            ]
+        }
+    ]
+}

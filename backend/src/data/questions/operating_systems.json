@@ -1,0 +1,561 @@
+{
+    "courseName": "Operating Systems Concepts",
+    "language": "C/C++",
+    "category": "Systems",
+    "totalQuestions": 18,
+    "questions": [
+        {
+            "id": "OS001",
+            "number": 1301,
+            "title": "Process Scheduling - FCFS",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Implement First-Come-First-Served (FCFS) scheduling.\n\nGiven arrival times and burst times, calculate waiting time and turnaround time for each process. Print average waiting time and turnaround time.",
+            "inputFormat": "First line: N (number of processes).\nNext N lines: arrival_time burst_time.",
+            "outputFormat": "Average waiting time and turnaround time (2 decimal places).",
+            "constraints": "1 <= N <= 100\n0 <= arrival_time <= 1000\n1 <= burst_time <= 100",
+            "sampleInput": "3\n0 4\n1 3\n2 2",
+            "sampleOutput": "2.33 5.33",
+            "explanation": "WT: P1=0, P2=3, P3=4. Avg=7/3=2.33. TAT: 4,6,6. Avg=16/3=5.33",
+            "testCases": [
+                {
+                    "input": "3\n0 4\n1 3\n2 2",
+                    "expectedOutput": "2.33 5.33",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n0 5\n1 3\n2 8\n3 6",
+                    "expectedOutput": "7.75 13.25",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n0 10\n0 5",
+                    "expectedOutput": "5.00 12.50",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "3\n0 1\n0 1\n0 1",
+                    "expectedOutput": "1.00 2.00",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS002",
+            "number": 1302,
+            "title": "Process Scheduling - SJF",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Implement Shortest Job First (SJF) non-preemptive scheduling.\n\nCalculate and print average waiting time and turnaround time.",
+            "inputFormat": "First line: N.\nNext N lines: arrival_time burst_time.",
+            "outputFormat": "Average WT and TAT.",
+            "constraints": "1 <= N <= 100",
+            "sampleInput": "4\n0 6\n0 8\n0 7\n0 3",
+            "sampleOutput": "7.00 13.00",
+            "explanation": "Order: P4, P1, P3, P2. WT: 0,3,9,16. Avg=28/4=7.",
+            "testCases": [
+                {
+                    "input": "4\n0 6\n0 8\n0 7\n0 3",
+                    "expectedOutput": "7.00 13.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n0 5\n1 3\n2 8",
+                    "expectedOutput": "2.33 7.67",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n0 5\n0 5",
+                    "expectedOutput": "2.50 7.50",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS003",
+            "number": 1303,
+            "title": "Round Robin Scheduling",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement Round Robin scheduling with given time quantum.\n\nCalculate average waiting time and turnaround time.",
+            "inputFormat": "First line: N and quantum.\nNext N lines: arrival_time burst_time.",
+            "outputFormat": "Average WT and TAT.",
+            "constraints": "1 <= N <= 100\n1 <= quantum <= 50",
+            "sampleInput": "3 2\n0 5\n1 4\n2 2",
+            "sampleOutput": "3.33 6.67",
+            "explanation": "RR with quantum 2, processes rotate until complete.",
+            "testCases": [
+                {
+                    "input": "3 2\n0 5\n1 4\n2 2",
+                    "expectedOutput": "3.33 6.67",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4 2\n0 5\n0 4\n0 3\n0 2",
+                    "expectedOutput": "7.00 10.50",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 1\n0 3\n0 3",
+                    "expectedOutput": "2.50 5.50",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS004",
+            "number": 1304,
+            "title": "Banker's Algorithm",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement Banker's Algorithm for deadlock avoidance.\n\nGiven allocation, max, and available resources, determine if system is in safe state. If safe, print safe sequence.",
+            "inputFormat": "First line: N M (processes, resources).\nNext N lines: Allocation matrix row.\nNext N lines: Max matrix row.\nLast line: Available resources.",
+            "outputFormat": "'SAFE: sequence' or 'UNSAFE'",
+            "constraints": "1 <= N, M <= 10",
+            "sampleInput": "5 3\n0 1 0\n2 0 0\n3 0 2\n2 1 1\n0 0 2\n7 5 3\n3 3 2\n9 0 2\n2 2 2\n4 3 3\n3 3 2",
+            "sampleOutput": "SAFE: P1 P3 P4 P0 P2",
+            "explanation": "System is in safe state with given sequence.",
+            "testCases": [
+                {
+                    "input": "5 3\n0 1 0\n2 0 0\n3 0 2\n2 1 1\n0 0 2\n7 5 3\n3 3 2\n9 0 2\n2 2 2\n4 3 3\n3 3 2",
+                    "expectedOutput": "SAFE: P1 P3 P4 P0 P2",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3\n1 0 0\n0 1 0\n0 0 1\n1 0 0\n0 1 0\n0 0 1\n1 1 1",
+                    "expectedOutput": "SAFE: P0 P1 P2",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 2\n1 0\n0 1\n2 2\n2 2\n0 0",
+                    "expectedOutput": "UNSAFE",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS005",
+            "number": 1305,
+            "title": "Page Replacement - FIFO",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Implement FIFO page replacement algorithm.\n\nGiven reference string and frame count, calculate page faults.",
+            "inputFormat": "First line: N (references) and F (frames).\nSecond line: N page references.",
+            "outputFormat": "Number of page faults.",
+            "constraints": "1 <= N <= 100\n1 <= F <= 10",
+            "sampleInput": "12 3\n7 0 1 2 0 3 0 4 2 3 0 3",
+            "sampleOutput": "9",
+            "explanation": "FIFO replacement causes 9 page faults.",
+            "testCases": [
+                {
+                    "input": "12 3\n7 0 1 2 0 3 0 4 2 3 0 3",
+                    "expectedOutput": "9",
+                    "visibility": "public"
+                },
+                {
+                    "input": "9 3\n1 2 3 4 1 2 5 1 2",
+                    "expectedOutput": "8",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 3\n1 2 3 1 2",
+                    "expectedOutput": "3",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "6 2\n1 2 3 1 2 3",
+                    "expectedOutput": "6",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS006",
+            "number": 1306,
+            "title": "Page Replacement - LRU",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement LRU (Least Recently Used) page replacement.\n\nCalculate page faults for given reference string and frames.",
+            "inputFormat": "First line: N and F.\nSecond line: N page references.",
+            "outputFormat": "Page faults.",
+            "constraints": "1 <= N <= 100\n1 <= F <= 10",
+            "sampleInput": "12 3\n7 0 1 2 0 3 0 4 2 3 0 3",
+            "sampleOutput": "9",
+            "explanation": "LRU replacement causes 9 faults.",
+            "testCases": [
+                {
+                    "input": "12 3\n7 0 1 2 0 3 0 4 2 3 0 3",
+                    "expectedOutput": "9",
+                    "visibility": "public"
+                },
+                {
+                    "input": "9 3\n1 2 3 4 1 2 5 1 2",
+                    "expectedOutput": "7",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 3\n1 2 3 1 2",
+                    "expectedOutput": "3",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS007",
+            "number": 1307,
+            "title": "Page Replacement - Optimal",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement Optimal page replacement algorithm (replace page not used for longest time in future).\n\nCalculate page faults.",
+            "inputFormat": "First line: N and F.\nSecond line: N page references.",
+            "outputFormat": "Page faults.",
+            "constraints": "1 <= N <= 100\n1 <= F <= 10",
+            "sampleInput": "12 3\n7 0 1 2 0 3 0 4 2 3 0 3",
+            "sampleOutput": "7",
+            "explanation": "Optimal has minimum faults = 7.",
+            "testCases": [
+                {
+                    "input": "12 3\n7 0 1 2 0 3 0 4 2 3 0 3",
+                    "expectedOutput": "7",
+                    "visibility": "public"
+                },
+                {
+                    "input": "9 3\n1 2 3 4 1 2 5 1 2",
+                    "expectedOutput": "6",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 3\n1 2 3 1 2",
+                    "expectedOutput": "3",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS008",
+            "number": 1308,
+            "title": "Disk Scheduling - FCFS",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Implement FCFS disk scheduling.\n\nGiven head position and request queue, calculate total head movement.",
+            "inputFormat": "First line: N and initial head position.\nSecond line: N requests.",
+            "outputFormat": "Total head movement.",
+            "constraints": "1 <= N <= 100\n0 <= positions <= 199",
+            "sampleInput": "8 53\n98 183 37 122 14 124 65 67",
+            "sampleOutput": "640",
+            "explanation": "Head moves: |53-98|+|98-183|+... = 640",
+            "testCases": [
+                {
+                    "input": "8 53\n98 183 37 122 14 124 65 67",
+                    "expectedOutput": "640",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 50\n82 170 43 140 24",
+                    "expectedOutput": "362",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 100\n50 150 100",
+                    "expectedOutput": "100",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS009",
+            "number": 1309,
+            "title": "Disk Scheduling - SSTF",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement Shortest Seek Time First (SSTF) disk scheduling.\n\nAlways service closest request next.",
+            "inputFormat": "First line: N and head position.\nSecond line: N requests.",
+            "outputFormat": "Total head movement.",
+            "constraints": "1 <= N <= 100",
+            "sampleInput": "8 53\n98 183 37 122 14 124 65 67",
+            "sampleOutput": "236",
+            "explanation": "SSTF minimizes seek time at each step.",
+            "testCases": [
+                {
+                    "input": "8 53\n98 183 37 122 14 124 65 67",
+                    "expectedOutput": "236",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 50\n82 170 43 140 24",
+                    "expectedOutput": "208",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 100\n50 150 100",
+                    "expectedOutput": "100",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS010",
+            "number": 1310,
+            "title": "Disk Scheduling - SCAN",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement SCAN (Elevator) disk scheduling.\n\nHead moves in one direction until end, then reverses.",
+            "inputFormat": "First line: N, head position, direction (0=left, 1=right).\nSecond line: N requests.",
+            "outputFormat": "Total head movement.",
+            "constraints": "Disk range: 0-199",
+            "sampleInput": "8 53 1\n98 183 37 122 14 124 65 67",
+            "sampleOutput": "331",
+            "explanation": "SCAN right to 199, then left to 14.",
+            "testCases": [
+                {
+                    "input": "8 53 1\n98 183 37 122 14 124 65 67",
+                    "expectedOutput": "331",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 50 0\n82 170 43 140 24",
+                    "expectedOutput": "296",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 100 1\n50 150 100",
+                    "expectedOutput": "149",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS011",
+            "number": 1311,
+            "title": "Memory Allocation - First Fit",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Implement First Fit memory allocation.\n\nAllocate process to first block that fits.",
+            "inputFormat": "First line: M (blocks) and N (processes).\nSecond line: M block sizes.\nThird line: N process sizes.",
+            "outputFormat": "For each process, print block number (1-indexed) or -1 if not allocated.",
+            "constraints": "1 <= M, N <= 100",
+            "sampleInput": "5 4\n100 500 200 300 600\n212 417 112 426",
+            "sampleOutput": "2 4 2 5",
+            "explanation": "First fit allocates to first suitable block.",
+            "testCases": [
+                {
+                    "input": "5 4\n100 500 200 300 600\n212 417 112 426",
+                    "expectedOutput": "2 4 2 5",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3\n100 200 300\n150 100 200",
+                    "expectedOutput": "2 1 3",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 3\n100 100\n50 50 50",
+                    "expectedOutput": "1 1 2",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS012",
+            "number": 1312,
+            "title": "Memory Allocation - Best Fit",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement Best Fit memory allocation.\n\nAllocate to smallest block that fits.",
+            "inputFormat": "Same as First Fit.",
+            "outputFormat": "Block allocations.",
+            "constraints": "1 <= M, N <= 100",
+            "sampleInput": "5 4\n100 500 200 300 600\n212 417 112 426",
+            "sampleOutput": "4 2 3 5",
+            "explanation": "Best fit finds smallest adequate block.",
+            "testCases": [
+                {
+                    "input": "5 4\n100 500 200 300 600\n212 417 112 426",
+                    "expectedOutput": "4 2 3 5",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3\n100 200 300\n150 100 200",
+                    "expectedOutput": "2 1 3",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 2\n100 200\n150 80",
+                    "expectedOutput": "2 1",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS013",
+            "number": 1313,
+            "title": "Producer-Consumer Problem",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Simulate Producer-Consumer with bounded buffer using semaphores.\n\nGiven sequence of produce/consume operations, output buffer state after each.",
+            "inputFormat": "First line: Buffer size.\nSecond line: N operations.\nNext N lines: 'produce item' or 'consume'.",
+            "outputFormat": "Buffer state or 'WAIT' if blocked.",
+            "constraints": "1 <= buffer size <= 10",
+            "sampleInput": "3\n5\nproduce A\nproduce B\nconsume\nproduce C\nproduce D",
+            "sampleOutput": "[A]\n[A, B]\n[B]\n[B, C]\n[B, C, D]",
+            "explanation": "Buffer operations with bounded size.",
+            "testCases": [
+                {
+                    "input": "3\n5\nproduce A\nproduce B\nconsume\nproduce C\nproduce D",
+                    "expectedOutput": "[A]\n[A, B]\n[B]\n[B, C]\n[B, C, D]",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1\n3\nproduce X\nconsume\nconsume",
+                    "expectedOutput": "[X]\n[]\nWAIT",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2\n4\nproduce A\nproduce B\nproduce C\nconsume",
+                    "expectedOutput": "[A]\n[A, B]\nWAIT\n[B]",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS014",
+            "number": 1314,
+            "title": "Reader-Writer Problem",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Simulate Reader-Writer with reader preference.\n\nMultiple readers can access simultaneously, writers need exclusive access.",
+            "inputFormat": "N operations: 'read_start id', 'read_end id', 'write_start id', 'write_end id'.",
+            "outputFormat": "For each operation: 'OK' or 'WAIT'.",
+            "constraints": "1 <= N <= 50",
+            "sampleInput": "6\nread_start 1\nread_start 2\nwrite_start 3\nread_end 1\nread_end 2\nwrite_start 3",
+            "sampleOutput": "OK\nOK\nWAIT\nOK\nOK\nOK",
+            "explanation": "Writer 3 waits until all readers done.",
+            "testCases": [
+                {
+                    "input": "6\nread_start 1\nread_start 2\nwrite_start 3\nread_end 1\nread_end 2\nwrite_start 3",
+                    "expectedOutput": "OK\nOK\nWAIT\nOK\nOK\nOK",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\nwrite_start 1\nread_start 2\nwrite_end 1\nread_start 2",
+                    "expectedOutput": "OK\nWAIT\nOK\nOK",
+                    "visibility": "public"
+                }
+            ]
+        },
+        {
+            "id": "OS015",
+            "number": 1315,
+            "title": "Dining Philosophers Problem",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Simulate Dining Philosophers. Philosophers can eat only when holding both forks.\n\nGiven actions, determine if successful or causes wait.",
+            "inputFormat": "N philosophers (0 to N-1).\nM actions: 'pickup id', 'putdown id', 'eat id'.",
+            "outputFormat": "For each action: 'OK', 'WAIT', or 'EATING'.",
+            "constraints": "N >= 2",
+            "sampleInput": "5\n6\npickup 0\npickup 1\neat 0\npickup 0\nputdown 0\neat 1",
+            "sampleOutput": "OK\nWAIT\nEATING\nWAIT\nOK\nOK",
+            "explanation": "P0 grabs forks, P1 waits. P0 eats, releases. P1 can eat.",
+            "testCases": [
+                {
+                    "input": "5\n6\npickup 0\npickup 1\neat 0\npickup 0\nputdown 0\neat 1",
+                    "expectedOutput": "OK\nWAIT\nEATING\nWAIT\nOK\nOK",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n4\npickup 0\npickup 2\neat 0\nputdown 0",
+                    "expectedOutput": "OK\nOK\nEATING\nOK",
+                    "visibility": "public"
+                }
+            ]
+        },
+        {
+            "id": "OS016",
+            "number": 1316,
+            "title": "Priority Scheduling",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement Priority Scheduling (non-preemptive). Lower number = higher priority.\n\nCalculate average WT and TAT.",
+            "inputFormat": "First line: N.\nNext N lines: arrival_time burst_time priority.",
+            "outputFormat": "Average WT and TAT.",
+            "constraints": "1 <= N <= 100\n1 <= priority <= 10",
+            "sampleInput": "5\n0 10 3\n0 1 1\n0 2 4\n0 1 5\n0 5 2",
+            "sampleOutput": "8.20 12.00",
+            "explanation": "Execute by priority: P2, P5, P1, P3, P4.",
+            "testCases": [
+                {
+                    "input": "5\n0 10 3\n0 1 1\n0 2 4\n0 1 5\n0 5 2",
+                    "expectedOutput": "8.20 12.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n0 5 2\n1 3 1\n2 8 3",
+                    "expectedOutput": "4.33 9.67",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n0 4 2\n0 3 1\n0 1 3\n0 2 4",
+                    "expectedOutput": "4.00 6.50",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "OS017",
+            "number": 1317,
+            "title": "Deadlock Detection",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Implement deadlock detection using Wait-For graph.\n\nGiven resource allocation and request matrices, detect if deadlock exists.",
+            "inputFormat": "First line: N (processes), M (resources).\nNext lines: Allocation matrix.\nNext lines: Request matrix.\nLast line: Available.",
+            "outputFormat": "'DEADLOCK: processes' or 'NO DEADLOCK'",
+            "constraints": "1 <= N, M <= 10",
+            "sampleInput": "5 3\n0 1 0\n2 0 0\n3 0 3\n2 1 1\n0 0 2\n0 0 0\n2 0 2\n0 0 0\n1 0 0\n0 0 2\n0 0 0",
+            "sampleOutput": "DEADLOCK: P1 P2 P3 P4",
+            "explanation": "Processes cannot complete due to circular wait.",
+            "testCases": [
+                {
+                    "input": "5 3\n0 1 0\n2 0 0\n3 0 3\n2 1 1\n0 0 2\n0 0 0\n2 0 2\n0 0 0\n1 0 0\n0 0 2\n0 0 0",
+                    "expectedOutput": "DEADLOCK: P1 P2 P3 P4",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3 3\n1 0 0\n0 1 0\n0 0 1\n0 0 0\n0 0 0\n0 0 0\n1 1 1",
+                    "expectedOutput": "NO DEADLOCK",
+                    "visibility": "public"
+                }
+            ]
+        },
+        {
+            "id": "OS018",
+            "number": 1318,
+            "title": "Virtual Memory - Page Table",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Implement single-level page table translation.\n\nGiven virtual address, page size, and page table, calculate physical address.",
+            "inputFormat": "First line: Page size (bytes), page table entries.\nSecond line: Page table (frame numbers, -1 for invalid).\nThird line: N virtual addresses to translate.",
+            "outputFormat": "Physical address or 'PAGE FAULT' for each.",
+            "constraints": "Page size is power of 2.",
+            "sampleInput": "4096 4\n5 -1 2 8\n3\n0 8192 5000",
+            "sampleOutput": "20480 PAGE FAULT 13096",
+            "explanation": "Page 0 -> Frame 5 (20480+0). Page 2 invalid. Page 1 -> Frame 2.",
+            "testCases": [
+                {
+                    "input": "4096 4\n5 -1 2 8\n3\n0 8192 5000",
+                    "expectedOutput": "20480 PAGE FAULT 13096",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1024 4\n0 1 2 3\n2\n1024 3072",
+                    "expectedOutput": "1024 3072",
+                    "visibility": "public"
+                },
+                {
+                    "input": "256 2\n10 -1\n2\n100 300",
+                    "expectedOutput": "2660 PAGE FAULT",
+                    "visibility": "hidden"
+                }
+            ]
+        }
+    ]
+}
