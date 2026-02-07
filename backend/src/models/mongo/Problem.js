@@ -36,6 +36,7 @@ const ProblemSchema = new mongoose.Schema({
     },
     topic: { type: String, required: true }, // e.g., Arrays, Trees, DP, etc.
     tags: [String], // e.g., ["Array", "Hash Table", "Two Pointers"]
+    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' }, // Link to course
     acceptanceRate: { type: Number, default: 0 }, // percentage (0-100)
     totalSubmissions: { type: Number, default: 0 },
     acceptedSubmissions: { type: Number, default: 0 },

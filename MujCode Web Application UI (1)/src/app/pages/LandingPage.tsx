@@ -1,19 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import {
   Code2,
-  BookOpen,
   CheckCircle,
   Building2,
   Users,
   Award,
-  TrendingUp,
   Shield,
   Lock,
   Eye,
   Zap,
   GraduationCap,
   FileText,
-  BarChart3,
   UserCheck,
   Briefcase,
   CheckCircle2,
@@ -24,7 +21,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
-import logoImage from '../../assets/image-removebg-preview.png';
+import logoImage from '@/assets/image-removebg-preview.png';
 
 export default function LandingPage() {
   const navigate = useNavigate();

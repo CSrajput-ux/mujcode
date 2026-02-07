@@ -122,14 +122,15 @@ export default function Analytics() {
                   <YAxis />
                   <Tooltip
                     labelFormatter={(date) => new Date(date).toLocaleDateString()}
-                    formatter={(value: number) => [`${value} points`, 'Points']}
+                    formatter={(value: number) => [`${value} Problems`, 'Total Solved']}
                   />
                   <Line
                     type="monotone"
-                    dataKey="points"
+                    dataKey="solved"
                     stroke="#FF7A00"
                     strokeWidth={2}
                     dot={{ fill: '#FF7A00', r: 4 }}
+                    animationDuration={1500}
                   />
                 </LineChart>
               </ResponsiveContainer>

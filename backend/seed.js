@@ -128,6 +128,66 @@ const seedDatabase = async () => {
             });
         }
 
+        // --- 5. Seed MongoDB (Tests & Questions) ---
+        console.log("\n🌱 Seeding MongoDB (Tests & Questions)...");
+        const mongoose = require('mongoose');
+        const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mujcode';
+        if (mongoose.connection.readyState === 0) {
+            await mongoose.connect(MONGO_URI);
+        }
+
+        const Question = require('./src/models/mongo/Question');
+        const Test = require('./src/models/mongo/Test');
+
+        // Clear existing
+        await Question.deleteMany({});
+        await Test.deleteMany({});
+
+        // Create Questions
+        const questionsData = [
+            { text: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], correctOption: 1, marks: 5, difficulty: "Medium", type: "MCQ" },
+            { text: "Which data structure uses LIFO?", options: ["Queue", "Stack", "Array", "Tree"], correctOption: 1, marks: 5, difficulty: "Easy", type: "MCQ" },
+            { text: "React is a framework.", options: ["True", "False"], correctOption: 1, marks: 2, difficulty: "Easy", type: "TrueFalse" }, // False, it's a library
+            { text: "Which hook is used for side effects in React?", options: ["useState", "useEffect", "useRef", "useMemo"], correctOption: 1, marks: 5, difficulty: "Medium", type: "MCQ" }
+        ];
+
+        const createdQuestions = await Question.insertMany(questionsData);
+        const qIds = createdQuestions.map(q => q._id);
+
+        // Create Tests
+        await Test.create([
+            {
+                title: "Live DSA Quiz",
+                type: "Quiz",
+                duration: 15,
+                questions: qIds.slice(0, 2),
+                status: "Live",
+                startTime: new Date(),
+                proctored: true,
+                description: "A quick quiz on Data Structures."
+            },
+            {
+                title: "Upcoming React Assessment",
+                type: "Assessment",
+                duration: 45,
+                questions: qIds.slice(2, 4),
+                status: "Upcoming",
+                startTime: new Date(Date.now() + 86400000), // Tomorrow
+                proctored: false,
+                description: "Test your React knowledge."
+            },
+            {
+                title: "Completed General Test",
+                type: "Quiz",
+                duration: 10,
+                questions: qIds,
+                status: "Completed",
+                startTime: new Date(Date.now() - 86400000), // Yesterday
+                proctored: false
+            }
+        ]);
+        console.log("✅ MongoDB Seeded Successfully.");
+
         console.log("\n🎉 SEEDING COMPLETE! You can login with the emails printed above matches.");
         process.exit(0);
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userCourseSchema = new mongoose.Schema({
-    userId: { type: Number, required: true, ref: 'User' },
+    userId: { type: String, required: true, ref: 'User' },
     courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
     enrolledAt: { type: Date, default: Date.now },
     progress: { type: Number, default: 0, min: 0, max: 100 }, // Percentage

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const studentProgressSchema = new mongoose.Schema({
     userId: {
-        type: Number,
+        type: String,
         required: true,
         unique: true,
         ref: 'User'

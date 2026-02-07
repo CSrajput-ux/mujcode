@@ -4,6 +4,8 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { FileText, Upload, Video, File, Calendar, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import CaseStudyNotebook from '../../components/CaseStudyNotebook';
+import { useState } from 'react';
 
 export default function Assignments() {
   const pendingAssignments = [
@@ -23,8 +25,14 @@ export default function Assignments() {
     { title: 'Technical Paper: Blockchain Applications', subject: 'Blockchain Tech', dueDate: '2026-02-20', minWords: 4000, submitted: false }
   ];
 
+  const caseStudies = [
+    { title: 'Business Ethics in AI Deployment', subject: 'AI Ethics', dueDate: '2026-03-01', type: 'Case Study', status: 'Pending', description: 'Analyze the ethical implications of deploying AI in critical healthcare systems.' },
+    { title: 'Supply Chain Resilience', subject: 'Operations', dueDate: '2026-03-05', type: 'Case Study', status: 'Submitted', description: 'Propose a strategy to mitigate risks in global supply chains.' },
+    { title: 'Cybersecurity Breach Response', subject: 'Network Security', dueDate: '2026-03-10', type: 'Case Study', status: 'Pending', description: 'Draft a incident response plan for a major data breach scenario.' }
+  ];
+
   const getTypeIcon = (type: string) => {
-    switch(type) {
+    switch (type) {
       case 'Written': return <FileText className="w-5 h-5" />;
       case 'Video': return <Video className="w-5 h-5" />;
       case 'Code': return <File className="w-5 h-5" />;
@@ -39,6 +47,8 @@ export default function Assignments() {
     if (grade.startsWith('C')) return 'bg-yellow-500';
     return 'bg-gray-500';
   };
+
+  const [activeCaseStudy, setActiveCaseStudy] = useState<{ title: string } | null>(null);
 
   return (
     <StudentLayout>
@@ -58,6 +68,9 @@ export default function Assignments() {
             </TabsTrigger>
             <TabsTrigger value="research" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
               Research Papers ({researchPapers.length})
+            </TabsTrigger>
+            <TabsTrigger value="casestudy" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
+              Case Studies ({caseStudies.length})
             </TabsTrigger>
           </TabsList>
 
@@ -167,6 +180,52 @@ export default function Assignments() {
               </Card>
             ))}
           </TabsContent>
+
+          {/* Case Studies */}
+          <TabsContent value="casestudy" className="space-y-4">
+            {caseStudies.map((study, index) => (
+              <Card key={index} className="shadow-md border-l-4 border-blue-600">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>{study.title}</span>
+                    <Badge className={study.status === 'Submitted' ? 'bg-green-500' : 'bg-blue-600'}>
+                      {study.status}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Subject: {study.subject}</span>
+                    <span className="text-gray-600">Type: {study.type}</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4 text-[#FF7A00]" />
+                    <span>Due Date: {study.dueDate}</span>
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg">
+                    <p className="text-sm text-blue-900">
+                      <strong>Scenario:</strong> {study.description}
+                    </p>
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button variant="outline" className="flex-1 hover:border-[#FF7A00] hover:text-[#FF7A00]">
+                      <FileText className="w-4 h-4 mr-2" />
+                      Read Case
+                    </Button>
+                    <Button
+                      onClick={() => setActiveCaseStudy(study)}
+                      className="flex-1 bg-[#FF7A00] hover:bg-[#FF6A00]"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Submit Analysis
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </TabsContent>
         </Tabs>
 
         {/* Upload Info Card */}
@@ -190,6 +249,13 @@ export default function Assignments() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Zoho-style Notebook Modal */}
+      <CaseStudyNotebook
+        open={!!activeCaseStudy}
+        onClose={() => setActiveCaseStudy(null)}
+        caseStudyTitle={activeCaseStudy?.title || ''}
+      />
     </StudentLayout>
   );
 }

@@ -5,10 +5,14 @@ const {
     getStudentStats,
     getStudentRankings,
     getStudentBadges,
-    getStudentActivity
+    getStudentActivity,
+    getUserProblemStats,
+    getHeatmap
 } = require('../controllers/studentProgressController');
 
 // Student Progress Routes
+router.get('/heatmap/:studentId', getHeatmap); // New Activity Collection Heatmap
+router.get('/problem-stats/:userId', getUserProblemStats); // Real-time aggregation endpoint
 router.get('/stats/:studentId', getStudentStats);
 router.get('/rankings/:studentId', getStudentRankings);
 router.get('/badges/:studentId', getStudentBadges);

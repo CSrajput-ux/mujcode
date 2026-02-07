@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Code2, User, Lock, GraduationCap, Users, Shield, Building2 } from 'lucide-react';
+import { User, Lock, GraduationCap, Users, Shield, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import logoImage from '../../assets/image-removebg-preview.png';
+import logoImage from '@/assets/image-removebg-preview.png';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -19,6 +20,9 @@ export default function LoginPage() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [pendingRoleRoute, setPendingRoleRoute] = useState('');
+  const [userEmail, setUserEmail] = useState('');
 
   const roles = [
     { value: 'student', label: 'Student', icon: <GraduationCap className="w-5 h-5" />, route: '/student/dashboard' },
@@ -59,8 +63,15 @@ export default function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
 
-        // Navigate
-        navigate(role.route);
+        // Open Password Change Modal instead of navigating immediately
+        // Check if password change is required (Not for Company, and only if not changed yet)
+        if (selectedRole !== 'company' && !data.user.isPasswordChanged) {
+          setUserEmail(loginId);
+          setPendingRoleRoute(role.route);
+          setShowPasswordModal(true);
+        } else {
+          navigate(role.route);
+        }
       } else {
         setError(data.error || 'Login failed');
       }
@@ -298,6 +309,16 @@ export default function LoginPage() {
           </CardContent>
         </Card>
       </div>
+
+      <ChangePasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => navigate(pendingRoleRoute)}
+        onSuccess={() => {
+          setShowPasswordModal(false);
+          navigate(pendingRoleRoute);
+        }}
+        userEmail={userEmail}
+      />
     </div>
   );
 }

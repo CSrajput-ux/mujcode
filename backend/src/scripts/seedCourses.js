@@ -177,6 +177,56 @@ const courses = [
         difficulty: 'Hard',
         totalProblems: 140,
         icon: 'code'
+    },
+
+    // Additional Courses
+    {
+        title: 'Operating Systems Concepts',
+        description: 'Learn OS fundamentals - processes, threads, synchronization, memory management, and file systems.',
+        category: 'DSA',
+        difficulty: 'Medium',
+        totalProblems: 100,
+        icon: 'code'
+    },
+    {
+        title: 'Computer Networks',
+        description: 'Master networking concepts - OSI model, TCP/IP, routing, protocols, and network security.',
+        category: 'DSA',
+        difficulty: 'Medium',
+        totalProblems: 100,
+        icon: 'code'
+    },
+    {
+        title: 'Machine Learning Basics',
+        description: 'Introduction to ML algorithms, data preprocessing, and model evaluation using Python.',
+        category: 'Python',
+        difficulty: 'Hard',
+        totalProblems: 100,
+        icon: 'code'
+    },
+    {
+        title: 'OOP Concepts',
+        description: 'Master Object-Oriented Programming principles - encapsulation, inheritance, polymorphism, and abstraction.',
+        category: 'Java',
+        difficulty: 'Medium',
+        totalProblems: 120,
+        icon: 'code'
+    },
+    {
+        title: 'Competitive Programming',
+        description: 'Advanced problem solving techniques for competitive programming contests.',
+        category: 'DSA',
+        difficulty: 'Hard',
+        totalProblems: 150,
+        icon: 'code'
+    },
+    {
+        title: 'Web Development Basics',
+        description: 'Learn HTML, CSS, and JavaScript fundamentals for web development.',
+        category: 'JavaScript',
+        difficulty: 'Easy',
+        totalProblems: 120,
+        icon: 'globe'
     }
 ];
 

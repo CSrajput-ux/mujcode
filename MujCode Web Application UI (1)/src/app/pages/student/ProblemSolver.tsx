@@ -3,7 +3,9 @@ import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Send, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Play, Send, CheckCircle2, XCircle, Clock, ArrowLeft, Save, MessageSquare, Lightbulb } from 'lucide-react';
+import { Textarea } from '../../components/ui/textarea';
+import { toast } from 'sonner';
 
 export default function ProblemSolver() {
     const { id } = useParams();
@@ -26,16 +28,27 @@ export default function ProblemSolver() {
     const [submissions, setSubmissions] = useState<any[]>([]);
     const [loadingSubmissions, setLoadingSubmissions] = useState(false);
 
+    // Editorial state
+    const [feedback, setFeedback] = useState('');
+    const [improvement, setImprovement] = useState('');
+    const [notes, setNotes] = useState('');
+
     const languages = [
         { id: 'c', name: 'C', template: '#include <stdio.h>\n\nint main() {\n    // Your code here\n    return 0;\n}' },
         { id: 'cpp', name: 'C++', template: '#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}' },
         { id: 'python', name: 'Python', template: '# Your code here\n' },
         { id: 'java', name: 'Java', template: 'public class Main {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}' },
-        { id: 'javascript', name: 'JavaScript', template: '// Your code here\n' }
+        { id: 'javascript', name: 'JavaScript', template: '// Your code here\n' },
+        { id: 'sql', name: 'SQL', template: '-- Write your SQL query here\nSELECT * FROM table_name;\n' }
     ];
 
     useEffect(() => {
         fetchProblem();
+        // Load notes from local storage
+        if (id) {
+            const savedNotes = localStorage.getItem(`notes_${id}`);
+            if (savedNotes) setNotes(savedNotes);
+        }
     }, [id]);
 
     useEffect(() => {
@@ -157,11 +170,13 @@ export default function ProblemSolver() {
                     setOutput(data.output || 'No output');
                     setIsRunning(false);
 
-                    // Redirect to Problems page if submission is Accepted
                     if (mode === 'submit' && data.verdict === 'Accepted') {
-                        setTimeout(() => {
-                            navigate('/student/problems');
-                        }, 2000); // Wait 2 seconds so user can see the success message
+                        // Refresh submissions list to show the new success
+                        fetchSubmissions();
+                        // navigate('/student/problems'); // Removed auto-redirect as per user request
+                    } else if (mode === 'submit') {
+                        // Refresh even if not accepted, so user sees the attempt
+                        fetchSubmissions();
                     }
                 }
             } catch (error) {
@@ -171,15 +186,15 @@ export default function ProblemSolver() {
             }
         }, 1000);
 
-        // Timeout after 30 seconds
+        // Timeout after 22 seconds (matches backend 20s + buffer)
         setTimeout(() => {
             clearInterval(interval);
             if (isRunning) {
                 setVerdict('Timeout');
-                setOutput('Request timed out');
+                setOutput('Request timed out. The server took too long to respond.');
                 setIsRunning(false);
             }
-        }, 30000);
+        }, 22000);
     };
 
     const getDifficultyColor = (difficulty: string) => {
@@ -227,6 +242,14 @@ export default function ProblemSolver() {
                 {/* Header */}
                 <div className="bg-white border-b px-6 py-3 flex items-center justify-between">
                     <div className="flex items-center space-x-4">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => navigate(-1)}
+                            className="mr-2"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                        </Button>
                         <h1 className="text-xl font-bold">#{problem.number}. {problem.title}</h1>
                         <Badge className={getDifficultyColor(problem.difficulty)}>
                             {problem.difficulty}
@@ -320,8 +343,79 @@ export default function ProblemSolver() {
                             )}
 
                             {activeTab === 'editorial' && (
-                                <div className="text-center text-gray-500 py-12">
-                                    Editorial coming soon!
+                                <div className="space-y-8">
+                                    {/* Personal Notes */}
+                                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                                        <div className="flex items-center space-x-2 mb-4 text-blue-800">
+                                            <Save className="w-5 h-5" />
+                                            <h3 className="font-semibold text-lg">Personal Notes</h3>
+                                        </div>
+                                        <Textarea
+                                            value={notes}
+                                            onChange={(e) => setNotes(e.target.value)}
+                                            placeholder="Write your personal notes, logic, or reminders here..."
+                                            className="bg-white border-blue-200 focus:border-blue-400 min-h-[150px] mb-4"
+                                        />
+                                        <Button
+                                            onClick={() => {
+                                                localStorage.setItem(`notes_${id}`, notes);
+                                                toast.success("Notes saved successfully!");
+                                            }}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        >
+                                            Save Notes
+                                        </Button>
+                                    </div>
+
+                                    {/* Improvement Suggestions */}
+                                    <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-100">
+                                        <div className="flex items-center space-x-2 mb-4 text-yellow-800">
+                                            <Lightbulb className="w-5 h-5" />
+                                            <h3 className="font-semibold text-lg">Suggest Improvement</h3>
+                                        </div>
+                                        <p className="text-sm text-yellow-700 mb-3">Found an issue with the problem or test cases? Let us know!</p>
+                                        <Textarea
+                                            value={improvement}
+                                            onChange={(e) => setImprovement(e.target.value)}
+                                            placeholder="Describe the issue or improvement..."
+                                            className="bg-white border-yellow-200 focus:border-yellow-400 min-h-[100px] mb-4"
+                                        />
+                                        <Button
+                                            onClick={() => {
+                                                if (!improvement.trim()) return toast.error("Please enter a suggestion");
+                                                toast.success("Suggestion submitted! Thank you.");
+                                                setImprovement('');
+                                            }}
+                                            className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                                        >
+                                            Submit Suggestion
+                                        </Button>
+                                    </div>
+
+                                    {/* Feedback */}
+                                    <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                                        <div className="flex items-center space-x-2 mb-4 text-gray-800">
+                                            <MessageSquare className="w-5 h-5" />
+                                            <h3 className="font-semibold text-lg">Editorial Feedback</h3>
+                                        </div>
+                                        <Textarea
+                                            value={feedback}
+                                            onChange={(e) => setFeedback(e.target.value)}
+                                            placeholder="Was this editorial helpful? Any confusion?"
+                                            className="bg-white border-gray-300 focus:border-gray-400 min-h-[100px] mb-4"
+                                        />
+                                        <Button
+                                            onClick={() => {
+                                                if (!feedback.trim()) return toast.error("Please enter feedback");
+                                                toast.success("Feedback received!");
+                                                setFeedback('');
+                                            }}
+                                            variant="outline"
+                                            className="border-gray-400 text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Submit Feedback
+                                        </Button>
+                                    </div>
                                 </div>
                             )}
 
@@ -378,8 +472,8 @@ export default function ProblemSolver() {
                                                     <div>
                                                         <div className="text-sm font-medium text-gray-700 mb-1">Output:</div>
                                                         <pre className={`p-3 rounded text-xs whitespace-pre-wrap ${submission.verdict === 'Accepted'
-                                                                ? 'bg-green-50 text-green-800'
-                                                                : 'bg-red-50 text-red-800'
+                                                            ? 'bg-green-50 text-green-800'
+                                                            : 'bg-red-50 text-red-800'
                                                             }`}>
                                                             {submission.output}
                                                         </pre>

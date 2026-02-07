@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import {
-  Code2,
   Users,
   Building2,
   FileText,
@@ -18,7 +17,7 @@ import {
   X
 } from 'lucide-react';
 import { useState } from 'react';
-import logoImage from '../../../assets/image-removebg-preview.png';
+import logoImage from '@/assets/image-removebg-preview.png';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();

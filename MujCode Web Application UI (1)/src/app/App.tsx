@@ -11,8 +11,13 @@ import StudentAssignments from './pages/student/Assignments';
 import ProblemSolver from './pages/student/ProblemSolver';
 import CourseDetail from './pages/student/CourseDetail';
 import FacultyDashboard from './pages/faculty/Dashboard';
+import FacultyTests from './pages/faculty/FacultyTests';
+import FacultyAssignments from './pages/faculty/FacultyAssignments';
+import FacultyReports from './pages/faculty/FacultyReports';
+import FacultyActivity from './pages/faculty/FacultyActivity';
 import AdminDashboard from './pages/admin/Dashboard';
 import CompanyDashboard from './pages/company/Dashboard';
+import FacultyLayout from './components/faculty/FacultyLayout';
 
 export default function App() {
   return (
@@ -27,13 +32,24 @@ export default function App() {
         <Route path="/student/courses/:courseId" element={<CourseDetail />} />
         <Route path="/student/problems" element={<StudentProblems />} />
         <Route path="/student/problems/:id" element={<ProblemSolver />} />
+        <Route path="/student/problem/:id" element={<ProblemSolver />} /> {/* Case-insensitive singular route support */}
         <Route path="/student/analytics" element={<StudentAnalytics />} />
         <Route path="/student/tests" element={<StudentTests />} />
         <Route path="/student/learning" element={<StudentLearning />} />
         <Route path="/student/assignments" element={<StudentAssignments />} />
 
         {/* Faculty Routes */}
-        <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
+        <Route path="/faculty/*" element={
+          <FacultyLayout>
+            <Routes>
+              <Route path="dashboard" element={<FacultyDashboard />} />
+              <Route path="tests" element={<FacultyTests />} />
+              <Route path="assignments" element={<FacultyAssignments />} />
+              <Route path="reports" element={<FacultyReports />} />
+              <Route path="activity" element={<FacultyActivity />} />
+            </Routes>
+          </FacultyLayout>
+        } />
 
         {/* Admin Routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

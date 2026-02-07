@@ -26,15 +26,15 @@ export default function YearlyActivity() {
                     return;
                 }
 
-                const res = await fetch(`http://localhost:5000/api/student/activity/${userId}`);
+                const res = await fetch(`http://localhost:5000/api/student/heatmap/${userId}`);
                 const data = await res.json();
 
-                if (res.ok && data.activity) {
+                if (res.ok && Array.isArray(data)) {
                     // Convert activity array to record for easy lookup
                     const activityMap: Record<string, number> = {};
-                    data.activity.forEach((item: any) => {
-                        const dateStr = format(new Date(item.date), 'yyyy-MM-dd');
-                        activityMap[dateStr] = item.count;
+                    data.forEach((item: any) => {
+                        // item.date is YYYY-MM-DD string
+                        activityMap[item.date] = item.count;
                     });
                     setActivityData(activityMap);
                 }

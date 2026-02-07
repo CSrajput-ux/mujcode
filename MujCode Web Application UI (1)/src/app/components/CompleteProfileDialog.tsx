@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -27,6 +27,37 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
         course: '',
         department: ''
     });
+
+    // Fetch existing profile data when dialog opens
+    useEffect(() => {
+        if (open) {
+            const fetchProfile = async () => {
+                try {
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    const userId = user.id;
+
+                    if (!userId) return;
+
+                    const res = await fetch(`http://localhost:5000/api/student/profile/${userId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.profile) {
+                            setFormData({
+                                section: data.profile.section || '',
+                                branch: data.profile.branch || '',
+                                year: data.profile.year ? data.profile.year.toString() : '',
+                                course: data.profile.course || '',
+                                department: data.profile.department || ''
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching profile:', error);
+                }
+            };
+            fetchProfile();
+        }
+    }, [open]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

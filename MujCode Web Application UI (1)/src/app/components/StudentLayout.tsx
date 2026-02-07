@@ -12,13 +12,14 @@ import {
   Menu,
   X,
   Shield,
-  Ticket
+  Ticket,
+  UserCircle
 } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from './ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import CompleteProfileDialog from './CompleteProfileDialog';
-import logoImage from '../../assets/image-removebg-preview.png';
+import EditProfileModal from './EditProfileModal';
+import logoImage from '@/assets/image-removebg-preview.png';
 
 interface StudentLayoutProps {
   children: ReactNode;
@@ -29,6 +30,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
 
   const refreshProfile = () => {
@@ -44,9 +46,6 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
     { icon: <GraduationCap className="w-5 h-5" />, label: 'Learning', path: '/student/learning' },
     { icon: <ClipboardList className="w-5 h-5" />, label: 'Assignments', path: '/student/assignments' },
   ];
-  const getFirstName = (fullName: string) => {
-    return fullName.split(' ')[0];
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -72,44 +71,47 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                 <div className="flex items-center space-x-4 cursor-pointer hover:opacity-80 transition-opacity">
                   <div className="text-right hidden sm:block">
                     <div className="text-sm font-medium text-gray-900">
-                      {JSON.parse(localStorage.getItem('user') || '{}').name?.split(' ')[0] || 'Student'}
+                      {userProfile.name?.split(' ')[0] || 'Student'}
                     </div>
                     <div className="text-xs text-gray-500">
                       ID: {(() => {
-                        const email = JSON.parse(localStorage.getItem('user') || '{}').email || '';
+                        const email = userProfile.email || '';
                         const match = email.match(/\.(\d+)@/);
                         return match ? match[1] : '---';
                       })()}
                     </div>
                   </div>
-                  <div className="w-10 h-10 bg-[#FF7A00] rounded-full flex items-center justify-center text-white font-semibold">
-                    {JSON.parse(localStorage.getItem('user') || '{}').name ? JSON.parse(localStorage.getItem('user') || '{}').name.split(' ')[0].charAt(0).toUpperCase() : 'U'}
+                  <div className="w-10 h-10 bg-[#FF7A00] rounded-full flex items-center justify-center text-white font-semibold shadow-inner">
+                    {userProfile.name ? userProfile.name.split(' ')[0].charAt(0).toUpperCase() : 'U'}
                   </div>
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="w-80 p-0 mr-4" align="end">
+              <PopoverContent className="w-80 p-0 mr-4 shadow-2xl border-none" align="end">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-[#FF7A00] to-[#FF5500] p-6 text-white rounded-t-md">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold backdrop-blur-sm">
-                      {JSON.parse(localStorage.getItem('user') || '{}').name ? JSON.parse(localStorage.getItem('user') || '{}').name.split(' ')[0].charAt(0).toUpperCase() : 'U'}
+                <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white rounded-t-md relative overflow-hidden">
+                  <div className="absolute -right-4 -bottom-4 opacity-10">
+                    <GraduationCap className="w-24 h-24" />
+                  </div>
+                  <div className="flex items-center space-x-3 relative z-10">
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold backdrop-blur-md shadow-sm">
+                      {userProfile.name ? userProfile.name.split(' ')[0].charAt(0).toUpperCase() : 'U'}
                     </div>
                     <div className="overflow-hidden">
-                      <h3 className="font-semibold text-lg truncate">{JSON.parse(localStorage.getItem('user') || '{}').name?.split(' ')[0] || 'Student'}</h3>
-                      <p className="text-white/80 text-xs truncate">{JSON.parse(localStorage.getItem('user') || '{}').email || 'No Email'}</p>
+                      <h3 className="font-semibold text-lg truncate leading-tight">{userProfile.name?.split(' ')[0] || 'Student'}</h3>
+                      <p className="text-white/80 text-xs truncate">{userProfile.email || 'No Email'}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Body */}
-                <div className="p-4 space-y-2">
-                  <div className="flex items-center justify-between text-sm p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                <div className="p-4 space-y-1">
+                  <div className="flex items-center justify-between text-sm p-2 hover:bg-gray-50 rounded-lg transition-colors group">
                     <div className="flex items-center space-x-3 text-gray-600">
                       <Shield className="w-4 h-4" />
                       <span>Role</span>
                     </div>
-                    <span className="font-medium capitalize bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-xs">
-                      {JSON.parse(localStorage.getItem('user') || '{}').role || 'Student'}
+                    <span className="font-medium capitalize bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-[10px] tracking-wide">
+                      {userProfile.role || 'Student'}
                     </span>
                   </div>
 
@@ -118,9 +120,9 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                       <Ticket className="w-4 h-4" />
                       <span>College ID</span>
                     </div>
-                    <span className="font-mono text-gray-900 text-xs">
+                    <span className="font-mono text-gray-900 text-xs font-semibold">
                       {(() => {
-                        const email = JSON.parse(localStorage.getItem('user') || '{}').email || '';
+                        const email = userProfile.email || '';
                         const match = email.match(/\.(\d+)@/);
                         return match ? match[1] : '---';
                       })()}
@@ -128,38 +130,46 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                   </div>
 
                   {/* Profile Info Section */}
-                  {userProfile.section && (
-                    <div className="px-4 py-2 space-y-2 border-t  border-gray-100">
-                      <div className="flex items-center justify-between text-xs p-2 hover:bg-gray-50 rounded-lg">
-                        <span className="text-gray-600">Branch</span>
-                        <span className="font-medium text-gray-900">{userProfile.branch || '---'}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs p-2 hover:bg-gray-50 rounded-lg">
-                        <span className="text-gray-600">Section</span>
-                        <span className="font-medium text-gray-900">{userProfile.section || '---'}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs p-2 hover:bg-gray-50 rounded-lg">
-                        <span className="text-gray-600">Year</span>
-                        <span className="font-medium text-gray-900">{userProfile.year ? `${userProfile.year}${userProfile.year === '1' ? 'st' : userProfile.year === '2' ? 'nd' : userProfile.year === '3' ? 'rd' : 'th'} Year` : '---'}</span>
-                      </div>
+                  <div className="py-2 mt-2 space-y-1 border-t border-gray-100">
+                    <div className="flex items-center justify-between text-xs p-2 rounded-lg text-gray-700">
+                      <span>Branch</span>
+                      <span className="font-semibold text-gray-900">{userProfile.branch || '---'}</span>
                     </div>
-                  )}
+                    <div className="flex items-center justify-between text-xs p-2 rounded-lg text-gray-700">
+                      <span>Section</span>
+                      <span className="font-semibold text-gray-900">{userProfile.section || '---'}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs p-2 rounded-lg text-gray-700">
+                      <span>Year</span>
+                      <span className="font-semibold text-gray-900">
+                        {userProfile.year ? `${userProfile.year}${['st', 'nd', 'rd'][userProfile.year - 1] || 'th'} Year` : '---'}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Footer */}
-                <div className="p-2 space-y-1">
-                  {!userProfile.section && (
+                <div className="p-3 bg-gray-50/50 space-y-2 border-t border-gray-100">
+                  {!userProfile.section ? (
                     <button
                       onClick={() => setProfileDialogOpen(true)}
-                      className="w-full flex items-center justify-center space-x-2 bg-[#FF7A00] text-white hover:bg-[#E66D00] py-2.5 rounded-lg transition-colors text-sm font-medium"
+                      className="w-full flex items-center justify-center space-x-2 bg-orange-600 text-white hover:bg-orange-700 py-2.5 rounded-lg transition-all text-sm font-semibold shadow-md active:scale-95"
                     >
                       <Shield className="w-4 h-4" />
                       <span>Complete Profile</span>
                     </button>
+                  ) : (
+                    <button
+                      onClick={() => setEditProfileOpen(true)}
+                      className="w-full flex items-center justify-center space-x-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 py-2.5 rounded-lg transition-all text-sm font-semibold shadow-sm active:scale-95"
+                    >
+                      <UserCircle className="w-4 h-4 text-orange-500" />
+                      <span>Edit Profile</span>
+                    </button>
                   )}
                   <button
                     onClick={() => navigate('/')}
-                    className="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-50 py-2.5 rounded-lg transition-colors text-sm font-medium"
+                    className="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-50 py-2.5 rounded-lg transition-colors text-sm font-semibold"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Sign Out</span>
@@ -227,10 +237,16 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
         />
       )}
 
-      {/* Complete Profile Dialog */}
+      {/* Profile Dialogs */}
       <CompleteProfileDialog
         open={profileDialogOpen}
         onOpenChange={setProfileDialogOpen}
+        onSuccess={refreshProfile}
+      />
+
+      <EditProfileModal
+        open={editProfileOpen}
+        onOpenChange={setEditProfileOpen}
         onSuccess={refreshProfile}
       />
     </div>

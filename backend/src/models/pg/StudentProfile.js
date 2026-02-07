@@ -29,6 +29,14 @@ const StudentProfile = sequelize.define('StudentProfile', {
     year: {
         type: DataTypes.INTEGER // e.g., 1, 2, 3, 4
     },
+    course: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    department: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     cgpa: {
         type: DataTypes.FLOAT,
         defaultValue: 0.0

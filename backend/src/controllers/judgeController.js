@@ -3,21 +3,46 @@ const { addSubmissionToQueue } = require('../services/queueService');
 
 exports.submitCode = async (req, res) => {
     try {
-        // Frontend se 'mode' aayega ('run' ya 'submit')
-        // 'userInput' tab aayega jab user khud ka input dekar Run karega
         const { userId, problemId, code, language, mode, userInput } = req.body;
 
-        // 1. Submission Entry Create karo
+        // DEDUPLICATION: If this code is already Accepted, return the existing submission.
+        // This prevents duplicate entries for the EXACT same code.
+        if (mode === 'submit') {
+            const existingSubmission = await Submission.findOne({
+                userId,
+                problemId: String(problemId),
+                code,
+                verdict: 'Accepted' // Only deduplicate if it was actually correct
+            });
+
+            if (existingSubmission) {
+                console.log(`♻️  Found existing accepted submission for user ${userId}, Problem ${problemId}`);
+
+                // Log activity even for duplicate submissions (User active today)
+                const activityService = require('../services/activityService');
+                await activityService.logActivity(userId);
+
+                return res.status(200).json({
+                    message: "Code already submitted and accepted",
+                    submissionId: existingSubmission._id,
+                    status: "Accepted" // Instant success
+                });
+            }
+        }
+
+        // Create Submission Entry
+        // IMPORTANT: We save it initially to track status via polling. 
+        // Filter logic in getUserSubmissions ensures "Run" or "Failed" attempts don't clutter history.
         const submission = await Submission.create({
             userId,
-            problemId,
+            problemId: String(problemId), // Ensure string
             code,
             language,
-            mode: mode || 'submit', // Default submit
+            mode: mode || 'submit',
             verdict: 'Pending'
         });
 
-        // 2. Queue mein job add karo
+        // Add to Queue
         await addSubmissionToQueue({
             submissionId: submission._id,
             userId,
@@ -25,7 +50,7 @@ exports.submitCode = async (req, res) => {
             code,
             language,
             mode: mode || 'submit',
-            userInput: userInput || '' // Custom input for 'run' mode
+            userInput: userInput || ''
         });
 
         res.status(200).json({
@@ -44,7 +69,6 @@ exports.submitCode = async (req, res) => {
 exports.getSubmissionStatus = async (req, res) => {
     try {
         const { submissionId } = req.params;
-
         const submission = await Submission.findById(submissionId);
 
         if (!submission) {
@@ -70,14 +94,17 @@ exports.getUserSubmissions = async (req, res) => {
     try {
         const { userId, problemId } = req.params;
 
+        // STRICT FILTERING: Only show 'submit' mode AND 'Accepted' verdict
+        // This satisfies the requirement: "Save/Show submissions ONLY on Successful Submit"
         const submissions = await Submission.find({
-            userId: parseInt(userId),
-            problemId: problemId,
-            mode: 'submit' // Only show actual submissions, not test runs
+            userId: String(userId),
+            problemId: String(problemId),
+            mode: 'submit',
+            verdict: 'Accepted'
         })
-            .sort({ createdAt: -1 }) // Latest first
-            .limit(20) // Limit to last 20 submissions
-            .select('code language verdict output createdAt');
+            .sort({ createdAt: -1 })
+            .limit(20)
+            .select('code language verdict output createdAt executionTime memoryUsed');
 
         res.status(200).json({
             submissions: submissions || []

@@ -33,35 +33,36 @@ export default function Courses() {
 
       // Try student-specific endpoint first, fallback to general courses
       let apiUrl = `http://localhost:5000/api/student/courses/${studentId}`;
-      console.log('Fetching courses from:', apiUrl);
+      console.log('🔍 Fetching courses for student:', studentId, 'from:', apiUrl);
 
       let res = await fetch(apiUrl);
-      console.log('Response status:', res.status);
+      console.log('📊 Response status:', res.status);
 
       // If student endpoint fails, try getting all courses
       if (!res.ok) {
-        console.log('Student endpoint failed, trying general courses endpoint...');
+        console.warn('⚠️ Student endpoint failed, trying general courses endpoint...');
         apiUrl = 'http://localhost:5000/api/student/courses';
         res = await fetch(apiUrl);
       }
 
       const data = await res.json();
-      console.log('Response data:', data);
+      console.log('📦 Received courses data:', data);
 
-      if (res.ok) {
+      if (res.ok && data.courses) {
         // Ensure all courses have progress data (default to 0 for non-enrolled)
-        const coursesWithDefaults = (data.courses || []).map((course: any) => ({
+        const coursesWithDefaults = data.courses.map((course: any) => ({
           ...course,
           progress: course.progress || 0,
           problemsSolved: course.problemsSolved || 0,
           status: course.status || 'not-started',
           enrolled: course.enrolled || false
         }));
-        console.log('Courses received:', coursesWithDefaults.length);
+        console.log('✅ Final courses list:', coursesWithDefaults.length);
         setCourses(coursesWithDefaults);
         setFilteredCourses(coursesWithDefaults);
       } else {
-        console.error('API error:', data);
+        console.error('❌ Failed to load courses or empty data:', data);
+        setCourses([]);
       }
       setLoading(false);
     } catch (error) {

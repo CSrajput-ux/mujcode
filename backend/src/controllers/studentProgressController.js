@@ -35,6 +35,80 @@ exports.getStudentStats = async (req, res) => {
     }
 };
 
+// Get user problem stats (Real-time aggregation)
+exports.getUserProblemStats = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const Submission = require('../models/mongo/Submission');
+
+        // Aggregation Pipeline
+        const stats = await Submission.aggregate([
+            // 1. Match User's Accepted Submissions
+            {
+                $match: {
+                    userId: String(userId), // Ensure string match
+                    verdict: 'Accepted',
+                    mode: 'submit'
+                }
+            },
+            // 2. Group by problemId to get DISTINCT solved problems
+            {
+                $group: {
+                    _id: "$problemId"
+                }
+            },
+            // 3. Convert problemId (String) to Number for Lookup
+            {
+                $addFields: {
+                    problemNum: { $toInt: "$_id" }
+                }
+            },
+            // 4. Lookup Problem details to get difficulty
+            {
+                $lookup: {
+                    from: "problems", // Collection name (usually plural lowercase)
+                    localField: "problemNum",
+                    foreignField: "number",
+                    as: "problemInfo"
+                }
+            },
+            // 5. Unwind to verify problem exists
+            {
+                $unwind: "$problemInfo"
+            },
+            // 6. Group by Difficulty
+            {
+                $group: {
+                    _id: { $toLower: "$problemInfo.difficulty" },
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const result = {
+            solved: {
+                easy: 0,
+                medium: 0,
+                hard: 0
+            },
+            totalSolved: 0
+        };
+
+        stats.forEach(item => {
+            if (item._id === 'easy') result.solved.easy = item.count;
+            if (item._id === 'medium') result.solved.medium = item.count;
+            if (item._id === 'hard') result.solved.hard = item.count;
+        });
+
+        result.totalSolved = result.solved.easy + result.solved.medium + result.solved.hard;
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('User Stats Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // Get student rankings
 exports.getStudentRankings = async (req, res) => {
     try {
@@ -138,6 +212,23 @@ exports.getStudentActivity = async (req, res) => {
         }
 
         res.status(200).json({ activity: progress.activityMap });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Get student activity heatmap (New Activity Collection)
+exports.getHeatmap = async (req, res) => {
+    try {
+        const { activityService } = require('../services/activityService');
+        // Require here or at top. Using require at top is better, but local for now to avoid breaking changes if service needs lazy load.
+        // Actually, let's fix imports properly.
+        const service = require('../services/activityService');
+
+        const { studentId } = req.params;
+        const data = await service.getActivityHeatmap(studentId);
+
+        res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

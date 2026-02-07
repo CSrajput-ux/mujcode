@@ -4,12 +4,9 @@ import { useState, useEffect } from 'react';
 
 export default function StudentStats() {
     const [loading, setLoading] = useState(true);
-    const [solved, setSolved] = useState({
-        easy: 0,
-        medium: 0,
-        hard: 0,
-        total: 0,
-        totalQuestions: 500
+    const [stats, setStats] = useState({
+        solved: { easy: 0, medium: 0, hard: 0, total: 0 },
+        total: { easy: 0, medium: 0, hard: 0, count: 0 }
     });
     const [badges, setBadges] = useState<any[]>([]);
 
@@ -24,17 +21,34 @@ export default function StudentStats() {
                     return;
                 }
 
-                // Fetch stats
-                const statsRes = await fetch(`http://localhost:5000/api/student/stats/${userId}`);
-                const statsData = await statsRes.json();
+                // Parallel Fetch: User Stats + Global Problem Stats
+                const [userStatsRes, globalStatsRes, badgesRes] = await Promise.all([
+                    fetch(`http://localhost:5000/api/student/problem-stats/${userId}`),
+                    fetch(`http://localhost:5000/api/problems/stats`),
+                    fetch(`http://localhost:5000/api/student/badges/${userId}`)
+                ]);
 
-                if (statsRes.ok && statsData.solved) {
-                    setSolved({ ...statsData.solved, totalQuestions: 500 });
-                }
-
-                // Fetch badges
-                const badgesRes = await fetch(`http://localhost:5000/api/student/badges/${userId}`);
+                const userStats = await userStatsRes.json();
+                const globalStats = await globalStatsRes.json();
                 const badgesData = await badgesRes.json();
+
+                // Calculate Totals
+                const totalGlobal = (globalStats.total.easy || 0) + (globalStats.total.medium || 0) + (globalStats.total.hard || 0);
+
+                setStats({
+                    solved: {
+                        easy: userStats.solved.easy || 0,
+                        medium: userStats.solved.medium || 0,
+                        hard: userStats.solved.hard || 0,
+                        total: userStats.totalSolved || 0
+                    },
+                    total: {
+                        easy: globalStats.total.easy || 0,
+                        medium: globalStats.total.medium || 0,
+                        hard: globalStats.total.hard || 0,
+                        count: totalGlobal || 1 // Avoid division by zero
+                    }
+                });
 
                 if (badgesRes.ok) {
                     setBadges(badgesData.badges || []);
@@ -42,7 +56,7 @@ export default function StudentStats() {
 
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching student stats:', error);
+                console.error('Error fetching stats:', error);
                 setLoading(false);
             }
         };
@@ -50,15 +64,11 @@ export default function StudentStats() {
         fetchData();
     }, []);
 
-    const totalEasy = 150;
-    const totalMedium = 200;
-    const totalHard = 150;
-
     // Calculate percentages
-    const easyPct = (solved.easy / totalEasy) * 100;
-    const medPct = (solved.medium / totalMedium) * 100;
-    const hardPct = (solved.hard / totalHard) * 100;
-    const totalPct = (solved.total / solved.totalQuestions) * 100;
+    const easyPct = (stats.solved.easy / (stats.total.easy || 1)) * 100;
+    const medPct = (stats.solved.medium / (stats.total.medium || 1)) * 100;
+    const hardPct = (stats.solved.hard / (stats.total.hard || 1)) * 100;
+    const totalPct = (stats.solved.total / stats.total.count) * 100;
 
     // Circular Progress Component
     const CircularProgress = ({ value, color, size = 120, strokeWidth = 8 }: { value: number, color: string, size?: number, strokeWidth?: number }) => {
@@ -136,38 +146,56 @@ export default function StudentStats() {
                         <div className="relative flex flex-col items-center justify-center">
                             <CircularProgress value={totalPct} color="text-[#FF7A00]" size={160} strokeWidth={12} />
                             <div className="absolute flex flex-col items-center text-center">
-                                <span className="text-4xl font-bold text-gray-900">{solved.total}</span>
+                                <span className="text-4xl font-bold text-gray-900">{stats.solved.total}</span>
                                 <span className="text-xs text-green-500 flex items-center gap-1">
                                     <CheckCircle2 className="w-3 h-3" /> Solved
                                 </span>
-                                <span className="text-xs text-gray-400 mt-1">0 Attempting</span>
+                                <span className="text-xs text-gray-400 mt-1">out of {stats.total.count}</span>
                             </div>
                         </div>
 
                         {/* Breakdown - Easy/Med/Hard Stats */}
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-3 min-w-[140px]">
                             {/* Easy */}
-                            <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-2 min-w-[100px]">
-                                <div className="text-sm font-medium text-green-600">Easy</div>
-                                <div className="font-bold">
-                                    <span className="text-green-600">{solved.easy}</span>
-                                    <span className="text-gray-400">/{totalEasy}</span>
+                            <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-2">
+                                <div className="text-sm font-medium text-green-600 flex justify-between">
+                                    <span>Easy</span>
+                                    <span className="text-xs opacity-70">{(easyPct || 0).toFixed(1)}%</span>
+                                </div>
+                                <div className="font-bold flex items-baseline gap-1">
+                                    <span className="text-green-600 text-lg">{stats.solved.easy}</span>
+                                    <span className="text-gray-400 text-sm">/ {stats.total.easy}</span>
+                                </div>
+                                <div className="w-full bg-green-200 h-1.5 rounded-full mt-1">
+                                    <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${easyPct}%` }}></div>
                                 </div>
                             </div>
                             {/* Medium */}
-                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2 min-w-[100px]">
-                                <div className="text-sm font-medium text-yellow-600">Med.</div>
-                                <div className="font-bold">
-                                    <span className="text-yellow-600">{solved.medium}</span>
-                                    <span className="text-gray-400">/{totalMedium}</span>
+                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2">
+                                <div className="text-sm font-medium text-yellow-600 flex justify-between">
+                                    <span>Medium</span>
+                                    <span className="text-xs opacity-70">{(medPct || 0).toFixed(1)}%</span>
+                                </div>
+                                <div className="font-bold flex items-baseline gap-1">
+                                    <span className="text-yellow-600 text-lg">{stats.solved.medium}</span>
+                                    <span className="text-gray-400 text-sm">/ {stats.total.medium}</span>
+                                </div>
+                                <div className="w-full bg-yellow-200 h-1.5 rounded-full mt-1">
+                                    <div className="bg-yellow-500 h-1.5 rounded-full" style={{ width: `${medPct}%` }}></div>
                                 </div>
                             </div>
                             {/* Hard */}
-                            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2 min-w-[100px]">
-                                <div className="text-sm font-medium text-red-600">Hard</div>
-                                <div className="font-bold">
-                                    <span className="text-red-600">{solved.hard}</span>
-                                    <span className="text-gray-400">/{totalHard}</span>
+                            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2">
+                                <div className="text-sm font-medium text-red-600 flex justify-between">
+                                    <span>Hard</span>
+                                    <span className="text-xs opacity-70">{(hardPct || 0).toFixed(1)}%</span>
+                                </div>
+                                <div className="font-bold flex items-baseline gap-1">
+                                    <span className="text-red-600 text-lg">{stats.solved.hard}</span>
+                                    <span className="text-gray-400 text-sm">/ {stats.total.hard}</span>
+                                </div>
+                                <div className="w-full bg-red-200 h-1.5 rounded-full mt-1">
+                                    <div className="bg-red-500 h-1.5 rounded-full" style={{ width: `${hardPct}%` }}></div>
                                 </div>
                             </div>
                         </div>

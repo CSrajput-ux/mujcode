@@ -121,21 +121,23 @@ exports.getCourseDetails = async (req, res) => {
             return res.status(404).json({ error: 'Course not found' });
         }
 
-        // Map course category to problem category
-        const problemCategory = categoryToProblemsMapping[course.category] || course.category;
-        console.log('Looking for problems with category:', problemCategory);
-
-        // Get problems for this course category
+        // Get problems for this courseId (using our new courseId field)
         const Problem = require('../models/mongo/Problem');
-        const problems = await Problem.find({ category: problemCategory }).sort({ number: 1 });
-        console.log('Found problems:', problems.length);
+        const Submission = require('../models/mongo/Submission');
+
+        const problems = await Problem.find({ courseId: courseId }).sort({ number: 1 });
+        console.log(`Found ${problems.length} problems for course: ${course.title}`);
 
         // Get user's solved problems if studentId provided
-        let solvedProblems = [];
+        let solvedProblemIds = [];
         if (studentId) {
-            const StudentProgress = require('../models/mongo/StudentProgress');
-            const progress = await StudentProgress.findOne({ userId: studentId });
-            solvedProblems = progress?.solvedProblemIds || [];
+            const acceptedSubmissions = await Submission.find({
+                userId: parseInt(studentId),
+                verdict: 'Accepted'
+            }).select('problemId');
+
+            solvedProblemIds = acceptedSubmissions.map(sub => sub.problemId);
+            console.log(`Student ${studentId} has solved: ${solvedProblemIds.length} problems`);
         }
 
         // Map problems with solved status
@@ -145,9 +147,20 @@ exports.getCourseDetails = async (req, res) => {
             title: problem.title,
             difficulty: problem.difficulty,
             category: problem.category,
+            topic: problem.topic,
             points: problem.points,
-            solved: solvedProblems.includes(problem.number)
+            status: solvedProblemIds.includes(problem.number.toString()) ? 'solved' : 'todo'
         }));
+
+        // Get user's enrollment status
+        let enrollmentInfo = null;
+        if (studentId) {
+            const UserCourse = require('../models/mongo/UserCourse');
+            enrollmentInfo = await UserCourse.findOne({
+                userId: parseInt(studentId),
+                courseId: courseId
+            });
+        }
 
         res.status(200).json({
             course: {
@@ -157,11 +170,14 @@ exports.getCourseDetails = async (req, res) => {
                 category: course.category,
                 difficulty: course.difficulty,
                 totalProblems: course.totalProblems,
-                icon: course.icon
+                icon: course.icon,
+                enrolled: !!enrollmentInfo,
+                progress: enrollmentInfo?.progress || 0,
+                problemsSolved: enrollmentInfo?.problemsSolved || 0
             },
             problems: problemsWithStatus,
             totalProblems: problemsWithStatus.length,
-            solvedCount: problemsWithStatus.filter(p => p.solved).length
+            solvedCount: problemsWithStatus.filter(p => p.status === 'solved').length
         });
     } catch (error) {
         console.error('Error in getCourseDetails:', error);
