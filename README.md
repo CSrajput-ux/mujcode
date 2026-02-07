@@ -7,6 +7,7 @@ A comprehensive Learning Management System (LMS) designed for coding education, 
 
 **The Solution:** MujCode bridges this gap by providing an integrated IDE for students and a robust automation suite for faculty. It includes **SecureExamGuard**, an AI-driven module that uses computer vision to detect unauthorized mobile phone usage and tab-switching during exams.
 
+
 ## ✨ Core Features
 - **🎯 Student Portal:** Personalized dashboard with performance rankings, assignment tracking, and an integrated coding playground.
 - **👨‍🏫 Faculty Dashboard:** Direct management of courses, automated test/quiz creation, and deep student analytics.
