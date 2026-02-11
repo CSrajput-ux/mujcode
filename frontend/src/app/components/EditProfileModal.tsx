@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { User, Mail, GraduationCap, Building2 } from 'lucide-react';
+import { User, Mail, Building2 } from 'lucide-react';
 
 interface EditProfileModalProps {
     open: boolean;
@@ -27,6 +27,7 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
         section: user.section || '',
         branch: user.branch || '',
         year: user.year ? user.year.toString() : '',
+        semester: user.semester ? user.semester.toString() : '',
         course: user.course || '',
         department: user.department || ''
     });
@@ -56,6 +57,10 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
                 const data = await res.json();
                 const updatedUser = { ...user, ...data.profile };
                 localStorage.setItem('user', JSON.stringify(updatedUser));
+
+                // Dispatch custom event to notify other components
+                window.dispatchEvent(new Event('profileUpdated'));
+
                 onSuccess();
                 onOpenChange(false);
             } else {
@@ -72,20 +77,20 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden border-none">
-                <DialogHeader className="p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
-                    <DialogTitle className="text-2xl font-bold">Edit Profile</DialogTitle>
-                    <DialogDescription className="text-orange-50/90">
+            <DialogContent className="sm:max-w-[450px] p-0 overflow-hidden border-none">
+                <DialogHeader className="p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+                    <DialogTitle className="text-xl font-bold">Edit Profile</DialogTitle>
+                    <DialogDescription className="text-orange-50/90 text-sm">
                         Update your academic information. Some fields are controlled by administration.
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-6 bg-white">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmit} className="p-5 space-y-5 bg-white">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Permanent Fields - Read Only */}
-                        <div className="space-y-4 md:col-span-2">
+                        <div className="space-y-3 md:col-span-2">
                             <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Account Information (Locked)</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div className="space-y-2">
                                     <Label className="text-gray-600">Full Name</Label>
                                     <div className="relative">
@@ -111,9 +116,9 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
                         </div>
 
                         {/* Editable Fields */}
-                        <div className="space-y-4 md:col-span-2 pt-4 border-t border-gray-100">
+                        <div className="space-y-3 md:col-span-2 pt-3 border-t border-gray-100">
                             <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Academic Details</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div className="space-y-2">
                                     <Label htmlFor="branch">Branch</Label>
                                     <Select value={formData.branch} onValueChange={(value) => setFormData({ ...formData, branch: value })}>
@@ -158,6 +163,25 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
                                             <SelectItem value="C">Section C</SelectItem>
                                             <SelectItem value="D">Section D</SelectItem>
                                             <SelectItem value="E">Section E</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="semester">Current Semester</Label>
+                                    <Select value={formData.semester} onValueChange={(value) => setFormData({ ...formData, semester: value })}>
+                                        <SelectTrigger className="border-gray-300 focus:ring-orange-500">
+                                            <SelectValue placeholder="Select semester" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="1">Semester 1</SelectItem>
+                                            <SelectItem value="2">Semester 2</SelectItem>
+                                            <SelectItem value="3">Semester 3</SelectItem>
+                                            <SelectItem value="4">Semester 4</SelectItem>
+                                            <SelectItem value="5">Semester 5</SelectItem>
+                                            <SelectItem value="6">Semester 6</SelectItem>
+                                            <SelectItem value="7">Semester 7</SelectItem>
+                                            <SelectItem value="8">Semester 8</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>

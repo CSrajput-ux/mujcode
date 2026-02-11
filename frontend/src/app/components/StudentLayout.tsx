@@ -13,9 +13,10 @@ import {
   X,
   Shield,
   Ticket,
-  UserCircle
+  UserCircle,
+  Lock // Added lock icon for blocked state
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import CompleteProfileDialog from './CompleteProfileDialog';
 import EditProfileModal from './EditProfileModal';
@@ -32,19 +33,54 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
+  const [blockedFeatures, setBlockedFeatures] = useState<string[]>([]); // New State
+
+  useEffect(() => {
+    // Poll for permissions or fetch on load
+    const fetchPermissions = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        // We need an endpoint to get "My Permissions" / "My Restrictions"
+        // Since we implemented GET /api/permissions/blocks for faculty, we might need a student equivalent
+        // OR we can just hit a lightweight endpoint.
+        // For now, let's assume we can fetch from a new endpoint: GET /api/student/permissions
+        // Wait, we haven't created that endpoint yet. 
+        // Let's create it in studentProfileRoutes or similar? 
+        // Or just use the existence of blocks.
+
+        // Actually, for immediate enforcement, let's just make the Menu Items logic robust.
+        // If we don't have the endpoint, we can't hide it yet.
+        // REQUIRED: I need to add GET /api/student/restrictions to fetch my blocks.
+
+        const res = await fetch('http://localhost:5000/api/student/restrictions', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setBlockedFeatures(data.blockedFeatures || []);
+        }
+      } catch (e) {
+        console.error("Failed to fetch permissions");
+      }
+    };
+
+    fetchPermissions();
+  }, [location.pathname]); // Re-check on navigation? Or just once on mount.
 
   const refreshProfile = () => {
     setUserProfile(JSON.parse(localStorage.getItem('user') || '{}'));
   };
 
   const menuItems = [
-    { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard', path: '/student/dashboard' },
-    { icon: <BookOpen className="w-5 h-5" />, label: 'Courses', path: '/student/courses' },
-    { icon: <Code2 className="w-5 h-5" />, label: 'Problems', path: '/student/problems' },
-    { icon: <BarChart3 className="w-5 h-5" />, label: 'Analytics', path: '/student/analytics' },
-    { icon: <FileText className="w-5 h-5" />, label: 'Tests', path: '/student/tests' },
-    { icon: <GraduationCap className="w-5 h-5" />, label: 'Learning', path: '/student/learning' },
-    { icon: <ClipboardList className="w-5 h-5" />, label: 'Assignments', path: '/student/assignments' },
+    { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard', path: '/student/dashboard', id: 'dashboard' },
+    { icon: <BookOpen className="w-5 h-5" />, label: 'Courses', path: '/student/courses', id: 'courses' },
+    { icon: <Code2 className="w-5 h-5" />, label: 'Problems', path: '/student/problems', id: 'problems' },
+    { icon: <BarChart3 className="w-5 h-5" />, label: 'Analytics', path: '/student/analytics', id: 'reports' },
+    { icon: <FileText className="w-5 h-5" />, label: 'Tests', path: '/student/tests', id: 'tests' },
+    { icon: <GraduationCap className="w-5 h-5" />, label: 'Learning', path: '/student/learning', id: 'learning' },
+    { icon: <ClipboardList className="w-5 h-5" />, label: 'Assignments', path: '/student/assignments', id: 'assignments' },
   ];
 
   return (
@@ -191,25 +227,32 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
           overflow-y-auto
         `}>
           <nav className="p-4 space-y-2">
-            {menuItems.map((item, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  navigate(item.path);
-                  setSidebarOpen(false);
-                }}
-                className={`
+            {menuItems.map((item, index) => {
+              const isBlocked = blockedFeatures.includes(item.id);
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    if (isBlocked) return;
+                    navigate(item.path);
+                    setSidebarOpen(false);
+                  }}
+                  disabled={isBlocked}
+                  className={`
                   w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all
                   ${location.pathname === item.path
-                    ? 'bg-[#FF7A00] text-white shadow-md'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }
+                      ? 'bg-[#FF7A00] text-white shadow-md'
+                      : isBlocked
+                        ? 'text-gray-300 cursor-not-allowed bg-gray-50'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }
                 `}
-              >
-                {item.icon}
-                <span className="font-medium">{item.label}</span>
-              </button>
-            ))}
+                >
+                  {isBlocked ? <Lock className="w-5 h-5" /> : item.icon}
+                  <span className="font-medium">{item.label} {isBlocked && '(Locked)'}</span>
+                </button>
+              )
+            })}
 
             <div className="pt-4 border-t border-gray-200">
               <button

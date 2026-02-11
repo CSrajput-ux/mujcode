@@ -15,7 +15,9 @@ const facultySchema = new mongoose.Schema({
     facultyId: { type: String, required: true, unique: true }, // Employee ID
     department: { type: String, required: true },
     designation: { type: String, required: true },
-    teachingAssignments: [teachingAssignmentSchema]
+    teachingAssignments: [teachingAssignmentSchema],
+    teachingCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+    createdCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
 }, { timestamps: true });
 
 // Index for fast student lookups

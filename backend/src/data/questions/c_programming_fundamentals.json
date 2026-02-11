@@ -2,149 +2,140 @@
     "courseName": "C Programming Fundamentals",
     "language": "C",
     "category": "C",
-    "totalQuestions": 22,
+    "totalQuestions": 27,
     "questions": [
         {
             "id": "CPF001",
-            "number": 1,
-            "title": "Sum of Twin Numbers",
+            "number": 3001,
+            "title": "The Classic Greeting",
             "difficulty": "Easy",
-            "points": 10,
-            "description": "Given two integers that are called 'twin numbers' if they have the same number of digits, calculate their sum. If they are not twin numbers, return -1.\n\nTwo numbers are considered twins if they have exactly the same count of digits. For example, 45 and 89 are twins (both have 2 digits), but 100 and 99 are not twins.",
-            "inputFormat": "Two space-separated integers A and B.",
-            "outputFormat": "Print the sum of A and B if they are twins, otherwise print -1.",
-            "constraints": "1 <= A, B <= 10^9",
-            "sampleInput": "45 89",
-            "sampleOutput": "134",
-            "explanation": "Both 45 and 89 have 2 digits, so they are twins. Their sum is 45 + 89 = 134.",
+            "points": 5,
+            "description": "Print the classic greeting message 'Hello, World!' to the console.\n\nThis is the traditional first program in C programming.",
+            "inputFormat": "No input required.",
+            "outputFormat": "Print 'Hello, World!' (without quotes).",
+            "constraints": "None",
+            "sampleInput": "",
+            "sampleOutput": "Hello, World!",
+            "explanation": "Simply use printf() to print the message.",
             "testCases": [
                 {
-                    "input": "45 89",
-                    "expectedOutput": "134",
+                    "input": "",
+                    "expectedOutput": "Hello, World!",
                     "visibility": "public"
-                },
-                {
-                    "input": "100 999",
-                    "expectedOutput": "1099",
-                    "visibility": "public"
-                },
-                {
-                    "input": "5 9",
-                    "expectedOutput": "14",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "100 99",
-                    "expectedOutput": "-1",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "1000000000 1000000001",
-                    "expectedOutput": "-1",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "123456789 987654321",
-                    "expectedOutput": "1111111110",
-                    "visibility": "hidden"
                 }
             ]
         },
         {
             "id": "CPF002",
-            "number": 2,
-            "title": "Digit Frequency Counter",
+            "number": 3002,
+            "title": "Echo the Integer",
             "difficulty": "Easy",
-            "points": 10,
-            "description": "Given an integer N and a digit D (0-9), count how many times the digit D appears in the number N.\n\nFor example, if N = 122333 and D = 3, the digit 3 appears 3 times.",
-            "inputFormat": "Two space-separated integers N and D where D is a single digit (0-9).",
-            "outputFormat": "Print the count of digit D in number N.",
-            "constraints": "1 <= N <= 10^9\n0 <= D <= 9",
-            "sampleInput": "122333 3",
-            "sampleOutput": "3",
-            "explanation": "The number 122333 contains the digit 3 exactly 3 times.",
+            "points": 5,
+            "description": "Read an integer from input and print it back.\n\nThis teaches you basic input/output operations in C using scanf() and printf().",
+            "inputFormat": "A single integer N.",
+            "outputFormat": "Print the integer N.",
+            "constraints": "-10^9 <= N <= 10^9",
+            "sampleInput": "42",
+            "sampleOutput": "42",
+            "explanation": "Read the integer using scanf() and print it using printf().",
             "testCases": [
                 {
-                    "input": "122333 3",
-                    "expectedOutput": "3",
+                    "input": "42",
+                    "expectedOutput": "42",
                     "visibility": "public"
                 },
                 {
-                    "input": "1111111 1",
-                    "expectedOutput": "7",
-                    "visibility": "public"
-                },
-                {
-                    "input": "123456789 0",
+                    "input": "0",
                     "expectedOutput": "0",
+                    "visibility": "public"
+                },
+                {
+                    "input": "-999",
+                    "expectedOutput": "-999",
                     "visibility": "hidden"
                 },
                 {
-                    "input": "1000000000 0",
-                    "expectedOutput": "9",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "555 5",
-                    "expectedOutput": "3",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "987654321 9",
-                    "expectedOutput": "1",
+                    "input": "1000000000",
+                    "expectedOutput": "1000000000",
                     "visibility": "hidden"
                 }
             ]
         },
         {
             "id": "CPF003",
-            "number": 3,
-            "title": "Positive Negative Alternator",
+            "number": 3003,
+            "title": "Simple Addition",
             "difficulty": "Easy",
-            "points": 10,
-            "description": "Given an integer N, print numbers from 1 to N with alternating signs starting with positive.\n\nThe pattern should be: +1, -2, +3, -4, +5, ... and so on.",
-            "inputFormat": "A single integer N.",
-            "outputFormat": "Print space-separated numbers with alternating signs.",
-            "constraints": "1 <= N <= 100",
-            "sampleInput": "5",
-            "sampleOutput": "1 -2 3 -4 5",
-            "explanation": "Starting with positive 1, alternate the signs: 1, -2, 3, -4, 5.",
+            "points": 5,
+            "description": "Read two integers and print their sum.\n\nThis introduces basic arithmetic operations in C.",
+            "inputFormat": "Two space-separated integers A and B.",
+            "outputFormat": "Print the sum of A and B.",
+            "constraints": "-10^6 <= A, B <= 10^6",
+            "sampleInput": "5 7",
+            "sampleOutput": "12",
+            "explanation": "Add the two numbers: 5 + 7 = 12.",
             "testCases": [
                 {
-                    "input": "5",
-                    "expectedOutput": "1 -2 3 -4 5",
+                    "input": "5 7",
+                    "expectedOutput": "12",
                     "visibility": "public"
                 },
                 {
-                    "input": "1",
-                    "expectedOutput": "1",
+                    "input": "0 0",
+                    "expectedOutput": "0",
                     "visibility": "public"
                 },
                 {
-                    "input": "10",
-                    "expectedOutput": "1 -2 3 -4 5 -6 7 -8 9 -10",
+                    "input": "-10 10",
+                    "expectedOutput": "0",
                     "visibility": "hidden"
                 },
                 {
-                    "input": "2",
-                    "expectedOutput": "1 -2",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "7",
-                    "expectedOutput": "1 -2 3 -4 5 -6 7",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "3",
-                    "expectedOutput": "1 -2 3",
+                    "input": "1000000 1000000",
+                    "expectedOutput": "2000000",
                     "visibility": "hidden"
                 }
             ]
         },
         {
             "id": "CPF004",
-            "number": 4,
+            "number": 3004,
+            "title": "Floating Point Precision",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Read a floating-point number and print it with exactly 2 decimal places.\n\nThis teaches you about formatting output in C.",
+            "inputFormat": "A single floating-point number N.",
+            "outputFormat": "Print N with exactly 2 decimal places.",
+            "constraints": "-10^6 <= N <= 10^6",
+            "sampleInput": "3.14159",
+            "sampleOutput": "3.14",
+            "explanation": "Use %.2f format specifier to print with 2 decimal places.",
+            "testCases": [
+                {
+                    "input": "3.14159",
+                    "expectedOutput": "3.14",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5.0",
+                    "expectedOutput": "5.00",
+                    "visibility": "public"
+                },
+                {
+                    "input": "99.999",
+                    "expectedOutput": "100.00",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "-123.456",
+                    "expectedOutput": "-123.46",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF005",
+            "number": 3005,
             "title": "Middle Element Finder",
             "difficulty": "Easy",
             "points": 10,
@@ -189,146 +180,8 @@
             ]
         },
         {
-            "id": "CPF005",
-            "number": 5,
-            "title": "Power of Digits Sum",
-            "difficulty": "Easy",
-            "points": 10,
-            "description": "Given a positive integer N, calculate the sum of each digit raised to the power of its position (1-indexed from right).\n\nFor example, for N = 123: (3^1) + (2^2) + (1^3) = 3 + 4 + 1 = 8",
-            "inputFormat": "A single positive integer N.",
-            "outputFormat": "Print the sum of digits raised to their positional powers.",
-            "constraints": "1 <= N <= 10^6",
-            "sampleInput": "123",
-            "sampleOutput": "8",
-            "explanation": "Position from right: 3 is at position 1, 2 is at position 2, 1 is at position 3.\nSum = 3^1 + 2^2 + 1^3 = 3 + 4 + 1 = 8",
-            "testCases": [
-                {
-                    "input": "123",
-                    "expectedOutput": "8",
-                    "visibility": "public"
-                },
-                {
-                    "input": "5",
-                    "expectedOutput": "5",
-                    "visibility": "public"
-                },
-                {
-                    "input": "111",
-                    "expectedOutput": "3",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "222",
-                    "expectedOutput": "14",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "9999",
-                    "expectedOutput": "7380",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "1000",
-                    "expectedOutput": "1",
-                    "visibility": "hidden"
-                }
-            ]
-        },
-        {
             "id": "CPF006",
-            "number": 6,
-            "title": "Boundary Sum of Matrix",
-            "difficulty": "Easy",
-            "points": 10,
-            "description": "Given a 2D matrix of size N x M, calculate the sum of all boundary elements (first row, last row, first column, last column).\n\nNote: Corner elements should be counted only once.",
-            "inputFormat": "First line: Two integers N and M (rows and columns).\nNext N lines: M space-separated integers representing matrix elements.",
-            "outputFormat": "Print the sum of boundary elements.",
-            "constraints": "1 <= N, M <= 100\n-1000 <= matrix[i][j] <= 1000",
-            "sampleInput": "3 3\n1 2 3\n4 5 6\n7 8 9",
-            "sampleOutput": "40",
-            "explanation": "Boundary elements: 1,2,3 (first row) + 4,6 (first and last of middle row) + 7,8,9 (last row) = 1+2+3+4+6+7+8+9 = 40",
-            "testCases": [
-                {
-                    "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
-                    "expectedOutput": "40",
-                    "visibility": "public"
-                },
-                {
-                    "input": "2 2\n1 2\n3 4",
-                    "expectedOutput": "10",
-                    "visibility": "public"
-                },
-                {
-                    "input": "1 5\n1 2 3 4 5",
-                    "expectedOutput": "15",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "4 4\n1 1 1 1\n1 0 0 1\n1 0 0 1\n1 1 1 1",
-                    "expectedOutput": "12",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "3 1\n5\n10\n15",
-                    "expectedOutput": "30",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "2 3\n-1 -2 -3\n-4 -5 -6",
-                    "expectedOutput": "-21",
-                    "visibility": "hidden"
-                }
-            ]
-        },
-        {
-            "id": "CPF007",
-            "number": 7,
-            "title": "Character Case Swapper",
-            "difficulty": "Easy",
-            "points": 10,
-            "description": "Given a string, swap the case of each alphabetic character. Uppercase becomes lowercase and vice versa. Non-alphabetic characters remain unchanged.",
-            "inputFormat": "A single line string (may contain spaces and special characters).",
-            "outputFormat": "Print the string with swapped cases.",
-            "constraints": "1 <= length of string <= 1000",
-            "sampleInput": "Hello World!",
-            "sampleOutput": "hELLO wORLD!",
-            "explanation": "H->h, e->E, l->L, l->L, o->O, space stays, W->w, o->O, r->R, l->L, d->D, ! stays",
-            "testCases": [
-                {
-                    "input": "Hello World!",
-                    "expectedOutput": "hELLO wORLD!",
-                    "visibility": "public"
-                },
-                {
-                    "input": "ABC",
-                    "expectedOutput": "abc",
-                    "visibility": "public"
-                },
-                {
-                    "input": "abc123XYZ",
-                    "expectedOutput": "ABC123xyz",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "MuJcOdE",
-                    "expectedOutput": "mUjCoDe",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "12345",
-                    "expectedOutput": "12345",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "aAaAaA",
-                    "expectedOutput": "AaAaAa",
-                    "visibility": "hidden"
-                }
-            ]
-        },
-        {
-            "id": "CPF008",
-            "number": 8,
+            "number": 3006,
             "title": "Leap Year Counter",
             "difficulty": "Easy",
             "points": 10,
@@ -373,54 +226,238 @@
             ]
         },
         {
-            "id": "CPF009",
-            "number": 9,
-            "title": "Array Rotation Check",
-            "difficulty": "Medium",
-            "points": 20,
-            "description": "Given two arrays A and B of the same size N, determine if array B is a rotation of array A.\n\nAn array B is a rotation of A if B can be obtained by rotating A left or right any number of times.",
-            "inputFormat": "First line: Integer N (size of arrays).\nSecond line: N space-separated integers (array A).\nThird line: N space-separated integers (array B).",
-            "outputFormat": "Print 'YES' if B is a rotation of A, otherwise print 'NO'.",
-            "constraints": "1 <= N <= 1000\n-10^6 <= A[i], B[i] <= 10^6",
-            "sampleInput": "5\n1 2 3 4 5\n3 4 5 1 2",
-            "sampleOutput": "YES",
-            "explanation": "Array [3,4,5,1,2] can be obtained by rotating [1,2,3,4,5] left by 2 positions.",
+            "id": "CPF007",
+            "number": 3007,
+            "title": "Positive Negative Alternator",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Given an integer N, print numbers from 1 to N with alternating signs starting with positive.\n\nThe pattern should be: +1, -2, +3, -4, +5, ... and so on.",
+            "inputFormat": "A single integer N.",
+            "outputFormat": "Print space-separated numbers with alternating signs.",
+            "constraints": "1 <= N <= 100",
+            "sampleInput": "5",
+            "sampleOutput": "1 -2 3 -4 5",
+            "explanation": "Starting with positive 1, alternate the signs: 1, -2, 3, -4, 5.",
             "testCases": [
                 {
-                    "input": "5\n1 2 3 4 5\n3 4 5 1 2",
-                    "expectedOutput": "YES",
+                    "input": "5",
+                    "expectedOutput": "1 -2 3 -4 5",
                     "visibility": "public"
                 },
                 {
-                    "input": "4\n1 2 3 4\n1 3 2 4",
-                    "expectedOutput": "NO",
+                    "input": "1",
+                    "expectedOutput": "1",
                     "visibility": "public"
                 },
                 {
-                    "input": "3\n1 1 1\n1 1 1",
-                    "expectedOutput": "YES",
+                    "input": "10",
+                    "expectedOutput": "1 -2 3 -4 5 -6 7 -8 9 -10",
                     "visibility": "hidden"
                 },
                 {
-                    "input": "6\n1 2 3 4 5 6\n6 1 2 3 4 5",
-                    "expectedOutput": "YES",
+                    "input": "2",
+                    "expectedOutput": "1 -2",
                     "visibility": "hidden"
                 },
                 {
-                    "input": "4\n1 2 2 1\n2 1 1 2",
-                    "expectedOutput": "YES",
+                    "input": "7",
+                    "expectedOutput": "1 -2 3 -4 5 -6 7",
                     "visibility": "hidden"
                 },
                 {
-                    "input": "5\n1 2 3 4 5\n5 4 3 2 1",
-                    "expectedOutput": "NO",
+                    "input": "3",
+                    "expectedOutput": "1 -2 3",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF008",
+            "number": 3008,
+            "title": "Digit Frequency Counter",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Given an integer N and a digit D (0-9), count how many times the digit D appears in the number N.\n\nFor example, if N = 122333 and D = 3, the digit 3 appears 3 times.",
+            "inputFormat": "Two space-separated integers N and D where D is a single digit (0-9).",
+            "outputFormat": "Print the count of digit D in number N.",
+            "constraints": "1 <= N <= 10^9\n0 <= D <= 9",
+            "sampleInput": "122333 3",
+            "sampleOutput": "3",
+            "explanation": "The number 122333 contains the digit 3 exactly 3 times.",
+            "testCases": [
+                {
+                    "input": "122333 3",
+                    "expectedOutput": "3",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1111111 1",
+                    "expectedOutput": "7",
+                    "visibility": "public"
+                },
+                {
+                    "input": "123456789 0",
+                    "expectedOutput": "0",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "1000000000 0",
+                    "expectedOutput": "9",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "555 5",
+                    "expectedOutput": "3",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "987654321 9",
+                    "expectedOutput": "1",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF009",
+            "number": 3009,
+            "title": "Sum of Twin Numbers",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Given two integers that are called 'twin numbers' if they have the same number of digits, calculate their sum. If they are not twin numbers, return -1.\n\nTwo numbers are considered twins if they have exactly the same count of digits. For example, 45 and 89 are twins (both have 2 digits), but 100 and 99 are not twins.",
+            "inputFormat": "Two space-separated integers A and B.",
+            "outputFormat": "Print the sum of A and B if they are twins, otherwise print -1.",
+            "constraints": "1 <= A, B <= 10^9",
+            "sampleInput": "45 89",
+            "sampleOutput": "134",
+            "explanation": "Both 45 and 89 have 2 digits, so they are twins. Their sum is 45 + 89 = 134.",
+            "testCases": [
+                {
+                    "input": "45 89",
+                    "expectedOutput": "134",
+                    "visibility": "public"
+                },
+                {
+                    "input": "100 999",
+                    "expectedOutput": "1099",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5 9",
+                    "expectedOutput": "14",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "100 99",
+                    "expectedOutput": "-1",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "1000000000 1000000001",
+                    "expectedOutput": "-1",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "123456789 987654321",
+                    "expectedOutput": "1111111110",
                     "visibility": "hidden"
                 }
             ]
         },
         {
             "id": "CPF010",
-            "number": 10,
+            "number": 3010,
+            "title": "Power of Digits Sum",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Given a positive integer N, calculate the sum of each digit raised to the power of its position (1-indexed from right).\n\nFor example, for N = 123: (3^1) + (2^2) + (1^3) = 3 + 4 + 1 = 8",
+            "inputFormat": "A single positive integer N.",
+            "outputFormat": "Print the sum of digits raised to their positional powers.",
+            "constraints": "1 <= N <= 10^6",
+            "sampleInput": "123",
+            "sampleOutput": "8",
+            "explanation": "Position from right: 3 is at position 1, 2 is at position 2, 1 is at position 3.\nSum = 3^1 + 2^2 + 1^3 = 3 + 4 + 1 = 8",
+            "testCases": [
+                {
+                    "input": "123",
+                    "expectedOutput": "8",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5",
+                    "expectedOutput": "5",
+                    "visibility": "public"
+                },
+                {
+                    "input": "111",
+                    "expectedOutput": "3",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "222",
+                    "expectedOutput": "14",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "9999",
+                    "expectedOutput": "7380",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "1000",
+                    "expectedOutput": "1",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF011",
+            "number": 3011,
+            "title": "Character Case Swapper",
+            "difficulty": "Easy",
+            "points": 10,
+            "description": "Given a string, swap the case of each alphabetic character. Uppercase becomes lowercase and vice versa. Non-alphabetic characters remain unchanged.",
+            "inputFormat": "A single line string (may contain spaces and special characters).",
+            "outputFormat": "Print the string with swapped cases.",
+            "constraints": "1 <= length of string <= 1000",
+            "sampleInput": "Hello World!",
+            "sampleOutput": "hELLO wORLD!",
+            "explanation": "H->h, e->E, l->L, l->L, o->O, space stays, W->w, o->O, r->R, l->L, d->D, ! stays",
+            "testCases": [
+                {
+                    "input": "Hello World!",
+                    "expectedOutput": "hELLO wORLD!",
+                    "visibility": "public"
+                },
+                {
+                    "input": "ABC",
+                    "expectedOutput": "abc",
+                    "visibility": "public"
+                },
+                {
+                    "input": "abc123XYZ",
+                    "expectedOutput": "ABC123xyz",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "MuJcOdE",
+                    "expectedOutput": "mUjCoDe",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "12345",
+                    "expectedOutput": "12345",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "aAaAaA",
+                    "expectedOutput": "AaAaAa",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF012",
+            "number": 3012,
             "title": "Prime Factor Chain",
             "difficulty": "Medium",
             "points": 20,
@@ -465,100 +502,54 @@
             ]
         },
         {
-            "id": "CPF011",
-            "number": 11,
-            "title": "Spiral Matrix Printer",
-            "difficulty": "Medium",
-            "points": 20,
-            "description": "Given a 2D matrix of size N x M, print all elements in spiral order (clockwise starting from top-left).",
-            "inputFormat": "First line: Two integers N and M.\nNext N lines: M space-separated integers.",
-            "outputFormat": "Print all elements in spiral order, space-separated.",
-            "constraints": "1 <= N, M <= 50\n-1000 <= matrix[i][j] <= 1000",
-            "sampleInput": "3 3\n1 2 3\n4 5 6\n7 8 9",
-            "sampleOutput": "1 2 3 6 9 8 7 4 5",
-            "explanation": "Spiral order: Right along top row (1,2,3), down right column (6,9), left along bottom (8,7), up left column (4), then center (5).",
-            "testCases": [
-                {
-                    "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
-                    "expectedOutput": "1 2 3 6 9 8 7 4 5",
-                    "visibility": "public"
-                },
-                {
-                    "input": "2 3\n1 2 3\n4 5 6",
-                    "expectedOutput": "1 2 3 6 5 4",
-                    "visibility": "public"
-                },
-                {
-                    "input": "1 4\n1 2 3 4",
-                    "expectedOutput": "1 2 3 4",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "4 1\n1\n2\n3\n4",
-                    "expectedOutput": "1 2 3 4",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "2 2\n1 2\n3 4",
-                    "expectedOutput": "1 2 4 3",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "4 4\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16",
-                    "expectedOutput": "1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10",
-                    "visibility": "hidden"
-                }
-            ]
-        },
-        {
-            "id": "CPF012",
-            "number": 12,
-            "title": "Longest Consecutive Sequence",
-            "difficulty": "Medium",
-            "points": 20,
-            "description": "Given an array of integers, find the length of the longest consecutive elements sequence.\n\nFor example, in [100, 4, 200, 1, 3, 2], the longest consecutive sequence is [1, 2, 3, 4] with length 4.",
-            "inputFormat": "First line: Integer N (size of array).\nSecond line: N space-separated integers.",
-            "outputFormat": "Print the length of the longest consecutive sequence.",
-            "constraints": "1 <= N <= 10^5\n-10^6 <= arr[i] <= 10^6",
-            "sampleInput": "6\n100 4 200 1 3 2",
-            "sampleOutput": "4",
-            "explanation": "The longest consecutive sequence is [1,2,3,4] with length 4.",
-            "testCases": [
-                {
-                    "input": "6\n100 4 200 1 3 2",
-                    "expectedOutput": "4",
-                    "visibility": "public"
-                },
-                {
-                    "input": "5\n1 2 3 4 5",
-                    "expectedOutput": "5",
-                    "visibility": "public"
-                },
-                {
-                    "input": "7\n0 3 7 2 5 8 4",
-                    "expectedOutput": "4",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "1\n10",
-                    "expectedOutput": "1",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "8\n1 9 3 10 4 20 2 5",
-                    "expectedOutput": "5",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "5\n5 5 5 5 5",
-                    "expectedOutput": "1",
-                    "visibility": "hidden"
-                }
-            ]
-        },
-        {
             "id": "CPF013",
-            "number": 13,
+            "number": 3013,
+            "title": "Array Rotation Check",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Given two arrays A and B of the same size N, determine if array B is a rotation of array A.\n\nAn array B is a rotation of A if B can be obtained by rotating A left or right any number of times.",
+            "inputFormat": "First line: Integer N (size of arrays).\nSecond line: N space-separated integers (array A).\nThird line: N space-separated integers (array B).",
+            "outputFormat": "Print 'YES' if B is a rotation of A, otherwise print 'NO'.",
+            "constraints": "1 <= N <= 1000\n-10^6 <= A[i], B[i] <= 10^6",
+            "sampleInput": "5\n1 2 3 4 5\n3 4 5 1 2",
+            "sampleOutput": "YES",
+            "explanation": "Array [3,4,5,1,2] can be obtained by rotating [1,2,3,4,5] left by 2 positions.",
+            "testCases": [
+                {
+                    "input": "5\n1 2 3 4 5\n3 4 5 1 2",
+                    "expectedOutput": "YES",
+                    "visibility": "public"
+                },
+                {
+                    "input": "4\n1 2 3 4\n1 3 2 4",
+                    "expectedOutput": "NO",
+                    "visibility": "public"
+                },
+                {
+                    "input": "3\n1 1 1\n1 1 1",
+                    "expectedOutput": "YES",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "6\n1 2 3 4 5 6\n6 1 2 3 4 5",
+                    "expectedOutput": "YES",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "4\n1 2 2 1\n2 1 1 2",
+                    "expectedOutput": "YES",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "5\n1 2 3 4 5\n5 4 3 2 1",
+                    "expectedOutput": "NO",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF014",
+            "number": 3014,
             "title": "Wave Sort Array",
             "difficulty": "Medium",
             "points": 20,
@@ -603,8 +594,8 @@
             ]
         },
         {
-            "id": "CPF014",
-            "number": 14,
+            "id": "CPF015",
+            "number": 3015,
             "title": "String Compression",
             "difficulty": "Medium",
             "points": 20,
@@ -649,8 +640,146 @@
             ]
         },
         {
-            "id": "CPF015",
-            "number": 15,
+            "id": "CPF016",
+            "number": 3016,
+            "title": "Boundary Sum of Matrix",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Given a 2D matrix of size N x M, calculate the sum of all boundary elements (first row, last row, first column, last column).\n\nNote: Corner elements should be counted only once.",
+            "inputFormat": "First line: Two integers N and M (rows and columns).\nNext N lines: M space-separated integers representing matrix elements.",
+            "outputFormat": "Print the sum of boundary elements.",
+            "constraints": "1 <= N, M <= 100\n-1000 <= matrix[i][j] <= 1000",
+            "sampleInput": "3 3\n1 2 3\n4 5 6\n7 8 9",
+            "sampleOutput": "40",
+            "explanation": "Boundary elements: 1,2,3 (first row) + 4,6 (first and last of middle row) + 7,8,9 (last row) = 1+2+3+4+6+7+8+9 = 40",
+            "testCases": [
+                {
+                    "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
+                    "expectedOutput": "40",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 2\n1 2\n3 4",
+                    "expectedOutput": "10",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1 5\n1 2 3 4 5",
+                    "expectedOutput": "15",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "4 4\n1 1 1 1\n1 0 0 1\n1 0 0 1\n1 1 1 1",
+                    "expectedOutput": "12",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "3 1\n5\n10\n15",
+                    "expectedOutput": "30",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "2 3\n-1 -2 -3\n-4 -5 -6",
+                    "expectedOutput": "-21",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF017",
+            "number": 3017,
+            "title": "Spiral Matrix Printer",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Given a 2D matrix of size N x M, print all elements in spiral order (clockwise starting from top-left).",
+            "inputFormat": "First line: Two integers N and M.\nNext N lines: M space-separated integers.",
+            "outputFormat": "Print all elements in spiral order, space-separated.",
+            "constraints": "1 <= N, M <= 50\n-1000 <= matrix[i][j] <= 1000",
+            "sampleInput": "3 3\n1 2 3\n4 5 6\n7 8 9",
+            "sampleOutput": "1 2 3 6 9 8 7 4 5",
+            "explanation": "Spiral order: Right along top row (1,2,3), down right column (6,9), left along bottom (8,7), up left column (4), then center (5).",
+            "testCases": [
+                {
+                    "input": "3 3\n1 2 3\n4 5 6\n7 8 9",
+                    "expectedOutput": "1 2 3 6 9 8 7 4 5",
+                    "visibility": "public"
+                },
+                {
+                    "input": "2 3\n1 2 3\n4 5 6",
+                    "expectedOutput": "1 2 3 6 5 4",
+                    "visibility": "public"
+                },
+                {
+                    "input": "1 4\n1 2 3 4",
+                    "expectedOutput": "1 2 3 4",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "4 1\n1\n2\n3\n4",
+                    "expectedOutput": "1 2 3 4",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "2 2\n1 2\n3 4",
+                    "expectedOutput": "1 2 4 3",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "4 4\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16",
+                    "expectedOutput": "1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF018",
+            "number": 3018,
+            "title": "Longest Consecutive Sequence",
+            "difficulty": "Medium",
+            "points": 20,
+            "description": "Given an array of integers, find the length of the longest consecutive elements sequence.\n\nFor example, in [100, 4, 200, 1, 3, 2], the longest consecutive sequence is [1, 2, 3, 4] with length 4.",
+            "inputFormat": "First line: Integer N (size of array).\nSecond line: N space-separated integers.",
+            "outputFormat": "Print the length of the longest consecutive sequence.",
+            "constraints": "1 <= N <= 10^5\n-10^6 <= arr[i] <= 10^6",
+            "sampleInput": "6\n100 4 200 1 3 2",
+            "sampleOutput": "4",
+            "explanation": "The longest consecutive sequence is [1,2,3,4] with length 4.",
+            "testCases": [
+                {
+                    "input": "6\n100 4 200 1 3 2",
+                    "expectedOutput": "4",
+                    "visibility": "public"
+                },
+                {
+                    "input": "5\n1 2 3 4 5",
+                    "expectedOutput": "5",
+                    "visibility": "public"
+                },
+                {
+                    "input": "7\n0 3 7 2 5 8 4",
+                    "expectedOutput": "4",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "1\n10",
+                    "expectedOutput": "1",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "8\n1 9 3 10 4 20 2 5",
+                    "expectedOutput": "5",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "5\n5 5 5 5 5",
+                    "expectedOutput": "1",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF019",
+            "number": 3019,
             "title": "Matrix Diagonal Sum",
             "difficulty": "Medium",
             "points": 20,
@@ -695,8 +824,8 @@
             ]
         },
         {
-            "id": "CPF016",
-            "number": 16,
+            "id": "CPF020",
+            "number": 3020,
             "title": "Balanced Bracket Checker",
             "difficulty": "Medium",
             "points": 20,
@@ -741,54 +870,8 @@
             ]
         },
         {
-            "id": "CPF017",
-            "number": 17,
-            "title": "Number to Words Converter",
-            "difficulty": "Hard",
-            "points": 30,
-            "description": "Given a number N (0 to 9999), convert it to its English word representation.\n\nFor example: 1234 -> \"One Thousand Two Hundred Thirty Four\"",
-            "inputFormat": "A single integer N.",
-            "outputFormat": "Print the English word representation.",
-            "constraints": "0 <= N <= 9999",
-            "sampleInput": "1234",
-            "sampleOutput": "One Thousand Two Hundred Thirty Four",
-            "explanation": "1234 = 1 thousand + 2 hundred + 34 (thirty four)",
-            "testCases": [
-                {
-                    "input": "1234",
-                    "expectedOutput": "One Thousand Two Hundred Thirty Four",
-                    "visibility": "public"
-                },
-                {
-                    "input": "0",
-                    "expectedOutput": "Zero",
-                    "visibility": "public"
-                },
-                {
-                    "input": "100",
-                    "expectedOutput": "One Hundred",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "1001",
-                    "expectedOutput": "One Thousand One",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "9999",
-                    "expectedOutput": "Nine Thousand Nine Hundred Ninety Nine",
-                    "visibility": "hidden"
-                },
-                {
-                    "input": "15",
-                    "expectedOutput": "Fifteen",
-                    "visibility": "hidden"
-                }
-            ]
-        },
-        {
-            "id": "CPF018",
-            "number": 18,
+            "id": "CPF021",
+            "number": 3021,
             "title": "Matrix Rotation 90 Degrees",
             "difficulty": "Hard",
             "points": 30,
@@ -833,8 +916,54 @@
             ]
         },
         {
-            "id": "CPF019",
-            "number": 19,
+            "id": "CPF022",
+            "number": 3022,
+            "title": "Number to Words Converter",
+            "difficulty": "Hard",
+            "points": 30,
+            "description": "Given a number N (0 to 9999), convert it to its English word representation.\n\nFor example: 1234 -> \"One Thousand Two Hundred Thirty Four\"",
+            "inputFormat": "A single integer N.",
+            "outputFormat": "Print the English word representation.",
+            "constraints": "0 <= N <= 9999",
+            "sampleInput": "1234",
+            "sampleOutput": "One Thousand Two Hundred Thirty Four",
+            "explanation": "1234 = 1 thousand + 2 hundred + 34 (thirty four)",
+            "testCases": [
+                {
+                    "input": "1234",
+                    "expectedOutput": "One Thousand Two Hundred Thirty Four",
+                    "visibility": "public"
+                },
+                {
+                    "input": "0",
+                    "expectedOutput": "Zero",
+                    "visibility": "public"
+                },
+                {
+                    "input": "100",
+                    "expectedOutput": "One Hundred",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "1001",
+                    "expectedOutput": "One Thousand One",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "9999",
+                    "expectedOutput": "Nine Thousand Nine Hundred Ninety Nine",
+                    "visibility": "hidden"
+                },
+                {
+                    "input": "15",
+                    "expectedOutput": "Fifteen",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF023",
+            "number": 3023,
             "title": "Longest Palindrome Substring Length",
             "difficulty": "Hard",
             "points": 30,
@@ -879,8 +1008,8 @@
             ]
         },
         {
-            "id": "CPF020",
-            "number": 20,
+            "id": "CPF024",
+            "number": 3024,
             "title": "Next Greater Element",
             "difficulty": "Hard",
             "points": 30,
@@ -925,8 +1054,8 @@
             ]
         },
         {
-            "id": "CPF021",
-            "number": 21,
+            "id": "CPF025",
+            "number": 3025,
             "title": "Merge Overlapping Intervals",
             "difficulty": "Hard",
             "points": 30,
@@ -971,8 +1100,8 @@
             ]
         },
         {
-            "id": "CPF022",
-            "number": 22,
+            "id": "CPF026",
+            "number": 3026,
             "title": "Kadane's Maximum Subarray",
             "difficulty": "Hard",
             "points": 30,
@@ -1012,6 +1141,37 @@
                 {
                     "input": "6\n-2 -3 4 -1 -2 1",
                     "expectedOutput": "4",
+                    "visibility": "hidden"
+                }
+            ]
+        },
+        {
+            "id": "CPF027",
+            "number": 3027,
+            "title": "The Classic Greeting (Revisited)",
+            "difficulty": "Easy",
+            "points": 5,
+            "description": "Print 'Hello, World!' but add your name at the end.\n\nRead a name from input and print: Hello, World! My name is [NAME]",
+            "inputFormat": "A single string (name).",
+            "outputFormat": "Print 'Hello, World! My name is [NAME]'.",
+            "constraints": "1 <= length of name <= 50",
+            "sampleInput": "Alice",
+            "sampleOutput": "Hello, World! My name is Alice",
+            "explanation": "Combine the classic greeting with personalization.",
+            "testCases": [
+                {
+                    "input": "Alice",
+                    "expectedOutput": "Hello, World! My name is Alice",
+                    "visibility": "public"
+                },
+                {
+                    "input": "Bob",
+                    "expectedOutput": "Hello, World! My name is Bob",
+                    "visibility": "public"
+                },
+                {
+                    "input": "X",
+                    "expectedOutput": "Hello, World! My name is X",
                     "visibility": "hidden"
                 }
             ]

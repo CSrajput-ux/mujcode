@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import * as faceapi from 'face-api.js';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
-import '@tensorflow/tfjs'; // Warning: This might be heavy, ensure it's needed for coco-ssd backend
+import '@tensorflow/tfjs';
 
 // Types
-export type ViolationType = 'MULTIPLE_FACES' | 'NO_FACE' | 'GAZE_AWAY' | 'FORBIDDEN_OBJECT' | 'AUDIO_NOISE' | 'TAB_SWITCH' | 'FULLSCREEN_EXIT' | 'MOUSE_LEAVE' | 'DEV_TOOLS' | 'UNAUTHORIZED_EXTENSION';
+export type ViolationType = 'MULTIPLE_FACES' | 'NO_FACE' | 'FORBIDDEN_OBJECT' | 'AUDIO_SPIKE' | 'TAB_SWITCH' | 'FULLSCREEN_EXIT' | 'DEV_TOOLS';
 
 export interface Violation {
     type: ViolationType;
     timestamp: number;
     message: string;
-    snapshot?: string; // Base64 image
+    snapshot?: string;
 }
 
 interface UseProctoringProps {
@@ -23,34 +23,48 @@ export const useProctoring = ({ onViolation, isExamActive }: UseProctoringProps)
     const [modelsLoaded, setModelsLoaded] = useState(false);
     const [strikes, setStrikes] = useState(0);
 
-    // Model refs to persist across renders
-    const faceModelRef = useRef<any>(null); // keeping generic to avoid strict face-api types issues if not perfectly matched
+    // Model refs
     const objectModelRef = useRef<cocoSsd.ObjectDetection | null>(null);
 
     // Audio refs
     const audioContextRef = useRef<AudioContext | null>(null);
     const analyserRef = useRef<AnalyserNode | null>(null);
-    const microphoneRef = useRef<MediaStreamAudioSourceNode | null>(null);
+    const audioStreamRef = useRef<MediaStream | null>(null);
 
-    // Constants
-    const MOVEMENT_THRESHOLD = 50; // Simple gaze approximation logic
-    const AUDIO_THRESHOLD = 50; // Decibel-like threshold (needs calibration)
-    const FORBIDDEN_OBJECTS = ['cell phone', 'book', 'laptop'];
+    // Performance optimization refs
+    const canvasRef = useRef<HTMLCanvasElement | null>(null); // REUSE canvas
+    const lastViolationTimeRef = useRef<{ [key: string]: number }>({});
+    const faceIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const objectIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const faceAbsenceTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Constants - OPTIMIZED FOR NORMAL LAPTOPS
+    const VIOLATION_COOLDOWN = 5000; // 5 seconds between same violation type
+    const AUDIO_THRESHOLD = 35;
+    const FACE_CHECK_INTERVAL = 400; // ms - Reduced frequency
+    const OBJECT_CHECK_INTERVAL = 500; // ms - FASTER for phone detection (was 1000)
+    const VIDEO_WIDTH = 320; // Lower resolution for performance
+    const VIDEO_HEIGHT = 240;
+    const SNAPSHOT_WIDTH = 160; // Even smaller snapshots
+    const SNAPSHOT_HEIGHT = 120;
 
     // Load Models & Initialize Camera
     useEffect(() => {
         const init = async () => {
-            // 1. Setup Camera First
             try {
+                // Camera with LOW RESOLUTION for performance
                 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                     const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'user' },
-                        audio: false // Audio is handled separately
+                        video: {
+                            facingMode: 'user',
+                            width: { ideal: VIDEO_WIDTH },
+                            height: { ideal: VIDEO_HEIGHT }
+                        },
+                        audio: false
                     });
 
                     if (videoRef.current) {
                         videoRef.current.srcObject = stream;
-                        // Determine when video is ready
                         videoRef.current.onloadedmetadata = () => {
                             videoRef.current?.play();
                         };
@@ -58,37 +72,27 @@ export const useProctoring = ({ onViolation, isExamActive }: UseProctoringProps)
                 }
             } catch (err) {
                 console.error("Camera Error:", err);
-                // We could likely notify parent here about permission denial
+                onViolation({ type: 'NO_FACE', timestamp: Date.now(), message: "Camera access denied." });
             }
 
-            // 2. Load Models
+            // Load AI Models
             try {
-                console.log("Loading AI Models...");
+                console.log("⚡ Loading AI Models (Lite Mode)...");
 
-                // Load COCO-SSD First (It's critical for object detection)
-                try {
-                    const objectModel = await cocoSsd.load();
-                    objectModelRef.current = objectModel;
-                    console.log("COCO-SSD Loaded");
-                } catch (e) {
-                    console.error("Failed to load COCO-SSD", e);
-                }
+                // COCO-SSD Lite
+                const objectModel = await cocoSsd.load({ base: 'lite_mobilenet_v2' });
+                objectModelRef.current = objectModel;
+                console.log("✅ COCO-SSD Loaded");
 
-                // Load Face API models
-                // Using a faster/lighter model set or ensure URL is correct
-                // Alternative: '/models' if hosted locally
+                // Face API - ONLY TinyFaceDetector (NO LANDMARKS for performance)
                 const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
-
-                await Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-                ]);
-                console.log("FaceAPI Loaded");
+                await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+                console.log("✅ FaceAPI Loaded (Tiny)");
 
                 setModelsLoaded(true);
             } catch (err) {
                 console.error("Failed to load AI models:", err);
-                setModelsLoaded(true); // Allow proceed even if partial fail
+                setModelsLoaded(true);
             }
         };
 
@@ -96,199 +100,267 @@ export const useProctoring = ({ onViolation, isExamActive }: UseProctoringProps)
             init();
         }
 
-        // Cleanup function for stream
         return () => {
             if (videoRef.current && videoRef.current.srcObject) {
                 const stream = videoRef.current.srcObject as MediaStream;
                 stream.getTracks().forEach(track => track.stop());
             }
         };
-    }, [isExamActive]);
+    }, [isExamActive, onViolation]);
 
-    // Audio Monitoring Setup
+    // Audio Monitoring (VAD)
     const setupAudioMonitoring = async () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioStreamRef.current = stream;
+
             const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
             const analyser = audioContext.createAnalyser();
             const microphone = audioContext.createMediaStreamSource(stream);
 
-            microphone.connect(analyser);
-            analyser.fftSize = 256;
+            // High-pass filter
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 100;
+
+            microphone.connect(filter);
+            filter.connect(analyser);
+
+            analyser.fftSize = 256; // Smaller FFT for performance
+            analyser.smoothingTimeConstant = 0.5;
 
             audioContextRef.current = audioContext;
             analyserRef.current = analyser;
-            microphoneRef.current = microphone;
         } catch (err) {
-            console.error("Audio permission denied or error:", err);
+            console.error("Audio permission denied:", err);
         }
     };
 
-    // Helper: Capture Snapshot
+    // Helper: OPTIMIZED Snapshot Capture (REUSE CANVAS)
     const captureSnapshot = useCallback((): string | undefined => {
         if (!videoRef.current) return undefined;
-        const canvas = document.createElement('canvas');
-        canvas.width = videoRef.current.videoWidth;
-        canvas.height = videoRef.current.videoHeight;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-            ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-            return canvas.toDataURL('image/jpeg', 0.5);
+        try {
+            // REUSE canvas instead of creating new one
+            if (!canvasRef.current) {
+                canvasRef.current = document.createElement('canvas');
+            }
+            const canvas = canvasRef.current;
+            canvas.width = SNAPSHOT_WIDTH;
+            canvas.height = SNAPSHOT_HEIGHT;
+
+            const ctx = canvas.getContext('2d', { alpha: false }); // Disable alpha for performance
+            if (ctx) {
+                ctx.drawImage(videoRef.current, 0, 0, SNAPSHOT_WIDTH, SNAPSHOT_HEIGHT);
+                const dataURL = canvas.toDataURL('image/jpeg', 0.3); // Low quality for size
+                return dataURL;
+            }
+        } catch (e) {
+            return undefined;
         }
         return undefined;
     }, []);
 
-    // Main Detection Loop
+    // Helper: Throttled Violation Handler
+    const handleViolationThrottled = useCallback((type: ViolationType, message: string, includeSnapshot = false) => {
+        const now = Date.now();
+        const lastTime = lastViolationTimeRef.current[type] || 0;
+
+        if (now - lastTime > VIOLATION_COOLDOWN) {
+            lastViolationTimeRef.current[type] = now;
+            setStrikes(prev => {
+                const newStrikes = prev + 1;
+                onViolation({
+                    type,
+                    message,
+                    timestamp: now,
+                    snapshot: includeSnapshot ? captureSnapshot() : undefined
+                });
+                return newStrikes;
+            });
+        }
+    }, [captureSnapshot, onViolation]);
+
+    // STAGGERED Detection - Face Detection Loop
+    useEffect(() => {
+        if (!isExamActive || !modelsLoaded) return;
+
+        const faceDetectionLoop = async () => {
+            if (!videoRef.current || videoRef.current.paused || videoRef.current.ended) return;
+
+            if (faceapi.nets.tinyFaceDetector.isLoaded) {
+                try {
+                    const detections = await faceapi.detectAllFaces(
+                        videoRef.current,
+                        new faceapi.TinyFaceDetectorOptions({ inputSize: 128 }) // Smaller input for speed
+                    );
+
+                    if (detections.length === 0) {
+                        if (!faceAbsenceTimerRef.current) {
+                            faceAbsenceTimerRef.current = setTimeout(() => {
+                                handleViolationThrottled('NO_FACE', "Face not visible for 5 seconds.", false);
+                                faceAbsenceTimerRef.current = null;
+                            }, 5000);
+                        }
+                    } else {
+                        if (faceAbsenceTimerRef.current) {
+                            clearTimeout(faceAbsenceTimerRef.current);
+                            faceAbsenceTimerRef.current = null;
+                        }
+
+                        if (detections.length > 1 && detections[1].score > 0.7) {
+                            handleViolationThrottled('MULTIPLE_FACES', "Multiple faces detected!", true);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Face Detection Error:", e);
+                }
+            }
+        };
+
+        faceIntervalRef.current = setInterval(faceDetectionLoop, FACE_CHECK_INTERVAL);
+
+        return () => {
+            if (faceIntervalRef.current) clearInterval(faceIntervalRef.current);
+            if (faceAbsenceTimerRef.current) clearTimeout(faceAbsenceTimerRef.current);
+        };
+    }, [isExamActive, modelsLoaded, handleViolationThrottled]);
+
+    // STAGGERED Detection - Object Detection Loop
+    useEffect(() => {
+        if (!isExamActive || !modelsLoaded || !objectModelRef.current) return;
+
+        const objectDetectionLoop = async () => {
+            if (!videoRef.current || videoRef.current.paused || videoRef.current.ended) return;
+
+            try {
+                const predictions = await objectModelRef.current!.detect(videoRef.current, undefined, 0.35);
+
+                const phone = predictions.find(p =>
+                    (p.class === 'cell phone' || p.class === 'mobile phone') && p.score > 0.40
+                );
+
+                if (phone) {
+                    handleViolationThrottled('FORBIDDEN_OBJECT', "CRITICAL: Phone detected", true);
+                }
+            } catch (e) {
+                console.error("Object Detection Error:", e);
+            }
+        };
+
+        objectIntervalRef.current = setInterval(objectDetectionLoop, OBJECT_CHECK_INTERVAL);
+
+        return () => {
+            if (objectIntervalRef.current) clearInterval(objectIntervalRef.current);
+        };
+    }, [isExamActive, modelsLoaded, handleViolationThrottled]);
+
+    // Audio Detection
     useEffect(() => {
         if (!isExamActive) return;
 
-        // Start Audio
         setupAudioMonitoring();
 
-        const interval = setInterval(async () => {
-            if (!videoRef.current || videoRef.current.paused || videoRef.current.ended) return;
-
-            // 1. Face & Gaze Detection
-            try {
-                // Ensure models are actually loaded before using
-                if (faceapi.nets.tinyFaceDetector.isLoaded) {
-                    const detection = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
-
-                    if (detection.length === 0) {
-                        handleViolation('NO_FACE', "No face detected. Please stay in frame.");
-                    } else if (detection.length > 1) {
-                        handleViolation('MULTIPLE_FACES', "Multiple faces detected.");
-                    } else {
-                        // Gaze Tracking (Simple logic)
-                        // If needed
-                    }
-                }
-            } catch (e) {
-                console.error("Face Detection Error", e);
-            }
-
-            // 2. Object Detection
-            if (objectModelRef.current) {
-                try {
-                    const predictions = await objectModelRef.current.detect(videoRef.current);
-                    const forbidden = predictions.find(p => FORBIDDEN_OBJECTS.includes(p.class) && p.score > 0.7);
-                    if (forbidden) {
-                        handleViolation('FORBIDDEN_OBJECT', `Forbidden object detected: ${forbidden.class}`);
-                    }
-                } catch (e) {
-                    console.error("Object Detection Error", e);
-                }
-            }
-
-            // 3. Audio Detection
+        const audioInterval = setInterval(() => {
             if (analyserRef.current) {
                 const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
                 analyserRef.current.getByteFrequencyData(dataArray);
                 const average = dataArray.reduce((acc, val) => acc + val, 0) / dataArray.length;
+
                 if (average > AUDIO_THRESHOLD) {
-                    // console.warn("Audio spike:", average);
+                    handleViolationThrottled('AUDIO_SPIKE', "High noise detected.", false);
                 }
             }
-
-        }, 1000);
+        }, 1000); // Check every 1s
 
         return () => {
-            clearInterval(interval);
-            if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-                audioContextRef.current.close();
-            }
+            clearInterval(audioInterval);
+            if (audioContextRef.current) audioContextRef.current.close();
+            if (audioStreamRef.current) audioStreamRef.current.getTracks().forEach(t => t.stop());
         };
-    }, [isExamActive, modelsLoaded]);
+    }, [isExamActive, handleViolationThrottled]);
 
-
-    // Browser Lockdown & DOM Police
+    // Browser Security
     useEffect(() => {
         if (!isExamActive) return;
 
-        // 1. Visibility Change (Tab Switching)
         const handleVisibilityChange = () => {
-            if (document.hidden) {
-                handleViolation('TAB_SWITCH', "You switched tabs or minimized the browser.");
-            }
+            if (document.hidden) handleViolationThrottled('TAB_SWITCH', "Tab switched.", false);
         };
 
-        // 2. Blur (Lost Focus)
-        const handleBlur = () => {
-            handleViolation('TAB_SWITCH', "Browser lost focus.");
-        };
+        const handleBlur = () => handleViolationThrottled('TAB_SWITCH', "Window lost focus.", false);
 
-        // 3. Fullscreen Check
         const handleFullscreenChange = () => {
-            if (!document.fullscreenElement) {
-                handleViolation('FULLSCREEN_EXIT', "You exited fullscreen mode.");
-            }
+            if (!document.fullscreenElement) handleViolationThrottled('FULLSCREEN_EXIT', "Exited fullscreen.", false);
         };
 
-        // 4. Keyboard Bans
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Prevent Copy/Paste/Print
-            if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'p', 's'].includes(e.key.toLowerCase())) {
+            if ((e.ctrlKey || e.metaKey || e.altKey) &&
+                ['c', 'v', 'p', 's', 'x'].includes(e.key.toLowerCase())) {
                 e.preventDefault();
-                handleViolation('DEV_TOOLS', `Blocked Shortcut: Ctrl+${e.key.toUpperCase()}`);
+                e.stopPropagation();
+                handleViolationThrottled('DEV_TOOLS', `Blocked: ${e.key.toUpperCase()}`, false);
             }
-            // Prevent Alt+Tab (browser catches this hard, but on blur triggers anyway)
         };
 
-        // 5. Context Menu
-        const handleContextMenu = (e: Event) => e.preventDefault();
+        const handleContextMenu = (e: Event) => {
+            e.preventDefault();
+            handleViolationThrottled('DEV_TOOLS', "Right-click disabled.", false);
+        };
 
-        // 6. DOM Police (MutationObserver)
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                    if (node instanceof HTMLElement) {
-                        const content = (node.className + " " + node.id + " " + node.innerText).toLowerCase();
-                        const banned = ['grammarly', 'gpt', 'ai-helper', 'sidebar', 'overlay', 'monica'];
-                        if (banned.some(k => content.includes(k))) {
-                            node.remove();
-                            handleViolation('UNAUTHORIZED_EXTENSION', `Unauthorized overlay removed: ${node.tagName}`);
-                        }
-                    }
-                });
-            });
-        });
+        const EVENTS = ['copy', 'paste', 'cut', 'drag', 'drop'];
+        const preventDefault = (e: Event) => e.preventDefault();
 
-        observer.observe(document.body, { childList: true, subtree: true });
-
-        // Listeners
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('blur', handleBlur);
         document.addEventListener('fullscreenchange', handleFullscreenChange);
-        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keydown', handleKeyDown, true);
         document.addEventListener('contextmenu', handleContextMenu);
+        EVENTS.forEach(ev => document.addEventListener(ev, preventDefault));
 
         return () => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('blur', handleBlur);
             document.removeEventListener('fullscreenchange', handleFullscreenChange);
-            document.removeEventListener('keydown', handleKeyDown);
+            document.removeEventListener('keydown', handleKeyDown, true);
             document.removeEventListener('contextmenu', handleContextMenu);
-            observer.disconnect();
+            EVENTS.forEach(ev => document.removeEventListener(ev, preventDefault));
         };
-    }, [isExamActive]);
+    }, [isExamActive, handleViolationThrottled]);
 
-    const handleViolation = (type: ViolationType, message: string) => {
-        setStrikes(prev => {
-            const newStrikes = prev + 1;
-            // Logic to notify parent
-            onViolation({
-                type,
-                message,
-                timestamp: Date.now(),
-                snapshot: captureSnapshot()
+    // Cleanup function to stop all streams
+    const stopAllStreams = useCallback(() => {
+        // Stop video stream
+        if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => {
+                track.stop();
+                console.log('🛑 Stopped track:', track.kind);
             });
-            return newStrikes;
-        });
-    };
+            videoRef.current.srcObject = null;
+        }
+
+        // Stop audio stream
+        if (audioStreamRef.current) {
+            audioStreamRef.current.getTracks().forEach(track => {
+                track.stop();
+                console.log('🛑 Stopped audio track');
+            });
+            audioStreamRef.current = null;
+        }
+
+        // Close audio context
+        if (audioContextRef.current) {
+            audioContextRef.current.close();
+            audioContextRef.current = null;
+        }
+
+        console.log('✅ All streams stopped');
+    }, []);
 
     return {
         videoRef,
         modelsLoaded,
-        strikes
+        strikes,
+        stopAllStreams
     };
 };

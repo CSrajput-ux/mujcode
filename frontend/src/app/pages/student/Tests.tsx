@@ -8,6 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/ta
 import SecureExamGuard from '../../components/SecureExamGuard';
 import { getTests, getTestById, submitTest, Test } from '../../services/testService';
 import { toast } from 'sonner';
+import MockTestsList from './mock-tests/MockTestsList';
+import MockTestRunner from './mock-tests/MockTestRunner';
+import MockResultPage from './mock-tests/MockResultPage';
 
 export default function Tests() {
   const [activeTest, setActiveTest] = useState<Test | null>(null);
@@ -18,6 +21,14 @@ export default function Tests() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [key: string]: number }>({}); // questionId -> selectedOptionIndex
   const [warnings, setWarnings] = useState(0);
+
+  // Mock Test State
+  const [mockTestAttemptId, setMockTestAttemptId] = useState<string | null>(null);
+  const [mockTestQuestions, setMockTestQuestions] = useState<any[]>([]);
+  const [mockTestDuration, setMockTestDuration] = useState(0);
+  const [mockTestResult, setMockTestResult] = useState<any>(null);
+  const [showMockTest, setShowMockTest] = useState(false);
+  const [showMockResult, setShowMockResult] = useState(false);
 
   useEffect(() => {
     fetchTests();
@@ -83,6 +94,76 @@ export default function Tests() {
     } catch (error) {
       toast.error("Failed to submit test");
     }
+  };
+
+  // Mock Test Handlers
+  const handleStartMockTest = async (mockTestId: string) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/mock-tests/${mockTestId}/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setMockTestAttemptId(data.attemptId);
+        setMockTestQuestions(data.questions);
+        setMockTestDuration(data.duration);
+        setShowMockTest(true);
+        setShowMockResult(false);
+      } else {
+        toast.error(data.error || 'Failed to start mock test');
+      }
+    } catch (error) {
+      console.error('Error starting mock test:', error);
+      toast.error('Failed to start mock test');
+    }
+  };
+
+  const handleSubmitMockTest = async (answers: any[], timeTaken: number) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/mock-tests/${mockTestAttemptId}/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          attemptId: mockTestAttemptId,
+          studentId,
+          answers,
+          timeTaken
+        })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setMockTestResult(data);
+        setShowMockTest(false);
+        setShowMockResult(true);
+        toast.success('Mock test submitted successfully!');
+      } else {
+        toast.error('Failed to submit mock test');
+      }
+    } catch (error) {
+      console.error('Error submitting mock test:', error);
+      toast.error('Failed to submit mock test');
+    }
+  };
+
+  const handleExitMockTest = () => {
+    setShowMockTest(false);
+    setMockTestAttemptId(null);
+    setMockTestQuestions([]);
+  };
+
+  const handleBackToMockTests = () => {
+    setShowMockResult(false);
+    setMockTestResult(null);
+  };
+
+  const handleRetryMockTest = () => {
+    setShowMockResult(false);
+    setMockTestResult(null);
+    // Optionally trigger UI to allow selecting a test again
   };
 
   const getTypeIcon = (type: string) => {
@@ -231,6 +312,9 @@ export default function Tests() {
               <TabsTrigger value="completed" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
                 Completed ({completedTests.length})
               </TabsTrigger>
+              <TabsTrigger value="mock-tests" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
+                Mock Tests
+              </TabsTrigger>
             </TabsList>
 
             {/* Upcoming Tests */}
@@ -316,6 +400,33 @@ export default function Tests() {
                   </CardContent>
                 </Card>
               ))}
+            </TabsContent>
+
+            {/* Mock Tests */}
+            <TabsContent value="mock-tests">
+              {showMockTest ? (
+                <MockTestRunner
+                  attemptId={mockTestAttemptId!}
+                  questions={mockTestQuestions}
+                  duration={mockTestDuration}
+                  onSubmit={handleSubmitMockTest}
+                  onExit={handleExitMockTest}
+                />
+              ) : showMockResult ? (
+                <MockResultPage
+                  score={mockTestResult.score}
+                  maxScore={mockTestResult.maxScore}
+                  percentage={mockTestResult.percentage}
+                  passed={mockTestResult.passed}
+                  timeTaken={mockTestResult.timeTaken}
+                  results={mockTestResult.results}
+                  canRetry={true}
+                  onRetry={handleRetryMockTest}
+                  onBack={handleBackToMockTests}
+                />
+              ) : (
+                <MockTestsList onStartTest={handleStartMockTest} />
+              )}
             </TabsContent>
 
           </Tabs>

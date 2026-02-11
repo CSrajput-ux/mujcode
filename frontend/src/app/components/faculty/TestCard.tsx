@@ -1,4 +1,4 @@
-import { Calendar, Users, BarChart2, BookOpen } from 'lucide-react';
+import { Calendar, Users, BarChart2, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -7,9 +7,10 @@ import { TestStats } from '../../services/facultyTestService';
 interface TestCardProps {
     test: TestStats;
     onViewDetails: (test: TestStats) => void;
+    onTogglePublish?: (testId: string, currentStatus: boolean) => void;
 }
 
-export default function TestCard({ test, onViewDetails }: TestCardProps) {
+export default function TestCard({ test, onViewDetails, onTogglePublish }: TestCardProps) {
     return (
         <Card className="hover:shadow-md transition-shadow border-l-4 border-l-[#FF7A00]">
             <CardContent className="p-5">
@@ -23,9 +24,14 @@ export default function TestCard({ test, onViewDetails }: TestCardProps) {
                             <span>{test.duration} min</span>
                         </div>
                     </div>
-                    <Badge className={test.status === 'Live' ? 'bg-green-500' : 'bg-gray-500'}>
-                        {test.status}
-                    </Badge>
+                    <div className="flex gap-2">
+                        <Badge className={test.status === 'Live' ? 'bg-green-500' : 'bg-gray-500'}>
+                            {test.status}
+                        </Badge>
+                        <Badge className={test.isPublished ? 'bg-green-600' : 'bg-gray-400'}>
+                            {test.isPublished ? 'Published' : 'Draft'}
+                        </Badge>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
@@ -52,12 +58,25 @@ export default function TestCard({ test, onViewDetails }: TestCardProps) {
                     </div>
                 </div>
 
-                <Button
-                    className="w-full bg-white text-[#FF7A00] border border-[#FF7A00] hover:bg-orange-50"
-                    onClick={() => onViewDetails(test)}
-                >
-                    View Details
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        className="flex-1 bg-white text-[#FF7A00] border border-[#FF7A00] hover:bg-orange-50"
+                        onClick={() => onViewDetails(test)}
+                    >
+                        View Details
+                    </Button>
+                    {onTogglePublish && (
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className={test.isPublished ? 'text-gray-600 hover:text-gray-800' : 'text-green-600 hover:text-green-800'}
+                            onClick={() => onTogglePublish(test._id, test.isPublished)}
+                            title={test.isPublished ? 'Unpublish Test' : 'Publish Test'}
+                        >
+                            {test.isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </Button>
+                    )}
+                </div>
             </CardContent>
         </Card>
     );

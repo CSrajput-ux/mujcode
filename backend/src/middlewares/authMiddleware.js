@@ -28,7 +28,28 @@ const verifyFaculty = (req, res, next) => {
     }
 };
 
+const verifyAdminToken = (req, res, next) => {
+    // Check if user is already verified by verifyToken (if used generally)
+    if (req.user) {
+        if (req.user.role === 'admin' || req.user.role === 'superadmin') {
+            next();
+        } else {
+            res.status(403).json({ error: 'Access denied. Admin role required.' });
+        }
+    } else {
+        // If verifyToken hasn't run, run it first
+        verifyToken(req, res, () => {
+            if (req.user && (req.user.role === 'admin' || req.user.role === 'superadmin')) {
+                next();
+            } else {
+                res.status(403).json({ error: 'Access denied. Admin role required.' });
+            }
+        });
+    }
+};
+
 module.exports = verifyToken;
 module.exports.verifyToken = verifyToken;
 module.exports.verifyFaculty = verifyFaculty;
+module.exports.verifyAdminToken = verifyAdminToken;
 module.exports.authMiddleware = verifyToken; // For those preferring destructured import

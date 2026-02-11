@@ -10,7 +10,8 @@ import {
     ClipboardList,
     Users,
     Shield,
-    Building
+    Building,
+    Upload
 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import FacultyProfileModal from './FacultyProfileModal';
@@ -51,7 +52,8 @@ export default function FacultyLayout({ children }: FacultyLayoutProps) {
         { icon: <FileText className="w-5 h-5" />, label: 'Tests & Quiz', path: '/faculty/tests' },
         { icon: <BarChart3 className="w-5 h-5" />, label: 'Activity', path: '/faculty/activity' },
         { icon: <ClipboardList className="w-5 h-5" />, label: 'Assignments', path: '/faculty/assignments' },
-        { icon: <Users className="w-5 h-5" />, label: 'Reports', path: '/faculty/reports' }
+        { icon: <Users className="w-5 h-5" />, label: 'Reports', path: '/faculty/reports' },
+        { icon: <Upload className="w-5 h-5" />, label: 'Content Hub', path: '/faculty/content' }
     ];
 
     return (

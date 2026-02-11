@@ -59,6 +59,19 @@ export default function FacultyTests() {
         // Implement CSV download logic here
     };
 
+    const handleTogglePublish = async (testId: string, currentStatus: boolean) => {
+        try {
+            const { toggleTestPublishStatus } = await import('../../services/facultyTestService');
+            await toggleTestPublishStatus(testId);
+            toast.success(`Test ${currentStatus ? 'unpublished' : 'published'} successfully!`);
+            // Refresh the test list
+            fetchTests();
+        } catch (error) {
+            console.error('Error toggling publish status:', error);
+            toast.error('Failed to update publish status');
+        }
+    };
+
     // Filter tests by Tabs
     const testList = tests.filter(t => t.type !== 'Quiz');
     const quizList = tests.filter(t => t.type === 'Quiz');
@@ -101,7 +114,7 @@ export default function FacultyTests() {
                                 <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">2nd Year / Section A</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {testList.map(test => (
-                                        <TestCard key={test._id} test={test} onViewDetails={handleViewDetails} />
+                                        <TestCard key={test._id} test={test} onViewDetails={handleViewDetails} onTogglePublish={handleTogglePublish} />
                                     ))}
                                     {testList.length === 0 && <p className="text-gray-500 col-span-3">No tests found.</p>}
                                 </div>
@@ -111,7 +124,7 @@ export default function FacultyTests() {
                         <TabsContent value="quizzes" className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {quizList.map(test => (
-                                    <TestCard key={test._id} test={test} onViewDetails={handleViewDetails} />
+                                    <TestCard key={test._id} test={test} onViewDetails={handleViewDetails} onTogglePublish={handleTogglePublish} />
                                 ))}
                                 {quizList.length === 0 && <p className="text-gray-500 col-span-3">No quizzes found.</p>}
                             </div>

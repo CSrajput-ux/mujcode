@@ -4,7 +4,7 @@ import {
     KPICard, PerformanceChart, ActivityChart, SuccessPieChart
 } from '../../components/faculty/AnalyticsComponents';
 import {
-    getDashboardStats, getSectionPerformance, getActivityMetrics, getSuccessRates
+    getDashboardStats, getSectionPerformance, getActivityMetrics, getSuccessRates, getFacultyInsights
 } from '../../services/facultyAnalyticsService';
 import { Users, CheckCircle, Clock, TrendingUp, Lightbulb } from 'lucide-react';
 import { toast } from 'sonner';
@@ -15,6 +15,7 @@ export default function FacultyReports() {
     const [sectionData, setSectionData] = useState<any[]>([]);
     const [activityData, setActivityData] = useState<any[]>([]);
     const [successData, setSuccessData] = useState<any[]>([]);
+    const [insights, setInsights] = useState<string[]>([]);
 
     useEffect(() => {
         fetchAllData();
@@ -23,17 +24,19 @@ export default function FacultyReports() {
     const fetchAllData = async () => {
         try {
             setLoading(true);
-            const [statsData, sectionPerf, activityMetrics, successRates] = await Promise.all([
+            const [statsData, sectionPerf, activityMetrics, successRates, insightsData] = await Promise.all([
                 getDashboardStats(),
                 getSectionPerformance(),
                 getActivityMetrics(),
-                getSuccessRates()
+                getSuccessRates(),
+                getFacultyInsights()
             ]);
 
             setStats(statsData);
             setSectionData(sectionPerf);
             setActivityData(activityMetrics);
             setSuccessData(successRates);
+            setInsights(insightsData);
         } catch (error) {
             console.error(error);
             toast.error("Failed to load analytics data");
@@ -117,18 +120,16 @@ export default function FacultyReports() {
                     <div>
                         <h3 className="text-lg font-bold text-gray-900 mb-2">Automated Insights</h3>
                         <ul className="space-y-2 text-blue-900">
-                            <li className="flex items-center gap-2">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                Section B has the highest engagement rate this week (78%).
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                Success rate in "Data Structures" dropped by 5% compared to last month.
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                Consider reviewing "Assignment 3" difficulty; 40% of Section A failed.
-                            </li>
+                            {insights.length > 0 ? (
+                                insights.map((insight, idx) => (
+                                    <li key={idx} className="flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                        {insight}
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="text-blue-700 italic">No significant insights detected for this period.</li>
+                            )}
                         </ul>
                     </div>
                 </div>

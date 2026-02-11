@@ -10,6 +10,9 @@ exports.getTests = async (req, res) => {
         if (type) query.type = type;
         if (status) query.status = status;
 
+        // CRITICAL: Students should ONLY see published tests
+        query.isPublished = true;
+
         const tests = await Test.find(query).sort({ startTime: 1 });
         res.json(tests);
     } catch (error) {
@@ -41,20 +44,42 @@ exports.getTestById = async (req, res) => {
 // Create a new test (Admin/Faculty only - for seeding/testing)
 exports.createTest = async (req, res) => {
     try {
-        const { title, type, duration, questions: questionData, startTime } = req.body;
+        const { title, type, testType, duration, questions: questionData, startTime, isPublished } = req.body;
 
-        // 1. Create Questions first
+        // For new test builder flow - create empty test
+        if (testType) {
+            const newTest = new Test({
+                title,
+                type,
+                testType,
+                duration,
+                startTime,
+                status: 'Draft', // Start as draft
+                builderStatus: 'building', // Builder is in progress
+                isPublished: isPublished || false // Default to false
+            });
+
+            await newTest.save();
+
+            return res.status(201).json({
+                testId: newTest._id,
+                message: 'Test created successfully',
+                redirectUrl: `/faculty/tests/${newTest._id}/builder`
+            });
+        }
+
+        // Legacy flow - with questions
         const createdQuestions = await Question.insertMany(questionData);
         const questionIds = createdQuestions.map(q => q._id);
 
-        // 2. Create Test
         const newTest = new Test({
             title,
             type,
             duration,
             startTime,
             questions: questionIds,
-            status: 'Upcoming' // Default
+            status: 'Upcoming', // Default
+            isPublished: isPublished || false // Default to false if not provided
         });
 
         await newTest.save();
@@ -188,5 +213,28 @@ exports.getTestSubmissions = async (req, res) => {
         res.json(enhancedSubmissions);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching test submissions', error: error.message });
+    }
+};
+
+// Toggle publish status for a test (Faculty only)
+exports.togglePublishTest = async (req, res) => {
+    try {
+        const { testId } = req.params;
+        const test = await Test.findById(testId);
+
+        if (!test) {
+            return res.status(404).json({ message: 'Test not found' });
+        }
+
+        // Toggle the publish status
+        test.isPublished = !test.isPublished;
+        await test.save();
+
+        res.json({
+            message: `Test ${test.isPublished ? 'published' : 'unpublished'} successfully`,
+            test
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error toggling publish status', error: error.message });
     }
 };

@@ -11,6 +11,7 @@ export interface TestStats {
     totalAppeared: number;
     avgScore: number;
     status: string;
+    isPublished: boolean; // Publish status for visibility control
 }
 
 export interface StudentSubmission {
@@ -32,5 +33,10 @@ export const getFacultyTests = async (): Promise<TestStats[]> => {
 
 export const getTestSubmissions = async (testId: string): Promise<StudentSubmission[]> => {
     const response = await axios.get(`${API_URL}/${testId}/submissions`);
+    return response.data;
+};
+
+export const toggleTestPublishStatus = async (testId: string) => {
+    const response = await axios.patch(`${API_URL}/${testId}/publish`);
     return response.data;
 };

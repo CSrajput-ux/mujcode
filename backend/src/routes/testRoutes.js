@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getTests, getTestById, createTest, submitTest, getStudentSubmissions, getTestsForFaculty, getTestSubmissions } = require('../controllers/testController');
+const { getTests, getTestById, createTest, submitTest, getStudentSubmissions, getTestsForFaculty, getTestSubmissions, togglePublishTest } = require('../controllers/testController');
 
 // Public/Student routes
 router.get('/', getTests);
@@ -14,5 +14,8 @@ router.get('/:testId/submissions', getTestSubmissions);
 
 // Admin/Faculty routes (should be protected in prod)
 router.post('/create', createTest);
+
+// Toggle publish status (Faculty only)
+router.patch('/:testId/publish', togglePublishTest);
 
 module.exports = router;

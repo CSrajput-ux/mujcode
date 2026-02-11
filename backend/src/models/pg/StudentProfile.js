@@ -29,6 +29,10 @@ const StudentProfile = sequelize.define('StudentProfile', {
     year: {
         type: DataTypes.INTEGER // e.g., 1, 2, 3, 4
     },
+    semester: {
+        type: DataTypes.INTEGER, // e.g., 1, 2, 3, 4, 5, 6, 7, 8
+        allowNull: true
+    },
     course: {
         type: DataTypes.STRING,
         allowNull: true

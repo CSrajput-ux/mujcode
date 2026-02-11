@@ -12,14 +12,17 @@ const studentProfileRoutes = require('./src/routes/studentProfileRoutes');
 const problemRoutes = require('./src/routes/problemRoutes');
 const analyticsRoutes = require('./src/routes/analyticsRoutes');
 const courseRoutes = require('./src/routes/courseRoutes');
+const studentPermissionRoutes = require('./src/routes/studentPermissionRoutes');
 const judgeRoutes = require('./src/routes/judgeRoutes');
 const testRoutes = require('./src/routes/testRoutes');
+const mockTestRoutes = require('./src/routes/mockTestRoutes');
 const assignmentRoutes = require('./src/routes/assignmentRoutes');
 const facultyAnalyticsRoutes = require('./src/routes/facultyAnalyticsRoutes');
 const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 5000;
-const numCPUs = 1; // Limited to 1 worker to reduce memory usage during development
+// Enable full clustering in production, single worker in development
+const numCPUs = process.env.NODE_ENV === 'production' ? os.cpus().length : 1;
 
 // --- CLUSTER LOGIC ---
 if (cluster.isMaster) {
@@ -59,6 +62,8 @@ if (cluster.isMaster) {
 } else {
     // --- WORKER LOGIC ---
     const app = express();
+    const http = require('http');
+    const { Server } = require("socket.io");
 
     // Middleware
     app.use(helmet()); // Security Headers
@@ -91,28 +96,78 @@ if (cluster.isMaster) {
         console.error('❌ Database Sync Error:', err);
     });
 
-    // Routes
+    // Create HTTP Server
+    const server = http.createServer(app);
+
+    // Initialize Socket.io
+    const io = new Server(server, {
+        cors: {
+            origin: ['http://localhost:5173', 'http://localhost:5174'],
+            methods: ["GET", "POST"],
+            credentials: true
+        }
+    });
+
+    // Socket Handler
+    require('./src/socket/socketHandler')(io);
+
+    const contentRoutes = require('./src/routes/contentRoutes');
+
+    // Mount Routes
     app.use('/api/auth', authRoutes);
+
+    // Student Routes
     app.use('/api/student', studentProgressRoutes);
     app.use('/api/student', studentProfileRoutes);
     app.use('/api/student', analyticsRoutes);
     app.use('/api/student', courseRoutes);
+    app.use('/api/student', studentPermissionRoutes);
+
+    // Core Features
     app.use('/api', problemRoutes);
     app.use('/api/judge', judgeRoutes);
+    app.use('/api/compile', require('./src/routes/compileRoutes'));
+    app.use('/api/evaluate', require('./src/routes/evaluationRoutes'));
+
+    // Tests & Assignments
     app.use('/api/tests', testRoutes);
+    app.use('/api/mock-tests', mockTestRoutes);
     app.use('/api/assignments', assignmentRoutes);
+    app.use('/api', require('./src/routes/mcqRoutes'));
+    app.use('/api', require('./src/routes/codingRoutes'));
+    app.use('/api', require('./src/routes/theoryRoutes'));
+
+    // Faculty Routes
     app.use('/api/faculty/analytics', facultyAnalyticsRoutes);
     app.use('/api/faculty', require('./src/routes/facultyRoutes'));
     app.use('/api/faculty', require('./src/routes/facultyActivityRoutes'));
+    app.use('/api/permissions', require('./src/routes/permissionRoutes'));
+    app.use('/api/academic', require('./src/routes/academicRoutes'));
+
+    // Admin Routes
+    app.use('/api/admin/dashboard', require('./src/routes/adminDashboardRoutes'));
+    app.use('/api/admin/students', require('./src/routes/adminStudentRoutes'));
+    app.use('/api/admin/faculty', require('./src/routes/adminFacultyRoutes'));
+    app.use('/api/admin/system', require('./src/routes/adminSystemRoutes'));
+
+    // Other Features
+    app.use('/api/placements', require('./src/routes/placementRoutes'));
     app.use('/api', require('./src/routes/communityRoutes'));
+
+    // NEW: Content Hub Routes
+    app.use('/api/content', contentRoutes);
+
+    // Serve Uploaded Files Statically
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
     app.get('/', (req, res) => {
         res.send(`MujCode Backend is running on Worker ${process.pid}`);
     });
 
-    // Start Server
-    app.listen(PORT, () => {
+    // Start Server (Change app.listen to server.listen)
+    server.listen(PORT, () => {
         console.log(`🟢 Worker ${process.pid} started on port ${PORT}`);
         console.log(`🔒 CORS Origin: ${process.env.CORS_ORIGIN || 'http://localhost:5173'}`);
+        console.log(`⚡ Socket.io enabled`);
     });
 }
