@@ -3,27 +3,25 @@ const fs = require('fs');
 const path = require('path');
 
 const tempDir = path.join(__dirname, 'temp_test');
-if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
-const code = 'print("Hello from Docker")';
-fs.writeFileSync(path.join(tempDir, 'main.py'), code);
+const codePath = path.join(tempDir, 'test.py');
+fs.writeFileSync(codePath, 'print("Hello from Docker")');
 
 // Normalize path for Windows Docker
-const normalizedPath = tempDir.replace(/\\/g, '/');
+// Try standard format first
+const absPath = path.resolve(tempDir).replace(/\\/g, '/'); // c:/Users/...
+const dockerCmd = `docker run --rm -v "${absPath}:/app" python:3.11-alpine python /app/test.py`;
 
-const dockerCmd = `docker run --rm -v "${tempDir}:/app" python:3.9-slim sh -c "python -u /app/main.py"`;
+console.log(`Running: ${dockerCmd}`);
 
-console.log('Executing:', dockerCmd);
-
-exec(dockerCmd, (error, stdout, stderr) => {
-    if (error) {
-        console.error('Error:', error);
+exec(dockerCmd, (err, stdout, stderr) => {
+    if (err) {
+        console.error('Docker Failed:', err);
+        console.error('Stderr:', stderr);
+    } else {
+        console.log('Docker Success:', stdout);
     }
-    console.log('Stdout:', stdout);
-    console.log('Stderr:', stderr);
-
     // Cleanup
-    try {
-        fs.rmSync(tempDir, { recursive: true, force: true });
-    } catch (e) { }
+    try { fs.rmSync(tempDir, { recursive: true }); } catch (e) { }
 });

@@ -21,8 +21,9 @@ const StudentProfile = sequelize.define('StudentProfile', {
     },
     branch: {
         type: DataTypes.STRING, // e.g., CSE
-        allowNull: false
+        allowNull: true
     },
+
     section: {
         type: DataTypes.STRING // e.g., A, B
     },

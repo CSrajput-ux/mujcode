@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { createFaculty } from '../../services/adminService';
+import uniService from '../../services/universityService';
 import { toast } from 'sonner';
 import { ArrowLeft, UserPlus } from 'lucide-react';
+
 
 export default function AddFaculty() {
     const navigate = useNavigate();
@@ -16,10 +18,26 @@ export default function AddFaculty() {
         facultyId: '',
         password: '',
         department: '',
+        departmentId: '',
         designation: 'Assistant Professor'
     });
 
+    const [departments, setDepartments] = useState<any[]>([]);
+
+    useEffect(() => {
+        const loadDepts = async () => {
+            try {
+                const data = await uniService.getDepartments();
+                setDepartments(data);
+            } catch (err) {
+                console.error("Failed to load departments", err);
+            }
+        };
+        loadDepts();
+    }, []);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -129,21 +147,26 @@ export default function AddFaculty() {
                                         Department <span className="text-red-500">*</span>
                                     </label>
                                     <select
-                                        name="department"
-                                        value={formData.department}
-                                        onChange={handleChange}
+                                        name="departmentId"
+                                        value={formData.departmentId}
+                                        onChange={(e) => {
+                                            const dept = departments.find(d => d.id === parseInt(e.target.value));
+                                            setFormData({
+                                                ...formData,
+                                                departmentId: e.target.value,
+                                                department: dept ? dept.name : ''
+                                            });
+                                        }}
                                         className="w-full px-3 py-2 border rounded-md"
                                         required
                                     >
                                         <option value="">Select Department</option>
-                                        <option value="CSE">Computer Science & Engineering</option>
-                                        <option value="IT">Information Technology</option>
-                                        <option value="ECE">Electronics & Communication</option>
-                                        <option value="EEE">Electrical & Electronics</option>
-                                        <option value="MECH">Mechanical Engineering</option>
-                                        <option value="CIVIL">Civil Engineering</option>
+                                        {departments.map(d => (
+                                            <option key={d.id} value={d.id}>{d.name}</option>
+                                        ))}
                                     </select>
                                 </div>
+
 
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">

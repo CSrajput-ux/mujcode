@@ -48,8 +48,21 @@ const verifyAdminToken = (req, res, next) => {
     }
 };
 
+const authorize = (...roles) => {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({
+                error: `User role ${req.user ? req.user.role : 'unknown'} is not authorized to access this route`
+            });
+        }
+        next();
+    };
+};
+
 module.exports = verifyToken;
 module.exports.verifyToken = verifyToken;
+module.exports.protect = verifyToken; // Alias for consistency
+module.exports.authorize = authorize;
 module.exports.verifyFaculty = verifyFaculty;
 module.exports.verifyAdminToken = verifyAdminToken;
 module.exports.authMiddleware = verifyToken; // For those preferring destructured import

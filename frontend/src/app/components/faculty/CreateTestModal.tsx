@@ -22,7 +22,10 @@ export default function CreateTestModal({ open, onOpenChange }: CreateTestModalP
         type: 'Quiz',
         duration: 60,
         totalMarks: 100,
-        startTime: ''
+        startTime: '',
+        branch: '',
+        section: '',
+        semester: ''
     });
 
     const handleCreate = async () => {
@@ -35,6 +38,10 @@ export default function CreateTestModal({ open, onOpenChange }: CreateTestModalP
             toast.error('Please select a schedule date and time');
             return;
         }
+        if (!formData.branch.trim() || !formData.section.trim() || !formData.semester) {
+            toast.error('Please select branch, section and semester');
+            return;
+        }
 
         setLoading(true);
         try {
@@ -44,7 +51,10 @@ export default function CreateTestModal({ open, onOpenChange }: CreateTestModalP
                 type: formData.type,
                 duration: formData.duration,
                 totalMarks: formData.totalMarks,
-                startTime: formData.startTime
+                startTime: formData.startTime,
+                branch: formData.branch,
+                section: formData.section,
+                semester: Number(formData.semester)
             });
 
             const { redirectUrl } = response.data;
@@ -145,6 +155,45 @@ export default function CreateTestModal({ open, onOpenChange }: CreateTestModalP
                             value={formData.startTime}
                             onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
                         />
+                    </div>
+
+                    {/* Target Audience */}
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="grid gap-2">
+                            <Label>Branch *</Label>
+                            <Input
+                                placeholder="e.g. CSE"
+                                value={formData.branch}
+                                onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Section *</Label>
+                            <Input
+                                placeholder="e.g. A"
+                                value={formData.section}
+                                onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Semester *</Label>
+                            <Select
+                                value={formData.semester}
+                                onValueChange={(value) => setFormData({ ...formData, semester: value })}
+                            >
+                                <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="1">1</SelectItem>
+                                    <SelectItem value="2">2</SelectItem>
+                                    <SelectItem value="3">3</SelectItem>
+                                    <SelectItem value="4">4</SelectItem>
+                                    <SelectItem value="5">5</SelectItem>
+                                    <SelectItem value="6">6</SelectItem>
+                                    <SelectItem value="7">7</SelectItem>
+                                    <SelectItem value="8">8</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
 
                     {/* Info Message */}

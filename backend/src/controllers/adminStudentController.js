@@ -122,6 +122,7 @@ exports.createStudent = async (req, res) => {
             rollNumber,
             password,
             branch,
+            branchId,
             year,
             section,
             course,
@@ -129,12 +130,13 @@ exports.createStudent = async (req, res) => {
         } = req.body;
 
         // Validate required fields
-        if (!name || !email || !rollNumber || !password || !branch) {
+        if (!name || !email || !rollNumber || !password || (!branch && !branchId)) {
             return res.status(400).json({
                 success: false,
-                error: 'Name, email, roll number, password, and branch are required'
+                error: 'Name, email, roll number, password, and branch (or branchId) are required'
             });
         }
+
 
         // Check if email already exists
         const existingUser = await User.findOne({ where: { email } });
@@ -167,16 +169,45 @@ exports.createStudent = async (req, res) => {
             isActive: true
         });
 
+        // NEW: If branchId provided, try to fill 'branch' string for legacy
+        let finalBranch = branch;
+        if (branchId && !finalBranch) {
+            const { Branch } = require('../models/pg');
+            const branchObj = await Branch.findByPk(branchId);
+            if (branchObj) finalBranch = branchObj.name;
+        }
+
         // Create StudentProfile
         const studentProfile = await StudentProfile.create({
             userId: user.id,
             rollNumber,
-            branch,
+            branch: finalBranch || null,
+
             year: year ? parseInt(year) : null,
             section: section || null,
             course: course || null,
             department: department || null
         });
+
+        // NEW: Create StudentEnrollment if sectionId is provided
+        const { sectionId, academicYearId } = req.body;
+        if (sectionId) {
+            const { StudentEnrollment, AcademicYear } = require('../models/pg');
+
+            // If no academicYearId provided, use the current one
+            let finalYearId = academicYearId;
+            if (!finalYearId) {
+                const currentYear = await AcademicYear.findOne({ where: { isCurrent: true } });
+                finalYearId = currentYear ? currentYear.id : null;
+            }
+
+            await StudentEnrollment.create({
+                studentId: user.id,
+                sectionId: sectionId,
+                academicYearId: finalYearId
+            });
+        }
+
 
         // Fetch complete student data
         const student = await StudentProfile.findByPk(studentProfile.id, {
@@ -199,11 +230,17 @@ exports.createStudent = async (req, res) => {
         });
     } catch (error) {
         console.error('Error creating student:', error);
+        require('fs').writeFileSync('debug_error.json', JSON.stringify(error, null, 2));
         res.status(500).json({
             success: false,
-            error: 'Failed to create student'
+            error: 'Failed to create student',
+            details: error.message,
+            validationErrors: error.errors ? error.errors.map(e => e.message) : []
         });
     }
+
+
+
 };
 
 /**

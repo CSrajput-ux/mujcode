@@ -16,7 +16,14 @@ export default function Tests() {
   const [activeTest, setActiveTest] = useState<Test | null>(null);
   const [loading, setLoading] = useState(true);
   const [tests, setTests] = useState<Test[]>([]);
-  const [studentId] = useState("student_123"); // TODO: Replace with actual auth user ID
+  const [studentProfile] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('user') || '{}');
+    } catch {
+      return {};
+    }
+  });
+  const studentId = (studentProfile as any).id as string | undefined;
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [key: string]: number }>({}); // questionId -> selectedOptionIndex
@@ -36,7 +43,15 @@ export default function Tests() {
 
   const fetchTests = async () => {
     try {
-      const data = await getTests();
+      const user = studentProfile as any;
+      const params: { branch?: string; section?: string; semester?: string } = {};
+      if (user.branch) params.branch = user.branch;
+      if (user.section) params.section = user.section;
+      if (user.semester !== undefined && user.semester !== null) {
+        params.semester = String(user.semester);
+      }
+
+      const data = await getTests(params);
       setTests(data);
     } catch (error) {
       console.error("Failed to fetch tests", error);
@@ -73,6 +88,10 @@ export default function Tests() {
 
   const handleSubmit = async () => {
     if (!activeTest) return;
+    if (!studentId) {
+      toast.error("Student information not found. Please log in again.");
+      return;
+    }
 
     // Transform answers object to array
     const formattedAnswers = Object.keys(answers).map(qId => ({
@@ -186,8 +205,11 @@ export default function Tests() {
     }
   };
 
-  // Helper to filter tests
-  const upcomingTests = tests.filter(t => t.status === 'Upcoming');
+  // Helper to filter tests by status only (branch/section/semester already filtered on backend)
+  // Treat published DRAFT tests as Upcoming so they appear for students.
+  const upcomingTests = tests.filter(t =>
+    t.status === 'Upcoming' || t.status === 'Draft'
+  );
   const liveTests = tests.filter(t => t.status === 'Live');
   const completedTests = tests.filter(t => t.status === 'Completed'); // Backend handles completed status logic or we check submissions
 
@@ -294,8 +316,8 @@ export default function Tests() {
     <StudentLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tests & Assessments</h1>
-          <p className="text-gray-600">Manage your scheduled and completed tests</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tests / Quiz</h1>
+          <p className="text-gray-600">Manage your scheduled and completed tests & quizzes</p>
         </div>
 
         {loading ? (

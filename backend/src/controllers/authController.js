@@ -80,6 +80,7 @@ exports.login = async (req, res) => {
                     section: profile.section,
                     branch: profile.branch,
                     year: profile.year,
+                    semester: profile.semester,
                     course: profile.course,
                     department: profile.department
                 };

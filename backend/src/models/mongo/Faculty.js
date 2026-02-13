@@ -14,7 +14,9 @@ const facultySchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     facultyId: { type: String, required: true, unique: true }, // Employee ID
     department: { type: String, required: true },
+    departmentId: { type: Number }, // Link to PostgreSQL Department ID
     designation: { type: String, required: true },
+
     teachingAssignments: [teachingAssignmentSchema],
     teachingCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     createdCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]

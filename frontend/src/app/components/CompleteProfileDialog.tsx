@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import uniService from '../services/universityService';
 import {
     Dialog,
     DialogContent,
@@ -8,8 +9,8 @@ import {
     DialogTitle,
 } from './ui/dialog';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Label } from './ui/label';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface CompleteProfileDialogProps {
@@ -21,18 +22,36 @@ interface CompleteProfileDialogProps {
 export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }: CompleteProfileDialogProps) {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
+        departmentId: '',
+        programId: '',
+        branchId: '',
+        sectionId: '',
+        academicYearId: '',
+        year: '',
+        // Legacy fields
         section: '',
         branch: '',
-        year: '',
-        course: '',
-        department: ''
+        department: '',
+        course: ''
     });
 
-    // Fetch existing profile data when dialog opens
+    const [departments, setDepartments] = useState<any[]>([]);
+    const [programs, setPrograms] = useState<any[]>([]);
+    const [branches, setBranches] = useState<any[]>([]);
+    const [sections, setSections] = useState<any[]>([]);
+    const [academicYears, setAcademicYears] = useState<any[]>([]);
+
+    // Fetch initial data
     useEffect(() => {
         if (open) {
-            const fetchProfile = async () => {
+            const loadInitialData = async () => {
                 try {
+                    const depts = await uniService.getDepartments();
+                    setDepartments(depts);
+
+                    const years = await uniService.getAcademicYears();
+                    setAcademicYears(years);
+
                     const user = JSON.parse(localStorage.getItem('user') || '{}');
                     const userId = user.id;
 
@@ -42,22 +61,49 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
                     if (res.ok) {
                         const data = await res.json();
                         if (data.profile) {
-                            setFormData({
+                            setFormData(prev => ({
+                                ...prev,
                                 section: data.profile.section || '',
                                 branch: data.profile.branch || '',
                                 year: data.profile.year ? data.profile.year.toString() : '',
                                 course: data.profile.course || '',
                                 department: data.profile.department || ''
-                            });
+                            }));
                         }
                     }
                 } catch (error) {
-                    console.error('Error fetching profile:', error);
+                    console.error('Error loading initial data:', error);
                 }
             };
-            fetchProfile();
+            loadInitialData();
         }
     }, [open]);
+
+    // Dependent Fetches
+    useEffect(() => {
+        if (formData.departmentId) {
+            uniService.getPrograms(parseInt(formData.departmentId)).then(setPrograms);
+        } else {
+            setPrograms([]);
+        }
+    }, [formData.departmentId]);
+
+    useEffect(() => {
+        if (formData.programId) {
+            uniService.getBranches(parseInt(formData.programId)).then(setBranches);
+        } else {
+            setBranches([]);
+        }
+    }, [formData.programId]);
+
+    useEffect(() => {
+        if (formData.branchId) {
+            uniService.getSections(parseInt(formData.branchId)).then(setSections);
+        } else {
+            setSections([]);
+        }
+    }, [formData.branchId]);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -102,43 +148,134 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="grid gap-4 py-4">
+                    <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto px-1">
+                        {/* Department */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="departmentId">Department</Label>
+                            <Select
+                                value={formData.departmentId}
+                                onValueChange={(value) => {
+                                    const dept = departments.find(d => d.id === parseInt(value));
+                                    setFormData({
+                                        ...formData,
+                                        departmentId: value,
+                                        department: dept ? dept.name : '',
+                                        programId: '',
+                                        branchId: '',
+                                        sectionId: ''
+                                    });
+                                }}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select department" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {departments.map(d => (
+                                        <SelectItem key={d.id} value={d.id.toString()}>{d.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Program */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="programId">Program</Label>
+                            <Select
+                                value={formData.programId}
+                                disabled={!formData.departmentId}
+                                onValueChange={(value) => {
+                                    const prog = programs.find(p => p.id === parseInt(value));
+                                    setFormData({
+                                        ...formData,
+                                        programId: value,
+                                        course: prog ? prog.name : '',
+                                        branchId: '',
+                                        sectionId: ''
+                                    });
+                                }}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select program" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {programs.map(p => (
+                                        <SelectItem key={p.id} value={p.id.toString()}>{p.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
                         {/* Branch */}
                         <div className="grid gap-2">
-                            <Label htmlFor="branch">Branch</Label>
-                            <Select value={formData.branch} onValueChange={(value) => setFormData({ ...formData, branch: value })}>
+                            <Label htmlFor="branchId">Branch</Label>
+                            <Select
+                                value={formData.branchId}
+                                disabled={!formData.programId}
+                                onValueChange={(value) => {
+                                    const b = branches.find(br => br.id === parseInt(value));
+                                    setFormData({
+                                        ...formData,
+                                        branchId: value,
+                                        branch: b ? b.name : '',
+                                        sectionId: ''
+                                    });
+                                }}
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select branch" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="CSE">Computer Science Engineering</SelectItem>
-                                    <SelectItem value="ECE">Electronics & Communication</SelectItem>
-                                    <SelectItem value="ME">Mechanical Engineering</SelectItem>
-                                    <SelectItem value="CE">Civil Engineering</SelectItem>
-                                    <SelectItem value="EE">Electrical Engineering</SelectItem>
+                                    {branches.map(b => (
+                                        <SelectItem key={b.id} value={b.id.toString()}>{b.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
 
                         {/* Section */}
                         <div className="grid gap-2">
-                            <Label htmlFor="section">Section</Label>
-                            <Select value={formData.section} onValueChange={(value) => setFormData({ ...formData, section: value })}>
+                            <Label htmlFor="sectionId">Section</Label>
+                            <Select
+                                value={formData.sectionId}
+                                disabled={!formData.branchId}
+                                onValueChange={(value) => {
+                                    const s = sections.find(sec => sec.id === parseInt(value));
+                                    setFormData({
+                                        ...formData,
+                                        sectionId: value,
+                                        section: s ? s.name : ''
+                                    });
+                                }}
+                            >
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select section" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="A">Section A</SelectItem>
-                                    <SelectItem value="B">Section B</SelectItem>
-                                    <SelectItem value="C">Section C</SelectItem>
-                                    <SelectItem value="D">Section D</SelectItem>
+                                    {sections.map(s => (
+                                        <SelectItem key={s.id} value={s.id.toString()}>{s.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
 
-                        {/* Year */}
+                        {/* Academic Year */}
                         <div className="grid gap-2">
-                            <Label htmlFor="year">Year</Label>
+                            <Label htmlFor="academicYearId">Academic Year</Label>
+                            <Select value={formData.academicYearId} onValueChange={(value) => setFormData({ ...formData, academicYearId: value })}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select academic year" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {academicYears.map(y => (
+                                        <SelectItem key={y.id} value={y.id.toString()}>{y.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        {/* Current Year Selection (Internal to UI) */}
+                        <div className="grid gap-2">
+                            <Label htmlFor="year">Class Year</Label>
                             <Select value={formData.year} onValueChange={(value) => setFormData({ ...formData, year: value })}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select year" />
@@ -151,31 +288,10 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
                                 </SelectContent>
                             </Select>
                         </div>
-
-                        {/* Course */}
-                        <div className="grid gap-2">
-                            <Label htmlFor="course">Course</Label>
-                            <Input
-                                id="course"
-                                value={formData.course}
-                                onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                                placeholder="e.g., B.Tech"
-                            />
-                        </div>
-
-                        {/* Department */}
-                        <div className="grid gap-2">
-                            <Label htmlFor="department">Department</Label>
-                            <Input
-                                id="department"
-                                value={formData.department}
-                                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                                placeholder="e.g., School of Computing"
-                            />
-                        </div>
                     </div>
 
-                    <DialogFooter>
+                    <DialogFooter className="mt-4">
+
                         <Button
                             type="button"
                             variant="outline"

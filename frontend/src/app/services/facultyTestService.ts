@@ -40,3 +40,8 @@ export const toggleTestPublishStatus = async (testId: string) => {
     const response = await axios.patch(`${API_URL}/${testId}/publish`);
     return response.data;
 };
+
+export const deleteTestById = async (testId: string) => {
+    const response = await axios.delete(`${API_URL}/${testId}`);
+    return response.data;
+};

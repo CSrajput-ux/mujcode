@@ -14,8 +14,10 @@ import {
   Shield,
   Ticket,
   UserCircle,
+  Briefcase,
   Lock // Added lock icon for blocked state
 } from 'lucide-react';
+
 import { useState, useEffect } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import CompleteProfileDialog from './CompleteProfileDialog';
@@ -78,10 +80,12 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
     { icon: <BookOpen className="w-5 h-5" />, label: 'Courses', path: '/student/courses', id: 'courses' },
     { icon: <Code2 className="w-5 h-5" />, label: 'Problems', path: '/student/problems', id: 'problems' },
     { icon: <BarChart3 className="w-5 h-5" />, label: 'Analytics', path: '/student/analytics', id: 'reports' },
-    { icon: <FileText className="w-5 h-5" />, label: 'Tests', path: '/student/tests', id: 'tests' },
+    { icon: <FileText className="w-5 h-5" />, label: 'Tests / Quiz', path: '/student/tests', id: 'tests' },
     { icon: <GraduationCap className="w-5 h-5" />, label: 'Learning', path: '/student/learning', id: 'learning' },
     { icon: <ClipboardList className="w-5 h-5" />, label: 'Assignments', path: '/student/assignments', id: 'assignments' },
+    { icon: <Briefcase className="w-5 h-5" />, label: 'Placements', path: '/student/placements', id: 'placements' },
   ];
+
 
   return (
     <div className="min-h-screen bg-gray-50">

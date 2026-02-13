@@ -1,4 +1,4 @@
-import { Calendar, Users, BarChart2, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Calendar, Users, BarChart2, BookOpen, Eye, EyeOff, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -8,9 +8,10 @@ interface TestCardProps {
     test: TestStats;
     onViewDetails: (test: TestStats) => void;
     onTogglePublish?: (testId: string, currentStatus: boolean) => void;
+    onDelete?: (testId: string) => void;
 }
 
-export default function TestCard({ test, onViewDetails, onTogglePublish }: TestCardProps) {
+export default function TestCard({ test, onViewDetails, onTogglePublish, onDelete }: TestCardProps) {
     return (
         <Card className="hover:shadow-md transition-shadow border-l-4 border-l-[#FF7A00]">
             <CardContent className="p-5">
@@ -74,6 +75,17 @@ export default function TestCard({ test, onViewDetails, onTogglePublish }: TestC
                             title={test.isPublished ? 'Unpublish Test' : 'Publish Test'}
                         >
                             {test.isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </Button>
+                    )}
+                    {onDelete && (
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="text-red-600 hover:text-red-800"
+                            onClick={() => onDelete(test._id)}
+                            title="Delete Test"
+                        >
+                            <Trash2 className="w-4 h-4" />
                         </Button>
                     )}
                 </div>

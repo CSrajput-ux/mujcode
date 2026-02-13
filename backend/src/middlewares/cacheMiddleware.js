@@ -10,6 +10,11 @@ const cache = (duration = DEFAULT_EXPIRATION) => {
             return next();
         }
 
+        // AG-FIX: Skip cache if userId is present (User-specific data)
+        if (req.query.userId) {
+            return next();
+        }
+
         const key = `cache:${req.originalUrl}`;
 
         try {

@@ -72,9 +72,11 @@ exports.createFaculty = async (req, res) => {
             email,
             facultyId,
             department,
+            departmentId,
             designation,
             password
         } = req.body;
+
 
         // Validate required fields
         if (!name || !email || !facultyId || !department || !password) {
@@ -122,7 +124,9 @@ exports.createFaculty = async (req, res) => {
             email,
             facultyId,
             department,
+            departmentId,
             designation: designation || 'Assistant Professor',
+
             teachingAssignments: [],
             teachingCourses: [],
             createdCourses: []
