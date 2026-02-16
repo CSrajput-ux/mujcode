@@ -35,17 +35,23 @@ exports.getProblemStats = async (req, res) => {
     }
 };
 
-// Get all problems with filters
+// Get all problems with filters and pagination
 exports.getProblems = async (req, res) => {
     try {
-        const { category, difficulty, topic, search } = req.query;
+        const { category, difficulty, topic, search, page = 1, limit = 20 } = req.query;
         const userId = req.query.userId;
-        const cacheKey = `problems:${JSON.stringify({ category, difficulty, topic, search })}`;
+
+        // Pagination params
+        const pageNum = Math.max(1, parseInt(page));
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit))); // Max 100 items
+        const skip = (pageNum - 1) * limitNum;
+
+        const cacheKey = `problems:${JSON.stringify({ category, difficulty, topic, search, page: pageNum, limit: limitNum })}`;
 
         // 1. Try Cache
-        let problems = await cacheService.get(cacheKey);
+        let result = await cacheService.get(cacheKey);
 
-        if (!problems) {
+        if (!result) {
             // Build filter object
             const filter = {};
             if (category && category !== 'All') filter.category = category;
@@ -53,30 +59,44 @@ exports.getProblems = async (req, res) => {
             if (topic) filter.topic = topic;
             if (search) filter.title = { $regex: search, $options: 'i' };
 
-            // Get problems from DB
-            problems = await Problem.find(filter).sort({ number: 1 });
+            // Get total count
+            const total = await Problem.countDocuments(filter);
+
+            // Get paginated problems from DB
+            const problems = await Problem.find(filter)
+                .sort({ number: 1 })
+                .skip(skip)
+                .limit(limitNum);
+
+            result = {
+                problems,
+                pagination: {
+                    page: pageNum,
+                    limit: limitNum,
+                    total,
+                    totalPages: Math.ceil(total / limitNum),
+                    hasNext: pageNum < Math.ceil(total / limitNum),
+                    hasPrev: pageNum > 1
+                }
+            };
 
             // Set Cache (5 minutes)
-            await cacheService.set(cacheKey, problems, 300);
+            await cacheService.set(cacheKey, result, 300);
         }
 
         // If userId provided, check which problems are solved
-        // (This part is dynamic per user, so we don't cache the result, but we used cached problems list)
-        // If userId provided, check which problems are solved
-        // Optimized: Use StudentProgress which maps solved problem IDs efficiently
         if (userId) {
             const StudentProgress = require('../models/mongo/StudentProgress');
             const progress = await StudentProgress.findOne({ userId });
 
             // Create Set for O(1) lookup
-            // StudentProgress stores solvedProblemIds as Numbers
             const solvedSet = new Set(progress ? progress.solvedProblemIds.map(id => id.toString()) : []);
 
             // Mark problems as solved, attempted, or todo
-            problems = problems.map(problem => {
+            result.problems = result.problems.map(problem => {
                 const problemObj = problem.toObject ? problem.toObject() : { ...problem };
 
-                // Check if problem number (e.g. 1) is in solved set
+                // Check if problem number is in solved set
                 if (solvedSet.has(problemObj.number.toString())) {
                     problemObj.status = 'solved';
                 } else {
@@ -87,7 +107,7 @@ exports.getProblems = async (req, res) => {
             });
         }
 
-        res.status(200).json({ problems });
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

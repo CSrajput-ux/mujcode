@@ -1,0 +1,76 @@
+﻿≡ƒôí Connecting to PostgreSQL...
+Γ£à Connected to MongoDB
+Γ£à Connected to Postgres/SQLite
+Γ£à Found StudentProfile: {
+  "id": "8d0844dd-af42-42a5-a82d-f9af17e8e334",
+  "userId": "2eabd3c7-a706-49cd-b008-76cb089aa5f1",
+  "rollNumber": "2427030521",
+  "branch": "CSE",
+  "section": "A",
+  "year": 2,
+  "semester": null,
+  "course": "computer science engineering",
+  "department": " cse",
+  "cgpa": 0,
+  "createdAt": "2026-01-31T22:20:23.158Z",
+  "updatedAt": "2026-02-03T19:15:14.035Z"
+}
+Γ£à Found StudentProgress: {
+  "solvedProblems": {
+    "easy": 2,
+    "medium": 1,
+    "hard": 0
+  },
+  "_id": "698e2e2acbef62913218805c",
+  "userId": "2eabd3c7-a706-49cd-b008-76cb089aa5f1",
+  "totalSolved": 3,
+  "totalPoints": 20,
+  "solvedProblemIds": [
+    1,
+    3001,
+    3
+  ],
+  "submissions": [
+    {
+      "problemId": "697f97d81004c3cb69e8ed7e",
+      "difficulty": "easy",
+      "solvedAt": "2026-02-12T19:46:50.315Z",
+      "status": "accepted",
+      "_id": "698e2e2acbef62913218805d"
+    },
+    {
+      "problemId": "6986475bcb6a79fb5867471f",
+      "difficulty": "easy",
+      "solvedAt": "2026-02-13T13:59:28.188Z",
+      "status": "accepted",
+      "_id": "698f2e40fb002976eb8c13f9"
+    },
+    {
+      "problemId": "697f97d81004c3cb69e8ed8e",
+      "difficulty": "medium",
+      "solvedAt": "2026-02-13T16:39:05.185Z",
+      "status": "accepted",
+      "_id": "698f53a9b624fca1a8edbaf0"
+    }
+  ],
+  "activityMap": [
+    {
+      "date": "2026-02-12T19:46:50.317Z",
+      "count": 1,
+      "_id": "698e2e2acbef62913218805e"
+    },
+    {
+      "date": "2026-02-13T13:59:28.214Z",
+      "count": 2,
+      "_id": "698f2e40fb002976eb8c13fa"
+    }
+  ],
+  "lastActive": "2026-02-13T16:39:05.191Z",
+  "createdAt": "2026-02-12T19:46:50.321Z",
+  "updatedAt": "2026-02-13T16:39:05.205Z",
+  "__v": 2,
+  "completedAssignments": [],
+  "completedTests": []
+}
+   -> Total Points: 20
+   -> Total Solved: 3

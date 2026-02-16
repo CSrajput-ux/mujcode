@@ -1,10 +1,13 @@
-import StudentLayout from '../../components/StudentLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import StudentLayout from '../../shared/components/StudentLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { TrendingUp, Target, Award, BookOpen } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+import { useAuth } from '@/contexts/AuthContext';
+
 export default function Analytics() {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
 
@@ -16,14 +19,16 @@ export default function Analytics() {
   const [summary, setSummary] = useState<any>(null);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    // Extract numeric college_id from user data
+    if (!user?.id) return;
+
+    // Extract numeric college_id from user data if exists, else use id
     const studentId = user.college_id || user.id;
+
     if (studentId) {
       setUserId(studentId);
       fetchAllData(studentId);
     }
-  }, []);
+  }, [user]);
 
   const fetchAllData = async (studentId: number) => {
     try {

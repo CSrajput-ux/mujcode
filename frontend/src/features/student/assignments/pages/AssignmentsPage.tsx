@@ -1,10 +1,10 @@
-import StudentLayout from '../../components/StudentLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import StudentLayout from '../../shared/components/StudentLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
+import { Badge } from '@/app/components/ui/badge';
 import { FileText, Upload, Video, File, Calendar, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import CaseStudyNotebook from '../../components/CaseStudyNotebook';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
+import CaseStudyNotebook from '@/app/components/CaseStudyNotebook';
 import { useState } from 'react';
 
 export default function Assignments() {

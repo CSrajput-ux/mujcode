@@ -31,19 +31,36 @@ export default function FacultyLayout({ children }: FacultyLayoutProps) {
     const [user, setUser] = useState<{ name: string; department?: string; email?: string; role?: string } | null>(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = sessionStorage.getItem('user');
         if (storedUser) {
             try {
-                setUser(JSON.parse(storedUser));
+                const parsedUser = JSON.parse(storedUser);
+                setUser(parsedUser);
+
+                if (parsedUser.role !== 'faculty' && parsedUser.role !== 'admin') {
+                    // Redirect non-faculty users
+                    if (parsedUser.role === 'student') navigate('/student/dashboard');
+                    else if (parsedUser.role === 'company') navigate('/company/dashboard');
+                    else navigate('/login');
+                }
             } catch (e) {
                 console.error('Failed to parse user data', e);
+                navigate('/login');
             }
+        } else {
+            navigate('/login');
         }
-    }, []);
+    }, [navigate]);
 
     const getInitials = (name: string) => {
         if (!name) return 'FM';
         return name.split(' ').map(part => part[0]).join('').toUpperCase().slice(0, 2);
+    };
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        navigate('/login');
     };
 
     const menuItems = [
@@ -120,7 +137,7 @@ export default function FacultyLayout({ children }: FacultyLayoutProps) {
                                 </div>
 
                                 <div className="p-2 border-t border-gray-50">
-                                    <button onClick={() => navigate('/')} className="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-50 py-2.5 rounded-lg transition-colors text-xs font-bold">
+                                    <button onClick={handleLogout} className="w-full flex items-center justify-center space-x-2 text-red-600 hover:bg-red-50 py-2.5 rounded-lg transition-colors text-xs font-bold">
                                         <LogOut className="w-4 h-4" />
                                         <span>Sign Out</span>
                                     </button>

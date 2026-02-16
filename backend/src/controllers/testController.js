@@ -1,17 +1,61 @@
 const Test = require('../models/mongo/Test');
 const Question = require('../models/mongo/Question');
 const TestSubmission = require('../models/mongo/TestSubmission');
+const StudentProfile = require('../models/pg/StudentProfile');
 
 // Get all tests (with optional filters)
+// NOTE: This endpoint is primarily for students. It only returns published tests,
+// and can optionally be filtered by branch/section/semester.
 exports.getTests = async (req, res) => {
     try {
-        const { type, status } = req.query;
+        let { type, status, branch, section, semester, course } = req.query;
         let query = {};
         if (type) query.type = type;
         if (status) query.status = status;
 
         // CRITICAL: Students should ONLY see published tests
         query.isPublished = true;
+
+        // If user is a student, force filters based on their profile
+        if (req.user && (req.user.role === 'student' || req.user.role === 'Student')) {
+            try {
+                const studentProfile = await StudentProfile.findOne({ where: { userId: req.user.id } });
+                if (studentProfile) {
+                    // Logic: Match student's specific details OR tests open to all (null/empty)
+                    // We must override any query params passed by frontend for security
+                    branch = studentProfile.branch;
+                    section = studentProfile.section;
+                    semester = studentProfile.semester;
+                    course = studentProfile.course;
+                }
+            } catch (err) {
+                console.error("Error fetching student profile:", err);
+            }
+        }
+
+        // Optional audience filtering (used when frontend passes student's profile)
+        // logic: Match specific branch OR if test is for all branches (null/empty)
+        const andConditions = [];
+
+        if (branch) {
+            andConditions.push({ $or: [{ branch: branch }, { branch: null }, { branch: '' }] });
+        }
+        if (section) {
+            andConditions.push({ $or: [{ section: section }, { section: null }, { section: '' }] });
+        }
+        if (semester !== undefined) {
+            const semNumber = Number(semester);
+            if (!Number.isNaN(semNumber)) {
+                andConditions.push({ $or: [{ semester: semNumber }, { semester: null }] });
+            }
+        }
+        if (course) {
+            andConditions.push({ $or: [{ course: course }, { course: null }, { course: '' }] });
+        }
+
+        if (andConditions.length > 0) {
+            query.$and = andConditions;
+        }
 
         const tests = await Test.find(query).sort({ startTime: 1 });
         res.json(tests);
@@ -41,10 +85,22 @@ exports.getTestById = async (req, res) => {
     }
 };
 
-// Create a new test (Admin/Faculty only - for seeding/testing)
+// Create a new test (Faculty creates test + target audience)
 exports.createTest = async (req, res) => {
     try {
-        const { title, type, testType, duration, questions: questionData, startTime, isPublished } = req.body;
+        const {
+            title,
+            type,
+            testType,
+            duration,
+            questions: questionData,
+            startTime,
+            isPublished,
+            branch,
+            section,
+            semester,
+            course
+        } = req.body;
 
         // For new test builder flow - create empty test
         if (testType) {
@@ -56,7 +112,11 @@ exports.createTest = async (req, res) => {
                 startTime,
                 status: 'Draft', // Start as draft
                 builderStatus: 'building', // Builder is in progress
-                isPublished: isPublished || false // Default to false
+                isPublished: isPublished || false, // Default to false
+                branch,
+                section,
+                semester,
+                course
             });
 
             await newTest.save();
@@ -79,7 +139,10 @@ exports.createTest = async (req, res) => {
             startTime,
             questions: questionIds,
             status: 'Upcoming', // Default
-            isPublished: isPublished || false // Default to false if not provided
+            isPublished: isPublished || false, // Default to false if not provided
+            branch,
+            section,
+            semester
         });
 
         await newTest.save();
@@ -127,6 +190,18 @@ exports.submitTest = async (req, res) => {
         // Log Activity
         const activityService = require('../services/activityService');
         await activityService.logActivity(studentId);
+
+        // Award Points (New Ranking System)
+        try {
+            const StudentProgress = require('../models/mongo/StudentProgress');
+            let progress = await StudentProgress.findOne({ userId: studentId });
+            if (!progress) progress = new StudentProgress({ userId: studentId });
+
+            await progress.addTestPoints(testId, 20); // 20 points for test completion
+        } catch (err) {
+            console.error('Error awarding test points:', err);
+            // Don't block response
+        }
 
         res.json({
             message: 'Test submitted successfully',
@@ -227,7 +302,14 @@ exports.togglePublishTest = async (req, res) => {
         }
 
         // Toggle the publish status
-        test.isPublished = !test.isPublished;
+        const willPublish = !test.isPublished;
+        test.isPublished = willPublish;
+
+        // If we are publishing a draft test, treat it as Upcoming for students
+        if (willPublish && test.status === 'Draft') {
+            test.status = 'Upcoming';
+        }
+
         await test.save();
 
         res.json({
@@ -236,5 +318,27 @@ exports.togglePublishTest = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Error toggling publish status', error: error.message });
+    }
+};
+
+// Delete a test (Faculty only) - also cleans up submissions
+exports.deleteTest = async (req, res) => {
+    try {
+        const { testId } = req.params;
+
+        const test = await Test.findById(testId);
+        if (!test) {
+            return res.status(404).json({ message: 'Test not found' });
+        }
+
+        // Delete all submissions linked to this test
+        await TestSubmission.deleteMany({ testId });
+
+        // Delete the test itself
+        await Test.deleteOne({ _id: testId });
+
+        res.json({ message: 'Test and related submissions deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting test', error: error.message });
     }
 };

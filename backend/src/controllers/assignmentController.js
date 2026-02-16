@@ -63,6 +63,22 @@ exports.gradeSubmission = async (req, res) => {
             { marks, feedback, status: 'Graded' },
             { new: true }
         );
+
+        // Award Points if passing/graded (New Ranking System)
+        try {
+            const StudentProgress = require('../models/mongo/StudentProgress');
+            const Assignment = require('../models/mongo/Assignment');
+
+            const assignment = await Assignment.findById(submission.assignmentId);
+            if (assignment) {
+                let progress = await StudentProgress.findOne({ userId: submission.studentId });
+                if (!progress) progress = new StudentProgress({ userId: submission.studentId });
+
+                await progress.addAssignmentPoints(submission.assignmentId, assignment.type);
+            }
+        } catch (err) {
+            console.error('Error awarding assignment points:', err);
+        }
         res.json(submission);
     } catch (error) {
         res.status(500).json({ message: 'Error grading submission', error: error.message });

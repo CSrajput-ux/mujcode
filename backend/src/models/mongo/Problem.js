@@ -8,10 +8,10 @@ const ProblemSchema = new mongoose.Schema({
     points: {
         type: Number, default: function () {
             // Auto-assign points based on difficulty
-            if (this.difficulty === 'Easy') return 5;
-            if (this.difficulty === 'Medium') return 7;
-            if (this.difficulty === 'Hard') return 10;
-            return 5;
+            if (this.difficulty === 'Easy') return 7;
+            if (this.difficulty === 'Medium') return 10;
+            if (this.difficulty === 'Hard') return 20;
+            return 7;
         }
     },
     category: {

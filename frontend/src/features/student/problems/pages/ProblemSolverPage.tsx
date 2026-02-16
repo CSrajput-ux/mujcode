@@ -1,10 +1,10 @@
-import StudentLayout from '../../components/StudentLayout';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import StudentLayout from '../../shared/components/StudentLayout';
+import { Button } from '@/app/components/ui/button';
+import { Badge } from '@/app/components/ui/badge';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Play, Send, CheckCircle2, XCircle, Clock, ArrowLeft, Save, MessageSquare, Lightbulb } from 'lucide-react';
-import { Textarea } from '../../components/ui/textarea';
+import { Textarea } from '@/app/components/ui/textarea';
 import { toast } from 'sonner';
 
 export default function ProblemSolver() {

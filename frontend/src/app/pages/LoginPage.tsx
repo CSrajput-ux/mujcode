@@ -59,18 +59,30 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Save to localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        // Save to sessionStorage (Tab Isolation Fix)
+        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+
+        // Correctly route based on ACTUAL user role, not the selected tab
+        const actualRole = data.user.role;
+        let targetRoute = '/';
+
+        switch (actualRole) {
+          case 'student': targetRoute = '/student/dashboard'; break;
+          case 'faculty': targetRoute = '/faculty/dashboard'; break;
+          case 'admin': targetRoute = '/admin/dashboard'; break;
+          case 'company': targetRoute = '/company/dashboard'; break;
+          default: targetRoute = '/login';
+        }
 
         // Open Password Change Modal instead of navigating immediately
         // Check if password change is required (Not for Company, and only if not changed yet)
         if (selectedRole !== 'company' && !data.user.isPasswordChanged) {
           setUserEmail(loginId);
-          setPendingRoleRoute(role.route);
+          setPendingRoleRoute(targetRoute);
           setShowPasswordModal(true);
         } else {
-          navigate(role.route);
+          navigate(targetRoute);
         }
       } else {
         setError(data.error || 'Login failed');

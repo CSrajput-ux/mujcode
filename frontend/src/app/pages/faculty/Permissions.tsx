@@ -51,11 +51,11 @@ export default function FacultyPermissions() {
     const fetchInitialData = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             const headers = { 'Authorization': `Bearer ${token}` };
 
             // 1. Fetch Profile
-            const userStr = localStorage.getItem('user');
+            const userStr = sessionStorage.getItem('user');
             const user = userStr ? JSON.parse(userStr) : null;
             if (!user?.id) throw new Error('User not found');
 
@@ -81,7 +81,7 @@ export default function FacultyPermissions() {
 
     const fetchActiveBlocks = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             const res = await fetch(`${API_BASE}/permissions/blocks`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -96,7 +96,7 @@ export default function FacultyPermissions() {
         if (!confirm('Are you sure you want to revoke this restriction?')) return;
 
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             const res = await fetch(`${API_BASE}/permissions/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }

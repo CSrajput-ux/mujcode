@@ -1,0 +1,186 @@
+src/app/components/faculty/FacultyProfileModal.tsx(11,1): error TS6133: 'Input' is declared but its value is never read.
+src/app/components/faculty/FacultyProfileModal.tsx(21,67): error TS6133: 'onSuccess' is declared but its value is never read.
+src/app/components/faculty/FacultyProfileModal.tsx(23,12): error TS6133: 'loading' is declared but its value is never read.
+src/app/components/faculty/FacultyProfileModal.tsx(23,21): error TS6133: 'setLoading' is declared but its value is never read.
+src/app/components/ProctoredTest.tsx(24,11): error TS6133: 'requestRef' is declared but its value is never read.
+src/app/components/ProctoredTest.tsx(24,24): error TS2554: Expected 1 arguments, but got 0.
+src/app/components/ProtectedRoute.tsx(2,1): error TS6192: All imports in import declaration are unused.
+src/app/components/ProtectedRoute.tsx(11,100): error TS2503: Cannot find namespace 'JSX'.
+src/app/components/SecureTestEnvironment.tsx(32,17): error TS2353: Object literal may only specify known properties, and 'important' does not exist in type 'ExternalToast'.
+src/app/pages/admin/AddPlacement.tsx(3,52): error TS6133: 'CardDescription' is declared but its value is never read.
+src/app/pages/admin/AddStudent.tsx(34,27): error TS6133: 'setAcademicYears' is declared but its value is never read.
+src/app/pages/admin/ManageRoles.tsx(1,20): error TS6133: 'useEffect' is declared but its value is never read.
+src/app/pages/admin/ManageRoles.tsx(12,5): error TS6133: 'UserPlus' is declared but its value is never read.
+src/app/pages/admin/ManageRoles.tsx(17,5): error TS6133: 'CheckCircle2' is declared but its value is never read.
+src/app/pages/admin/ManageRoles.tsx(20,1): error TS6133: 'toast' is declared but its value is never read.
+src/app/pages/company/Dashboard.tsx(6,3): error TS6133: 'Code2' is declared but its value is never read.
+src/app/pages/company/Dashboard.tsx(13,3): error TS6133: 'Clock' is declared but its value is never read.
+src/app/pages/company/Dashboard.tsx(23,1): error TS6192: All imports in import declaration are unused.
+src/app/pages/faculty/CoursePermissionPanel.tsx(1,20): error TS6133: 'useEffect' is declared but its value is never read.
+src/app/pages/faculty/CoursePermissionPanel.tsx(2,33): error TS6133: 'Check' is declared but its value is never read.
+src/app/pages/faculty/CoursePermissionPanel.tsx(2,40): error TS6133: 'Layout' is declared but its value is never read.
+src/app/pages/faculty/CoursePermissionPanel.tsx(2,48): error TS6133: 'AlertCircle' is declared but its value is never read.
+src/app/pages/faculty/FacultyTests.tsx(14,12): error TS6133: 'loading' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(3,18): error TS6133: 'Clock' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(3,25): error TS6133: 'Layers' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(4,5): error TS6133: 'Calendar' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(4,15): error TS6133: 'Check' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(4,22): error TS6133: 'X' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(4,25): error TS6133: 'Info' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(4,47): error TS6133: 'Search' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(6,16): error TS6133: 'CardHeader' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(6,28): error TS6133: 'CardTitle' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(6,39): error TS6133: 'CardContent' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(6,52): error TS6133: 'CardDescription' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(6,69): error TS6133: 'CardFooter' is declared but its value is never read.
+src/app/pages/faculty/Permissions.tsx(43,12): error TS6133: 'loading' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(2,10): error TS6133: 'Search' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(2,38): error TS6133: 'X' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(2,47): error TS6133: 'Unlock' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(5,1): error TS6133: 'Badge' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(40,12): error TS6133: 'searchQuery' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(40,25): error TS6133: 'setSearchQuery' is declared but its value is never read.
+src/app/pages/faculty/StudentPermissionPanel.tsx(239,10): error TS6133: 'UserIcon' is declared but its value is never read.
+src/app/pages/student/Analytics.tsx(3,30): error TS6133: 'Award' is declared but its value is never read.
+src/app/pages/student/Analytics.tsx(9,10): error TS6133: 'userId' is declared but its value is never read.
+src/app/pages/student/Assignments.tsx(5,51): error TS6133: 'Clock' is declared but its value is never read.
+src/app/pages/student/CodingTestRunner.tsx(46,34): error TS6133: 'setCurrentQuestionIndex' is declared but its value is never read.
+src/app/pages/student/CodingTestRunner.tsx(144,38): error TS6133: 'reason' is declared but its value is never read.
+src/app/pages/student/Dashboard.tsx(19,10): error TS6133: 'loadingRanks' is declared but its value is never read.
+src/app/pages/student/Jobs.tsx(11,5): error TS6133: 'IndianRupee' is declared but its value is never read.
+src/app/pages/student/Jobs.tsx(92,11): error TS6133: 'getApplicationStatus' is declared but its value is never read.
+src/app/pages/student/MCQTestRunner.tsx(101,38): error TS6133: 'reason' is declared but its value is never read.
+src/app/pages/student/mock-tests/MockTestRunner.tsx(29,42): error TS6133: 'attemptId' is declared but its value is never read.
+src/app/pages/student/Tests.tsx(54,35): error TS2559: Type '{ branch?: string | undefined; section?: string | undefined; semester?: string | undefined; }' has no properties in common with type '{ type?: string | undefined; status?: string | undefined; }'.
+src/app/pages/student/TheoryTestRunner.tsx(7,42): error TS6133: 'BookOpen' is declared but its value is never read.
+src/app/pages/student/TheoryTestRunner.tsx(99,38): error TS6133: 'reason' is declared but its value is never read.
+src/features/admin/components/AdminSidebar.tsx(52,77): error TS2345: Argument of type 'string[]' is not assignable to parameter of type 'PermissionKey[]'.
+  Type 'string' is not assignable to type 'PermissionKey'.
+src/features/auth/pages/LandingPage.tsx(22,24): error TS2307: Cannot find module '../components/ui/button' or its corresponding type declarations.
+src/features/auth/pages/LandingPage.tsx(23,35): error TS2307: Cannot find module '../components/ui/card' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(4,24): error TS2307: Cannot find module '../components/ui/button' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(5,35): error TS2307: Cannot find module '../components/ui/card' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(6,23): error TS2307: Cannot find module '../components/ui/input' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(7,23): error TS2307: Cannot find module '../components/ui/label' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(8,58): error TS2307: Cannot find module '../components/ui/tabs' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(10,33): error TS2307: Cannot find module '../components/ChangePasswordModal' or its corresponding type declarations.
+src/features/auth/pages/LoginPage.tsx(100,56): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(134,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(149,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(183,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(198,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(226,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(241,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(269,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/auth/pages/LoginPage.tsx(284,36): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(2,23): error TS2307: Cannot find module '../../components/faculty/FilterBar' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(3,28): error TS2307: Cannot find module '../../components/faculty/AssignmentCard' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(4,39): error TS2307: Cannot find module '../../components/faculty/AssignmentSubmissionTable' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(5,35): error TS2307: Cannot find module '../../components/faculty/CreateAssignmentModal' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(6,58): error TS2307: Cannot find module '../../components/ui/tabs' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(7,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(9,89): error TS2307: Cannot find module '../../services/facultyAssignmentService' or its corresponding type declarations.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(88,42): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/features/faculty/assignments/pages/AssignmentsPage.tsx(166,49): error TS7006: Parameter 'sub' implicitly has an 'any' type.
+src/features/faculty/dashboard/pages/DashboardPage.tsx(1,58): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/faculty/dashboard/pages/DashboardPage.tsx(2,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/faculty/profile/pages/ActivityPage.tsx(7,32): error TS2307: Cannot find module './components/CreateQuestionForm' or its corresponding type declarations.
+src/features/faculty/profile/pages/ActivityPage.tsx(8,33): error TS2307: Cannot find module './components/CreateCommunityForm' or its corresponding type declarations.
+src/features/faculty/profile/pages/ActivityPage.tsx(9,27): error TS2307: Cannot find module './components/QuestionsList' or its corresponding type declarations.
+src/features/faculty/profile/pages/ActivityPage.tsx(10,29): error TS2307: Cannot find module './components/CommunitiesList' or its corresponding type declarations.
+src/features/faculty/profile/pages/PermissionsPage.tsx(3,31): error TS6133: 'Clock' is declared but its value is never read.
+src/features/faculty/profile/pages/PermissionsPage.tsx(3,38): error TS6133: 'Filter' is declared but its value is never read.
+src/features/faculty/profile/pages/PermissionsPage.tsx(4,5): error TS6133: 'CheckCircle2' is declared but its value is never read.
+src/features/faculty/profile/pages/PermissionsPage.tsx(4,19): error TS6133: 'XCircle' is declared but its value is never read.
+src/features/faculty/profile/pages/PermissionsPage.tsx(5,5): error TS6133: 'ChevronDown' is declared but its value is never read.
+src/features/faculty/profile/pages/PermissionsPage.tsx(6,25): error TS6133: 'Info' is declared but its value is never read.
+src/features/faculty/reports/pages/ReportsPage.tsx(2,23): error TS2307: Cannot find module '../../components/faculty/FilterBar' or its corresponding type declarations.
+src/features/faculty/reports/pages/ReportsPage.tsx(5,8): error TS2307: Cannot find module '../../components/faculty/AnalyticsComponents' or its corresponding type declarations.
+src/features/faculty/reports/pages/ReportsPage.tsx(8,8): error TS2307: Cannot find module '../../services/facultyAnalyticsService' or its corresponding type declarations.
+src/features/faculty/reports/pages/ReportsPage.tsx(32,17): error TS2304: Cannot find name 'getFacultyInsights'.
+src/features/faculty/tests/pages/TestsPage.tsx(2,23): error TS2307: Cannot find module '../../components/faculty/FilterBar' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(3,22): error TS2307: Cannot find module '../../components/faculty/TestCard' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(4,37): error TS2307: Cannot find module '../../components/faculty/StudentPerformanceTable' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(5,58): error TS2307: Cannot find module '../../components/ui/tabs' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(6,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(8,83): error TS2307: Cannot find module '../../services/facultyTestService' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(11,29): error TS2307: Cannot find module '../../components/faculty/CreateTestModal' or its corresponding type declarations.
+src/features/faculty/tests/pages/TestsPage.tsx(14,12): error TS6133: 'loading' is declared but its value is never read.
+src/features/faculty/tests/pages/TestsPage.tsx(86,42): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/features/faculty/tests/pages/TestsPage.tsx(178,48): error TS7006: Parameter 'sub' implicitly has an 'any' type.
+src/features/student/analytics/pages/AnalyticsPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/analytics/pages/AnalyticsPage.tsx(2,58): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/analytics/pages/AnalyticsPage.tsx(3,30): error TS6133: 'Award' is declared but its value is never read.
+src/features/student/analytics/pages/AnalyticsPage.tsx(9,10): error TS6133: 'userId' is declared but its value is never read.
+src/features/student/assignments/pages/AssignmentsPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/assignments/pages/AssignmentsPage.tsx(2,58): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/assignments/pages/AssignmentsPage.tsx(3,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/student/assignments/pages/AssignmentsPage.tsx(4,23): error TS2307: Cannot find module '../../components/ui/badge' or its corresponding type declarations.
+src/features/student/assignments/pages/AssignmentsPage.tsx(5,51): error TS6133: 'Clock' is declared but its value is never read.
+src/features/student/assignments/pages/AssignmentsPage.tsx(6,58): error TS2307: Cannot find module '../../components/ui/tabs' or its corresponding type declarations.
+src/features/student/assignments/pages/AssignmentsPage.tsx(7,31): error TS2307: Cannot find module '../../components/CaseStudyNotebook' or its corresponding type declarations.
+src/features/student/courses/pages/CourseDetailPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/courses/pages/CourseDetailPage.tsx(2,35): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/courses/pages/CourseDetailPage.tsx(3,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/student/courses/pages/CourseDetailPage.tsx(4,23): error TS2307: Cannot find module '../../components/ui/badge' or its corresponding type declarations.
+src/features/student/courses/pages/CourseDetailPage.tsx(218,55): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/student/courses/pages/CoursesPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/courses/pages/CoursesPage.tsx(2,35): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/courses/pages/CoursesPage.tsx(3,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/student/courses/pages/CoursesPage.tsx(4,23): error TS2307: Cannot find module '../../components/ui/badge' or its corresponding type declarations.
+src/features/student/courses/pages/CoursesPage.tsx(5,23): error TS2307: Cannot find module '../../components/ui/input' or its corresponding type declarations.
+src/features/student/courses/pages/CoursesPage.tsx(138,24): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/student/dashboard/pages/DashboardPage.tsx(19,10): error TS6133: 'loadingRanks' is declared but its value is never read.
+src/features/student/problems/pages/ProblemSolverPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemSolverPage.tsx(2,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemSolverPage.tsx(3,23): error TS2307: Cannot find module '../../components/ui/badge' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemSolverPage.tsx(7,26): error TS2307: Cannot find module '../../components/ui/textarea' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemSolverPage.tsx(355,56): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/student/problems/pages/ProblemSolverPage.tsx(379,56): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/student/problems/pages/ProblemSolverPage.tsx(403,56): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/student/problems/pages/ProblemsPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemsPage.tsx(2,35): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemsPage.tsx(3,23): error TS2307: Cannot find module '../../components/ui/badge' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemsPage.tsx(4,23): error TS2307: Cannot find module '../../components/ui/input' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemsPage.tsx(5,79): error TS2307: Cannot find module '../../components/ui/select' or its corresponding type declarations.
+src/features/student/problems/pages/ProblemsPage.tsx(146,30): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/features/student/profile/pages/LearningPage.tsx(1,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/profile/pages/LearningPage.tsx(2,58): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/profile/pages/LearningPage.tsx(3,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/student/profile/pages/LearningPage.tsx(4,46): error TS6133: 'Code2' is declared but its value is never read.
+src/features/student/profile/pages/LearningPage.tsx(5,58): error TS2307: Cannot find module '../../components/ui/tabs' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(2,27): error TS2307: Cannot find module '../../components/StudentLayout' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(3,35): error TS2307: Cannot find module '../../components/ui/card' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(4,24): error TS2307: Cannot find module '../../components/ui/button' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(5,23): error TS2307: Cannot find module '../../components/ui/badge' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(7,58): error TS2307: Cannot find module '../../components/ui/tabs' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(8,29): error TS2307: Cannot find module '../../components/SecureExamGuard' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(9,57): error TS2307: Cannot find module '../../services/testService' or its corresponding type declarations.
+src/features/student/tests/pages/TestsPage.tsx(141,50): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+src/features/student/tests/pages/TestsPage.tsx(141,55): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/shared/components/common/ChangePasswordModal.tsx(3,24): error TS2307: Cannot find module './ui/button' or its corresponding type declarations.
+src/shared/components/common/ChangePasswordModal.tsx(4,23): error TS2307: Cannot find module './ui/input' or its corresponding type declarations.
+src/shared/components/common/ChangePasswordModal.tsx(5,23): error TS2307: Cannot find module './ui/label' or its corresponding type declarations.
+src/shared/components/common/ChangePasswordModal.tsx(6,75): error TS2307: Cannot find module './ui/card' or its corresponding type declarations.
+src/shared/components/common/ChangePasswordModal.tsx(101,48): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/shared/components/common/ChangePasswordModal.tsx(124,48): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/shared/components/common/ChangePasswordModal.tsx(146,44): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/shared/components/common/EditProfileModal.tsx(1,20): error TS6133: 'useEffect' is declared but its value is never read.
+src/shared/components/common/EditProfileModal.tsx(9,8): error TS2307: Cannot find module './ui/dialog' or its corresponding type declarations.
+src/shared/components/common/EditProfileModal.tsx(10,24): error TS2307: Cannot find module './ui/button' or its corresponding type declarations.
+src/shared/components/common/EditProfileModal.tsx(11,23): error TS2307: Cannot find module './ui/input' or its corresponding type declarations.
+src/shared/components/common/EditProfileModal.tsx(12,23): error TS2307: Cannot find module './ui/label' or its corresponding type declarations.
+src/shared/components/common/EditProfileModal.tsx(13,79): error TS2307: Cannot find module './ui/select' or its corresponding type declarations.
+src/shared/components/common/EditProfileModal.tsx(14,22): error TS6133: 'GraduationCap' is declared but its value is never read.
+src/shared/components/common/EditProfileModal.tsx(119,85): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/shared/components/common/EditProfileModal.tsx(136,83): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/shared/components/common/EditProfileModal.tsx(151,86): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/shared/components/common/EditProfileModal.tsx(170,52): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/shared/components/common/EditProfileModal.tsx(181,52): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/shared/components/common/StudentStats.tsx(1,58): error TS2307: Cannot find module './ui/card' or its corresponding type declarations.
+src/shared/components/layout/StudentLayout.tsx(19,57): error TS2307: Cannot find module './ui/popover' or its corresponding type declarations.
+src/shared/components/layout/StudentLayout.tsx(20,35): error TS2307: Cannot find module './CompleteProfileDialog' or its corresponding type declarations.
+src/shared/components/layout/StudentLayout.tsx(21,30): error TS2307: Cannot find module './EditProfileModal' or its corresponding type declarations.
+src/shared/components/proctoring/SecureExamGuard.tsx(2,42): error TS2307: Cannot find module '../hooks/useProctoring' or its corresponding type declarations.
+src/shared/hooks/useProctoring.ts(27,11): error TS6133: 'faceModelRef' is declared but its value is never read.
+src/shared/hooks/useProctoring.ts(36,11): error TS6133: 'MOVEMENT_THRESHOLD' is declared but its value is never read.

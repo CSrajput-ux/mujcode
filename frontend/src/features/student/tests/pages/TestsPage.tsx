@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
-import StudentLayout from '../../components/StudentLayout';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import StudentLayout from '../../shared/components/StudentLayout';
+import { Card, CardContent } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
+import { Badge } from '@/app/components/ui/badge';
 import { Code2, FileText, Zap, Building2, Video, Calendar, Clock, Play } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import SecureExamGuard from '../../components/SecureExamGuard';
-import { getTests, getTestById, submitTest, Test } from '../../services/testService';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
+import SecureExamGuard from '@/app/components/SecureExamGuard';
+import { getTests, getTestById, submitTest, Test } from '@/app/services/testService';
 import { toast } from 'sonner';
+
+import MockTestsList from './mock/MockTestsList';
+import MockTestRunner from './mock/MockTestRunner';
 
 export default function Tests() {
   const [activeTest, setActiveTest] = useState<Test | null>(null);
+  const [activeMockTest, setActiveMockTest] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [tests, setTests] = useState<Test[]>([]);
   const [studentId] = useState("student_123"); // TODO: Replace with actual auth user ID
@@ -47,6 +51,30 @@ export default function Tests() {
     }
   };
 
+  // --- MOCK TEST HANDLERS ---
+  const handleStartMockTest = async (mockTestId: string) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/mock-tests/${mockTestId}`);
+      const data = await res.json();
+      if (res.ok) {
+        setActiveMockTest(data.mockTest);
+      } else {
+        toast.error("Failed to load mock test details");
+      }
+    } catch (error) {
+      console.error("Error starting mock test:", error);
+      toast.error("Failed to start mock test");
+    }
+  };
+
+  const handleMockSubmit = async (answers: any[], timeTaken: number) => {
+    // Here you would typically send the results to the backend
+    console.log("Mock Test Submitted:", { answers, timeTaken });
+    toast.success("Mock Test Submitted Successfully! Check your analytics for results.");
+    setActiveMockTest(null);
+  };
+
+  // --- STANDARD TEST HANDLERS ---
   const handleOptionSelect = (questionId: string, optionIndex: number) => {
     setAnswers(prev => ({
       ...prev,
@@ -109,6 +137,19 @@ export default function Tests() {
   const upcomingTests = tests.filter(t => t.status === 'Upcoming');
   const liveTests = tests.filter(t => t.status === 'Live');
   const completedTests = tests.filter(t => t.status === 'Completed'); // Backend handles completed status logic or we check submissions
+
+  // --- ACTIVE MOCK TEST RENDER ---
+  if (activeMockTest) {
+    return (
+      <MockTestRunner
+        attemptId="new_attempt" // Mock attempt ID logic
+        questions={activeMockTest.questions || []}
+        duration={activeMockTest.duration}
+        onSubmit={handleMockSubmit}
+        onExit={() => setActiveMockTest(null)}
+      />
+    );
+  }
 
   // --- ACTIVE TEST RENDER ---
   if (activeTest) {
@@ -220,13 +261,16 @@ export default function Tests() {
         {loading ? (
           <div>Loading tests...</div>
         ) : (
-          <Tabs defaultValue="upcoming" className="space-y-6">
-            <TabsList className="bg-gray-100">
+          <Tabs defaultValue="mock" className="space-y-6">
+            <TabsList className="bg-gray-100 p-1">
               <TabsTrigger value="upcoming" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
                 Upcoming ({upcomingTests.length})
               </TabsTrigger>
               <TabsTrigger value="live" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
                 Live ({liveTests.length})
+              </TabsTrigger>
+              <TabsTrigger value="mock" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
+                Mock Tests
               </TabsTrigger>
               <TabsTrigger value="completed" className="data-[state=active]:bg-[#FF7A00] data-[state=active]:text-white">
                 Completed ({completedTests.length})
@@ -305,6 +349,11 @@ export default function Tests() {
                   </CardContent>
                 </Card>
               ))}
+            </TabsContent>
+
+            {/* Mock Tests */}
+            <TabsContent value="mock" className="space-y-4">
+              <MockTestsList onStartTest={handleStartMockTest} />
             </TabsContent>
 
             {/* Completed Tests */}

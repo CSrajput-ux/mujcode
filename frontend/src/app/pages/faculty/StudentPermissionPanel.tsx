@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, ShieldAlert, Check, X, Lock, Unlock } from 'lucide-react';
+import { Search, ShieldAlert, Check, X, Lock, Unlock, User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
@@ -57,7 +57,7 @@ export default function StudentPermissionPanel({ facultySections }: StudentPermi
     const fetchStudents = async (section: string) => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             const res = await fetch(`${API_BASE}/admin/students?section=${section}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -78,7 +78,7 @@ export default function StudentPermissionPanel({ facultySections }: StudentPermi
         }
 
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
 
             // Loop through selected students and create blocks
             // In a real bulk API we'd send an array, but our controller takes single targetId
@@ -140,7 +140,7 @@ export default function StudentPermissionPanel({ facultySections }: StudentPermi
                 <Card className="border-gray-200 shadow-sm">
                     <CardHeader>
                         <CardTitle className="text-lg flex items-center gap-2">
-                            <UserIcon className="w-5 h-5 text-blue-600" />
+                            <User className="w-5 h-5 text-blue-600" />
                             Select Students
                         </CardTitle>
                         <CardDescription>Choose section first, then select students to restrict.</CardDescription>

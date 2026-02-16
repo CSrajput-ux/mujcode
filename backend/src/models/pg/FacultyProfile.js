@@ -19,6 +19,10 @@ const FacultyProfile = sequelize.define('FacultyProfile', {
         allowNull: false,
         unique: true
     },
+    school: {
+        type: DataTypes.STRING, // e.g., SET, SCSE
+        allowNull: true
+    },
     department: {
         type: DataTypes.STRING, // e.g., CSE, Mechanical
         allowNull: false

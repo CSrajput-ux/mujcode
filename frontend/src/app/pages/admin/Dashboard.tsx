@@ -194,7 +194,11 @@ export default function AdminDashboard() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate('/')}
+                onClick={() => {
+                  sessionStorage.removeItem('token');
+                  sessionStorage.removeItem('user');
+                  navigate('/login');
+                }}
                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
               >
                 <LogOut className="w-4 h-4 mr-2" />

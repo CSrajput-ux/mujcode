@@ -28,6 +28,12 @@ const TestSchema = new mongoose.Schema({
     endTime: { type: Date },
     duration: { type: Number, required: true }, // Duration in minutes
 
+    // Target audience (who should see this test)
+    branch: { type: String },   // e.g. CSE
+    section: { type: String },  // e.g. A, B
+    semester: { type: Number }, // e.g. 1-8
+    course: { type: String },   // e.g. B.Tech, BCA
+
     // Question references by type
     mcqQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'MCQQuestion' }],
     codingQuestions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CodingQuestion' }],

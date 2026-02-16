@@ -72,6 +72,21 @@ export default function FacultyTests() {
         }
     };
 
+    const handleDeleteTest = async (testId: string) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this test? This will also remove all its submissions.');
+        if (!confirmDelete) return;
+
+        try {
+            const { deleteTestById } = await import('../../services/facultyTestService');
+            await deleteTestById(testId);
+            toast.success('Test deleted successfully');
+            fetchTests();
+        } catch (error) {
+            console.error('Error deleting test:', error);
+            toast.error('Failed to delete test');
+        }
+    };
+
     // Filter tests by Tabs
     const testList = tests.filter(t => t.type !== 'Quiz');
     const quizList = tests.filter(t => t.type === 'Quiz');
@@ -114,7 +129,13 @@ export default function FacultyTests() {
                                 <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">2nd Year / Section A</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {testList.map(test => (
-                                        <TestCard key={test._id} test={test} onViewDetails={handleViewDetails} onTogglePublish={handleTogglePublish} />
+                                        <TestCard
+                                            key={test._id}
+                                            test={test}
+                                            onViewDetails={handleViewDetails}
+                                            onTogglePublish={handleTogglePublish}
+                                            onDelete={handleDeleteTest}
+                                        />
                                     ))}
                                     {testList.length === 0 && <p className="text-gray-500 col-span-3">No tests found.</p>}
                                 </div>
@@ -124,7 +145,13 @@ export default function FacultyTests() {
                         <TabsContent value="quizzes" className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {quizList.map(test => (
-                                    <TestCard key={test._id} test={test} onViewDetails={handleViewDetails} onTogglePublish={handleTogglePublish} />
+                                    <TestCard
+                                        key={test._id}
+                                        test={test}
+                                        onViewDetails={handleViewDetails}
+                                        onTogglePublish={handleTogglePublish}
+                                        onDelete={handleDeleteTest}
+                                    />
                                 ))}
                                 {quizList.length === 0 && <p className="text-gray-500 col-span-3">No quizzes found.</p>}
                             </div>

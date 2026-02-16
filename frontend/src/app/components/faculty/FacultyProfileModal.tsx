@@ -19,7 +19,7 @@ interface FacultyProfileModalProps {
 }
 
 export default function FacultyProfileModal({ open, onOpenChange, onSuccess }: FacultyProfileModalProps) {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
     const [loading, setLoading] = useState(false);
 
     return (

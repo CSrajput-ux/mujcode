@@ -1,8 +1,8 @@
-import StudentLayout from '../../components/StudentLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
+import StudentLayout from '../../shared/components/StudentLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
 import { BookOpen, FileText, Download, Play, Code2 } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
 
 export default function Learning() {
   const programmingMaterials = [

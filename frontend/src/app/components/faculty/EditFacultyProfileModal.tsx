@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import uniService from '../../services/universityService';
 import {
     Dialog,
     DialogContent,
@@ -13,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Plus, Trash2, BookOpen, Mail, ShieldAlert } from 'lucide-react';
 
 interface Assignment {
-    year: string;
+    semester: string;
     section: string;
     branch: string;
     subject: string;
@@ -27,34 +28,64 @@ interface EditFacultyProfileModalProps {
 
 export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess }: EditFacultyProfileModalProps) {
     const [loading, setLoading] = useState(false);
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 
+    const [school, setSchool] = useState('');
     const [department, setDepartment] = useState('');
     const [designation, setDesignation] = useState('');
     const [assignments, setAssignments] = useState<Assignment[]>([]);
 
+    const [schools, setSchools] = useState<string[]>([]);
+    const [departments, setDepartments] = useState<any[]>([]);
+
     useEffect(() => {
         if (open) {
-            fetchProfile();
+            fetchInitialData();
         }
     }, [open]);
 
-    const fetchProfile = async () => {
+    // Fetch Schools and current Profile
+    const fetchInitialData = async () => {
         try {
+            // 1. Fetch Schools
+            const schoolsList = await uniService.getFaculties();
+            setSchools(schoolsList);
+
+            // 2. Fetch Profile
             const res = await fetch(`http://localhost:5000/api/faculty/profile/${user.id}`);
             const data = await res.json();
             if (res.ok) {
+                setSchool(data.school || '');
                 setDepartment(data.department || '');
                 setDesignation(data.designation || '');
                 setAssignments(data.teachingAssignments || []);
+
+                // 3. Fetch Departments for the saved School (if any)
+                if (data.school) {
+                    const depts = await uniService.getDepartments(data.school);
+                    setDepartments(depts);
+                } else {
+                    // If no school saved, maybe fetch all or wait?
+                    // Let's fetch all initially if no school selected
+                    const depts = await uniService.getDepartments();
+                    setDepartments(depts);
+                }
             }
         } catch (error) {
-            console.error("Failed to fetch faculty profile", error);
+            console.error("Failed to fetch data", error);
         }
     };
 
+    // When School changes, fetch departments
+    const handleSchoolChange = async (val: string) => {
+        setSchool(val);
+        setDepartment(''); // Reset department
+        const depts = await uniService.getDepartments(val);
+        setDepartments(depts);
+    };
+
     const addAssignment = () => {
-        setAssignments([...assignments, { year: '1st Year', section: 'A', branch: 'CSE', subject: '' }]);
+        setAssignments([...assignments, { semester: 'Semester 1', section: 'A', branch: 'CSE', subject: '' }]);
     };
 
     const removeAssignment = (index: number) => {
@@ -72,7 +103,7 @@ export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess 
         setLoading(true);
 
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             const res = await fetch(`http://localhost:5000/api/faculty/profile/${user.id}`, {
                 method: 'PUT',
                 headers: {
@@ -80,6 +111,7 @@ export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess 
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
+                    school,
                     department,
                     designation,
                     teachingAssignments: assignments
@@ -87,7 +119,15 @@ export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess 
             });
 
             if (res.ok) {
-                // Sync local storage if needed (but usually we keep base in PG)
+                // Update local session data so UI reflects changes immediately
+                const updatedUser = {
+                    ...user,
+                    school,
+                    department,
+                    designation
+                };
+                sessionStorage.setItem('user', JSON.stringify(updatedUser));
+
                 onSuccess();
                 onOpenChange(false);
             } else {
@@ -103,15 +143,15 @@ export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess 
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-none shadow-2xl">
-                <DialogHeader className="p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+            <DialogContent className="w-[95vw] sm:max-w-[700px] p-0 overflow-hidden border-none shadow-2xl max-h-[90vh] flex flex-col">
+                <DialogHeader className="p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white shrink-0">
                     <DialogTitle className="text-2xl font-bold">Edit Faculty Profile</DialogTitle>
                     <DialogDescription className="text-orange-50/90 italic font-medium">
                         Manage your assignments and professional details. Teaching mappings reflect on student dashboards.
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="bg-white overflow-y-auto max-h-[70vh]">
+                <form onSubmit={handleSubmit} className="bg-white overflow-y-auto flex-1">
                     <div className="p-6 space-y-8">
                         {/* Locked Identity Fields */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
@@ -134,15 +174,28 @@ export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess 
                         </div>
 
                         {/* Professional Info */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-2">
+                                <Label className="text-gray-500 font-bold text-xs uppercase">School (Faculty)</Label>
+                                <Select value={school} onValueChange={handleSchoolChange}>
+                                    <SelectTrigger className="border-gray-200 focus:ring-orange-500">
+                                        <SelectValue placeholder="Select School" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {schools.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                             <div className="space-y-2">
                                 <Label className="text-gray-500 font-bold text-xs uppercase">Department</Label>
-                                <Input
-                                    value={department}
-                                    onChange={(e) => setDepartment(e.target.value)}
-                                    placeholder="e.g. Computer Science"
-                                    className="border-gray-200 focus:ring-orange-500"
-                                />
+                                <Select value={department} onValueChange={setDepartment} disabled={!school && departments.length === 0}>
+                                    <SelectTrigger className="border-gray-200 focus:ring-orange-500">
+                                        <SelectValue placeholder="Select Department" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {departments.map(d => <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>)}
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-gray-500 font-bold text-xs uppercase">Designation</Label>
@@ -188,16 +241,15 @@ export default function EditFacultyProfileModal({ open, onOpenChange, onSuccess 
                                 {assignments.map((asgn, idx) => (
                                     <div key={idx} className="p-4 bg-gray-50 rounded-xl border border-gray-100 grid grid-cols-1 md:grid-cols-12 gap-3 items-end transition-all hover:shadow-sm">
                                         <div className="md:col-span-3 space-y-1.5">
-                                            <Label className="text-[10px] font-bold text-gray-400">Year</Label>
-                                            <Select value={asgn.year} onValueChange={(val) => updateAssignment(idx, 'year', val)}>
+                                            <Label className="text-[10px] font-bold text-gray-400">Semester</Label>
+                                            <Select value={asgn.semester} onValueChange={(val) => updateAssignment(idx, 'semester', val)}>
                                                 <SelectTrigger className="h-9 bg-white text-xs">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="1st Year">1st Year</SelectItem>
-                                                    <SelectItem value="2nd Year">2nd Year</SelectItem>
-                                                    <SelectItem value="3rd Year">3rd Year</SelectItem>
-                                                    <SelectItem value="4th Year">4th Year</SelectItem>
+                                                    {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
+                                                        <SelectItem key={sem} value={`Semester ${sem}`}>Semester {sem}</SelectItem>
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                         </div>

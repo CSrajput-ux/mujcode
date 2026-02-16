@@ -80,22 +80,41 @@ exports.login = async (req, res) => {
                     section: profile.section,
                     branch: profile.branch,
                     year: profile.year,
+                    semester: profile.semester,
                     course: profile.course,
                     department: profile.department
                 };
             }
         }
 
+        // 6.b Increment Token Version (Single Session Enforcement)
+        user.tokenVersion = (user.tokenVersion || 0) + 1;
+        await user.save();
+
         // 6. Generate Token
         const token = jwt.sign(
-            { id: user.id, role: user.role, email: user.email },
+            {
+                id: user.id,
+                role: user.role,
+                email: user.email,
+                tokenVersion: user.tokenVersion // Include version in token
+            },
             JWT_SECRET,
-            { expiresIn: '1d' }
+            { expiresIn: '7d' } // 7 days
         );
 
+        // 7. Set HttpOnly Cookie
+        res.cookie('token', token, {
+            httpOnly: true, // Cannot be accessed by JavaScript (XSS protection)
+            secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+            sameSite: 'lax', // CSRF protection
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+        });
+
+        // 8. Return user data AND token for sessionStorage
         res.status(200).json({
             message: 'Login successful',
-            token,
+            token, // Send token to frontend
             user: {
                 id: user.id,
                 name: user.name,
@@ -106,6 +125,72 @@ exports.login = async (req, res) => {
             }
         });
 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// GET CURRENT USER (from HttpOnly cookie)
+exports.getCurrentUser = async (req, res) => {
+    try {
+        // req.userId is set by verifyAuth middleware
+        const userId = req.userId;
+
+        // Find user in database
+        const user = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] } // Don't send password
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Fetch profile data if student
+        let profileData = {};
+        if (user.role === 'student') {
+            const profile = await StudentProfile.findOne({ where: { userId: user.id } });
+            if (profile) {
+                profileData = {
+                    section: profile.section,
+                    branch: profile.branch,
+                    year: profile.year,
+                    semester: profile.semester,
+                    course: profile.course,
+                    department: profile.department
+                };
+            }
+        }
+
+        // Return full user object
+        res.status(200).json({
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                isPasswordChanged: user.isPasswordChanged,
+                isApproved: user.isApproved,
+                department: user.department,
+                ...profileData
+            }
+        });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// LOGOUT: Clear HttpOnly cookie
+exports.logout = async (req, res) => {
+    try {
+        // Clear the cookie
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax'
+        });
+
+        res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

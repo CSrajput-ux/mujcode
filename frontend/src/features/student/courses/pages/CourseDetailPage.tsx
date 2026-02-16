@@ -1,7 +1,7 @@
-import StudentLayout from '../../components/StudentLayout';
-import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
-import { Badge } from '../../components/ui/badge';
+import StudentLayout from '../../shared/components/StudentLayout';
+import { Card, CardContent } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
+import { Badge } from '@/app/components/ui/badge';
 import { Code2, Database, Globe, Target, ArrowLeft, CheckCircle2, Circle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -212,8 +212,8 @@ export default function CourseDetail() {
                                         {/* Solve Button */}
                                         <Button
                                             className={`${problem.solved
-                                                    ? 'bg-green-600 hover:bg-green-700'
-                                                    : 'bg-[#FF7A00] hover:bg-[#FF6A00]'
+                                                ? 'bg-green-600 hover:bg-green-700'
+                                                : 'bg-[#FF7A00] hover:bg-[#FF6A00]'
                                                 }`}
                                             onClick={(e) => {
                                                 e.stopPropagation();

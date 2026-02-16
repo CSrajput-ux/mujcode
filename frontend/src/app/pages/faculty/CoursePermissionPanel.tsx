@@ -45,7 +45,7 @@ export default function CoursePermissionPanel({ facultyCourses, facultySections 
 
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
 
             // For course blocks, we block the COURSE itself for a SECTION.
             // TargetId = CourseId

@@ -1,14 +1,15 @@
-
-import { Navigate, Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
  * Higher Order Component to protect routes based on permissions
  * @param requiredFeature The feature identifier that must NOT be blocked
  */
-export const ProtectedRoute = ({ requiredFeature, children }: { requiredFeature: string, children: JSX.Element }) => {
+export const ProtectedRoute = ({ requiredFeature, children }: { requiredFeature: string, children: React.ReactNode }) => {
+    const { user, loading: authLoading } = useAuth();
     const [loading, setLoading] = useState(true);
     const [isBlocked, setIsBlocked] = useState(false);
     const [blockReason, setBlockReason] = useState('');
@@ -16,13 +17,30 @@ export const ProtectedRoute = ({ requiredFeature, children }: { requiredFeature:
     useEffect(() => {
         const checkPermission = async () => {
             try {
-                const token = localStorage.getItem('token');
-                // We'll reuse the endpoint we created. 
-                // Optimization: In a real app, we'd cache this in Context or Redux to avoid spamming the API on every route change.
-                // For this MVP, we fetch on mount of the protected route.
+                // Wait for auth to finish loading
+                if (authLoading) {
+                    return;
+                }
 
+                // If no user, they'll be redirected below
+                if (!user) {
+                    setLoading(false);
+                    return;
+                }
+
+                const userRole = user.role;
+
+                // enforce role check
+                if (userRole !== 'student') {
+                    setIsBlocked(true);
+                    setBlockReason(`User role '${userRole}' is not authorized for this area.`);
+                    setLoading(false);
+                    return;
+                }
+
+                // Check feature restrictions
                 const res = await fetch('http://localhost:5000/api/student/restrictions', {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    credentials: 'include' // Use cookie instead of Bearer token
                 });
 
                 if (res.ok) {
@@ -50,9 +68,14 @@ export const ProtectedRoute = ({ requiredFeature, children }: { requiredFeature:
         };
 
         checkPermission();
-    }, [requiredFeature]);
+    }, [requiredFeature, authLoading, user]);
 
-    if (loading) {
+    // Redirect to login if not authenticated
+    if (!authLoading && !user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (loading || authLoading) {
         return (
             <div className="h-screen flex items-center justify-center bg-gray-50">
                 <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
@@ -78,10 +101,24 @@ export const ProtectedRoute = ({ requiredFeature, children }: { requiredFeature:
                         </div>
                     )}
                     <button
-                        onClick={() => window.location.href = '/student/dashboard'}
+                        onClick={() => {
+                            // Use user from AuthContext
+                            if (!user) {
+                                window.location.href = '/login';
+                                return;
+                            }
+
+                            let target = '/login';
+                            if (user.role === 'faculty') target = '/faculty/dashboard';
+                            else if (user.role === 'admin') target = '/admin/dashboard';
+                            else if (user.role === 'company') target = '/company/dashboard';
+                            else target = '/student/dashboard';
+
+                            window.location.href = target;
+                        }}
                         className="w-full bg-gray-900 text-white font-bold py-3 rounded-xl hover:bg-black transition-all"
                     >
-                        Back to Dashboard
+                        Go to My Dashboard
                     </button>
                 </div>
             </div>

@@ -195,7 +195,8 @@ const ADMIN_SIDEBAR_CONFIG: AdminSidebarConfig = {
                     "id": "drive-monitoring",
                     "label": "Drive Monitoring",
                     "icon": "Activity",
-                    "route": "/admin/placement/drives",
+                    "route": "/admin/placements",
+
                     "permissions": ["placement.drive.view"],
                     "api": {
                         "method": "GET",

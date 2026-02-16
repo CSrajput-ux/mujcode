@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 
 export default function FacultyDashboard() {
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
       try {
         JSON.parse(storedUser);

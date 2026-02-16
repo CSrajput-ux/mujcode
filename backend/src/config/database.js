@@ -3,18 +3,28 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 // Unified Database Connection (PostgreSQL)
-// This will be the "Brain" connecting all dashboards.
-// SQLite Connection (Fallback for Dev)
-const sequelize = new Sequelize({
+console.log(`📡 Connecting to ${process.env.PG_HOST ? 'PostgreSQL' : 'SQLite'}...`);
+const sequelize = process.env.PG_HOST ? new Sequelize(
+    process.env.PG_DATABASE,
+    process.env.PG_USER,
+    process.env.PG_PASSWORD,
+    {
+        host: process.env.PG_HOST,
+        port: process.env.PG_PORT,
+        dialect: 'postgres',
+        logging: false
+    }
+) : new Sequelize({
     dialect: 'sqlite',
-    storage: './database.sqlite', // File will be created in backend root
+    storage: './database.sqlite',
     logging: false
 });
+
 
 const connectDB = async () => {
     try {
         await sequelize.authenticate();
-        console.log('✅ Unified Database Connected (SQLite).');
+        console.log(`✅ Database Connected to ${sequelize.options.dialect.toUpperCase()}.`);
     } catch (error) {
         console.error('❌ Unable to connect to the database:', error);
     }

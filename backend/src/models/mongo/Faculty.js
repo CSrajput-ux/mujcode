@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 const teachingAssignmentSchema = new mongoose.Schema({
-    year: { type: String, required: true }, // e.g., "1st Year"
+    semester: { type: String, required: true }, // e.g., "Semester 1", "Semester 5"
     section: { type: String, required: true }, // e.g., "A"
     branch: { type: String, required: true }, // e.g., "CSE"
     subject: { type: String, required: true } // e.g., "Data Structures"
@@ -14,7 +14,9 @@ const facultySchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     facultyId: { type: String, required: true, unique: true }, // Employee ID
     department: { type: String, required: true },
+    departmentId: { type: Number }, // Link to PostgreSQL Department ID
     designation: { type: String, required: true },
+
     teachingAssignments: [teachingAssignmentSchema],
     teachingCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     createdCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
@@ -22,7 +24,7 @@ const facultySchema = new mongoose.Schema({
 
 // Index for fast student lookups
 facultySchema.index({
-    'teachingAssignments.year': 1,
+    'teachingAssignments.semester': 1,
     'teachingAssignments.section': 1,
     'teachingAssignments.branch': 1
 });

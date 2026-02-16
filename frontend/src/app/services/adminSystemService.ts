@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:5000/api/admin/system';
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     return {
         headers: {
             'x-auth-token': token,

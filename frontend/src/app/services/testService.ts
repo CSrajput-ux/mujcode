@@ -23,6 +23,9 @@ export interface Test {
     questions: Question[]; // Assuming we get full question objects
     proctored: boolean;
     totalMarks: number;
+    branch?: string;
+    section?: string;
+    semester?: number;
 }
 
 export interface TestSubmission {

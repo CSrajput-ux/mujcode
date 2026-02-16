@@ -1,7 +1,7 @@
-import StudentLayout from '../../components/StudentLayout';
-import YearlyActivity from '../../components/YearlyActivity';
-import StudentStats from '../../components/StudentStats';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import StudentLayout from '../../shared/components/StudentLayout';
+import YearlyActivity from '@/app/components/YearlyActivity';
+import StudentStats from '../../dashboard/components/StudentStats';
+import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import {
   Trophy,
   Users,
@@ -9,8 +9,12 @@ import {
   Clock
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { FeatureErrorBoundary } from '@/app/components/FeatureErrorBoundary';
+
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [ranks, setRanks] = useState([
     { label: 'College Rank', value: '#-', total: '/ -' },
     { label: 'Branch Rank', value: '#-', total: '/ -' },
@@ -23,13 +27,12 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const userId = user.id;
-
-        if (!userId) {
+        if (!user?.id) {
           setLoadingRanks(false);
           return;
         }
+
+        const userId = user.id;
 
         const res = await fetch(`http://localhost:5000/api/student/rankings/${userId}`);
         const data = await res.json();
@@ -46,15 +49,21 @@ export default function Dashboard() {
 
     const fetchMentors = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        const studentProfile = user.StudentProfile || {};
+        if (!user) return;
+
+        const studentProfile = user.StudentProfile || {}; // user type might need updating to include StudentProfile types if strictly typed, but user is typically any or has index signature in some contexts. 
+        // Actually AuthContext User interface has optional fields. 
+        // Let's assume StudentProfile might be on user if backend sends it. 
+        // Wait, AuthContext User interface:
+        // interface User { id, name, email, ... branch, section, semester }
+        // It does NOT have StudentProfile. It has direct fields.
 
         // Use default values if profile is missing
-        const year = studentProfile.year || '1st Year';
-        const section = studentProfile.section || 'A';
-        const branch = studentProfile.branch || 'CSE';
+        const semester = user.semester || 'Semester 1';
+        const section = user.section || 'A';
+        const branch = user.branch || 'CSE';
 
-        const res = await fetch(`http://localhost:5000/api/faculty/teaching-map?year=${year}&section=${section}&branch=${branch}`);
+        const res = await fetch(`http://localhost:5000/api/faculty/teaching-map?semester=${semester}&section=${section}&branch=${branch}`);
         const data = await res.json();
 
         if (res.ok && Array.isArray(data)) {
@@ -73,9 +82,11 @@ export default function Dashboard() {
       }
     };
 
-    fetchRankings();
-    fetchMentors();
-  }, []);
+    if (user) {
+      fetchRankings();
+      fetchMentors();
+    }
+  }, [user]);
 
   const upcomingTests = [
     { title: 'Data Structures Final Test', date: '2026-01-15', time: '10:00 AM', type: 'Coding' },
@@ -89,7 +100,7 @@ export default function Dashboard() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {JSON.parse(localStorage.getItem('user') || '{}').name?.split(' ')[0] || 'Student'}! 👋
+            Welcome back, {user?.name?.split(' ')[0] || 'Student'} 👋
           </h1>
           <p className="text-gray-600">Here's your learning progress overview</p>
         </div>

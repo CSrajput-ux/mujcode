@@ -52,7 +52,7 @@ export interface BranchResponse {
  * Based on their profile (branch + semester)
  */
 export const getMyCoursesAPI = async (): Promise<StudentCoursesResponse> => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     if (!token) {
         throw new Error('Authentication required. Please login.');

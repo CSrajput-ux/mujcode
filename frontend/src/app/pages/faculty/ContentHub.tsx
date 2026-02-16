@@ -65,7 +65,7 @@ export default function ContentHub() {
     const fetchContent = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             const response = await axios.get('http://localhost:5000/api/content', {
                 headers: { Authorization: `Bearer ${token}` },
                 params: {
@@ -112,7 +112,7 @@ export default function ContentHub() {
         data.append('type', formData.type);
 
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             await axios.post('http://localhost:5000/api/content/upload', data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -136,7 +136,7 @@ export default function ContentHub() {
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this content?')) return;
         try {
-            const token = localStorage.getItem('token');
+            const token = sessionStorage.getItem('token');
             await axios.delete(`http://localhost:5000/api/content/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });

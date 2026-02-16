@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock, GraduationCap, Users, Shield, Building2 } from 'lucide-react';
-import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { Button } from '@/app/components/ui/button';
+import { Card, CardContent } from '@/app/components/ui/card';
+import { Input } from '@/app/components/ui/input';
+import { Label } from '@/app/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/app/components/ui/tabs';
 import logoImage from '@/assets/image-removebg-preview.png';
-import ChangePasswordModal from '../components/ChangePasswordModal';
+import ChangePasswordModal from '@/app/components/ChangePasswordModal';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth(); // Get login function from AuthContext
   const [selectedRole, setSelectedRole] = useState('student');
   const [credentials, setCredentials] = useState({
     collegeId: 'chhotu.2427030521@muj.manipal.edu', // Auto-fill Student
@@ -48,6 +50,7 @@ export default function LoginPage() {
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
+        credentials: 'include', // CRITICAL: Send/receive cookies
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: loginId,
@@ -59,18 +62,30 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Save to localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        // Cookie is automatically set by browser but we also store token in sessionStorage
+        // Use AuthContext to update user state and store token
+        login(data.user, data.token);
+
+        // Route based on actual user role
+        const actualRole = data.user.role;
+        let targetRoute = '/';
+
+        switch (actualRole) {
+          case 'student': targetRoute = '/student/dashboard'; break;
+          case 'faculty': targetRoute = '/faculty/dashboard'; break;
+          case 'admin': targetRoute = '/admin/dashboard'; break;
+          case 'company': targetRoute = '/company/dashboard'; break;
+          default: targetRoute = '/login';
+        }
 
         // Open Password Change Modal instead of navigating immediately
         // Check if password change is required (Not for Company, and only if not changed yet)
         if (selectedRole !== 'company' && !data.user.isPasswordChanged) {
           setUserEmail(loginId);
-          setPendingRoleRoute(role.route);
+          setPendingRoleRoute(targetRoute);
           setShowPasswordModal(true);
         } else {
-          navigate(role.route);
+          navigate(targetRoute);
         }
       } else {
         setError(data.error || 'Login failed');
