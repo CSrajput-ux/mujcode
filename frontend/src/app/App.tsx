@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
+<<<<<<< HEAD
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'));
 const StudentDashboard = lazy(() => import('@/features/student/dashboard/pages/DashboardPage'));
 const StudentCourses = lazy(() => import('@/features/student/courses/pages/CoursesPage'));
@@ -18,6 +19,23 @@ const TheoryTestRunner = lazy(() => import('@/features/student/tests/pages/Theor
 const StudentProblemSolver = lazy(() => import('@/features/student/problems/pages/ProblemSolverPage'));
 const StudentCourseDetail = lazy(() => import('@/features/student/courses/pages/CourseDetailPage'));
 const StudentJobs = lazy(() => import('@/features/student/jobs/pages/JobsPage'));
+=======
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
+const StudentCourses = lazy(() => import('./pages/student/Courses'));
+const StudentProblems = lazy(() => import('./pages/student/Problems'));
+const StudentAnalytics = lazy(() => import('./pages/student/Analytics'));
+const StudentTests = lazy(() => import('./pages/student/Tests'));
+const StudentLearning = lazy(() => import('./pages/student/Learning'));
+const StudentAssignments = lazy(() => import('./pages/student/Assignments'));
+const MCQTestList = lazy(() => import('./pages/student/MCQTestList'));
+const MCQTestRunner = lazy(() => import('./pages/student/MCQTestRunner'));
+const CodingTestRunner = lazy(() => import('./pages/student/CodingTestRunner'));
+const TheoryTestRunner = lazy(() => import('./pages/student/TheoryTestRunner'));
+const ProblemSolver = lazy(() => import('./pages/student/ProblemSolver'));
+const CourseDetail = lazy(() => import('./pages/student/CourseDetail'));
+const StudentJobs = lazy(() => import('./pages/student/Jobs'));
+>>>>>>> 54c65193bef0adb8c05bc7e519e5e1e947a58c34
 const FacultyDashboard = lazy(() => import('./pages/faculty/Dashboard'));
 
 const FacultyTests = lazy(() => import('./pages/faculty/FacultyTests'));
@@ -36,6 +54,7 @@ const Companies = lazy(() => import('./pages/admin/Companies'));
 const Placements = lazy(() => import('./pages/admin/Placements'));
 const AddPlacement = lazy(() => import('./pages/admin/AddPlacement'));
 const ManageRoles = lazy(() => import('./pages/admin/ManageRoles'));
+<<<<<<< HEAD
 const CompanyDashboard = lazy(() => import('@/features/company/dashboard/pages/DashboardPage'));
 const CompanyDrives = lazy(() => import('@/features/company/drives/pages/DrivesPage'));
 const CompanyCandidates = lazy(() => import('@/features/company/candidates/pages/CandidatesPage'));
@@ -43,6 +62,12 @@ const CompanyAssessments = lazy(() => import('@/features/company/assessments/pag
 
 const FacultyLayout = lazy(() => import('./components/faculty/FacultyLayout'));
 const CompanyLayout = lazy(() => import('@/features/company/shared/components/CompanyLayout'));
+=======
+const CompanyDashboard = lazy(() => import('./pages/company/Dashboard'));
+
+
+const FacultyLayout = lazy(() => import('./components/faculty/FacultyLayout'));
+>>>>>>> 54c65193bef0adb8c05bc7e519e5e1e947a58c34
 
 export default function App() {
   return (
@@ -58,6 +83,7 @@ export default function App() {
               <StudentDashboard />
             </ProtectedRoute>
           } />
+<<<<<<< HEAD
           <Route path="/student/courses" element={<ProtectedRoute requiredFeature="courses"><StudentCourses /></ProtectedRoute>} />
           <Route path="/student/courses/:courseId" element={<ProtectedRoute requiredFeature="courses"><StudentCourseDetail /></ProtectedRoute>} />
 
@@ -139,6 +165,107 @@ export default function App() {
           <Route path="/admin/faculty" element={<Faculty />} />
           <Route path="/admin/faculty/add" element={<AddFaculty />} />
 
+=======
+          <Route path="/student/courses" element={
+            <ProtectedRoute requiredFeature="courses">
+              <StudentCourses />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/courses/:courseId" element={
+            <ProtectedRoute requiredFeature="courses">
+              <CourseDetail />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/problems" element={
+            <ProtectedRoute requiredFeature="problems">
+              <StudentProblems />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/problems/:id" element={
+            <ProtectedRoute requiredFeature="problems">
+              <ProblemSolver />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/problem/:id" element={
+            <ProtectedRoute requiredFeature="problems">
+              <ProblemSolver />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/analytics" element={
+            <ProtectedRoute requiredFeature="reports">
+              <StudentAnalytics />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/tests" element={
+            <ProtectedRoute requiredFeature="tests">
+              <StudentTests />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/tests/mcq" element={
+            <ProtectedRoute requiredFeature="tests">
+              <MCQTestList />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/tests/mcq/:testId" element={
+            <ProtectedRoute requiredFeature="tests">
+              <MCQTestRunner />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/tests/coding/:testId" element={
+            <ProtectedRoute requiredFeature="tests">
+              <CodingTestRunner />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/tests/theory/:testId" element={
+            <ProtectedRoute requiredFeature="tests">
+              <TheoryTestRunner />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/learning" element={
+            <ProtectedRoute requiredFeature="learning">
+              <StudentLearning />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/assignments" element={
+            <ProtectedRoute requiredFeature="assignments">
+              <StudentAssignments />
+            </ProtectedRoute>
+          } />
+          <Route path="/student/placements" element={
+            <ProtectedRoute requiredFeature="placements">
+              <StudentJobs />
+            </ProtectedRoute>
+          } />
+
+
+          {/* Faculty Routes */}
+          <Route path="/faculty/*" element={
+            <FacultyLayout>
+              <Routes>
+                <Route path="dashboard" element={<FacultyDashboard />} />
+                <Route path="tests" element={<FacultyTests />} />
+                <Route path="tests/:testId/builder" element={<TestBuilderPage />} />
+                <Route path="assignments" element={<FacultyAssignments />} />
+                <Route path="reports" element={<FacultyReports />} />
+                <Route path="activity" element={<FacultyActivity />} />
+                <Route path="permissions" element={<FacultyPermissions />} />
+                <Route path="content" element={<ContentHub />} />
+              </Routes>
+            </FacultyLayout>
+          } />
+
+          {/* Admin Routes */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+          {/* Admin - Students */}
+          <Route path="/admin/students" element={<Students />} />
+          <Route path="/admin/students/add" element={<AddStudent />} />
+
+          {/* Admin - Faculty */}
+          <Route path="/admin/faculty" element={<Faculty />} />
+          <Route path="/admin/faculty/add" element={<AddFaculty />} />
+
+>>>>>>> 54c65193bef0adb8c05bc7e519e5e1e947a58c34
           {/* Admin - Companies & Placements */}
           <Route path="/admin/companies" element={<Companies />} />
           <Route path="/admin/placements" element={<Placements />} />
@@ -147,6 +274,7 @@ export default function App() {
 
 
           {/* Company Routes */}
+<<<<<<< HEAD
           <Route path="/company" element={<CompanyLayout />}>
             <Route path="dashboard" element={<CompanyDashboard />} />
             <Route path="drives" element={<CompanyDrives />} />
@@ -154,6 +282,10 @@ export default function App() {
             <Route path="candidates" element={<CompanyCandidates />} />
             <Route path="analytics" element={<div>Analytics Page (Coming Soon)</div>} />
           </Route>
+=======
+
+          <Route path="/company/dashboard" element={<CompanyDashboard />} />
+>>>>>>> 54c65193bef0adb8c05bc7e519e5e1e947a58c34
         </Routes>
       </Suspense>
     </Router>
