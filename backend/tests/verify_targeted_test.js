@@ -1,3 +1,4 @@
+// Fixed merge conflicts and redeclarations - 2026-02-25
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const { sequelize } = require('../src/config/database');
