@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useState, useEffect } from 'react';
 import uniService from '../services/universityService';
 import {
@@ -57,7 +58,7 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
 
                     if (!userId) return;
 
-                    const res = await fetch(`http://localhost:5000/api/student/profile/${userId}`);
+                    const res = await fetch(`${API_URL}/student/profile/${userId}`);
                     if (res.ok) {
                         const data = await res.json();
                         if (data.profile) {
@@ -113,7 +114,7 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             const userId = user.id;
 
-            const res = await fetch(`http://localhost:5000/api/student/profile/${userId}`, {
+            const res = await fetch(`${API_URL}/student/profile/${userId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -309,3 +310,4 @@ export default function CompleteProfileDialog({ open, onOpenChange, onSuccess }:
         </Dialog>
     );
 }
+

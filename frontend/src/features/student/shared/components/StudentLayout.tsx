@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -21,7 +22,7 @@ import {
 import { useState, useEffect } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/app/components/ui/popover';
 import CompleteProfileDialog from '../../profile/components/CompleteProfileDialog';
-import EditProfileModal from '@/features/student/profile/components/EditProfileModal';
+import EditProfileModal from '../../profile/components/EditProfileModal';
 import logoImage from '@/assets/image-removebg-preview.png';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -32,11 +33,19 @@ interface StudentLayoutProps {
 export default function StudentLayout({ children }: StudentLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user: userProfile, refreshUser, logout } = useAuth(); // Use AuthContext
+  const { user: userProfile, refreshUser, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
-  const [blockedFeatures, setBlockedFeatures] = useState<string[]>([]); // New State
+  const [blockedFeatures, setBlockedFeatures] = useState<string[]>([]);
+
+  useEffect(() => {
+    const handleProfileUpdate = () => {
+      refreshUser();
+    };
+    window.addEventListener('profileUpdated', handleProfileUpdate);
+    return () => window.removeEventListener('profileUpdated', handleProfileUpdate);
+  }, []);
 
   useEffect(() => {
     // Poll for permissions or fetch on load
@@ -56,7 +65,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
         // If we don't have the endpoint, we can't hide it yet.
         // REQUIRED: I need to add GET /api/student/restrictions to fetch my blocks.
 
-        const res = await fetch('http://localhost:5000/api/student/restrictions', {
+        const res = await fetch('${API_URL}/student/restrictions', {
           credentials: 'include' // Use cookie instead of Bearer token
         });
         if (res.ok) {
@@ -141,8 +150,8 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                       {userProfile?.name ? userProfile.name.split(' ')[0].charAt(0).toUpperCase() : 'U'}
                     </div>
                     <div className="overflow-hidden">
-                      <h3 className="font-semibold text-lg truncate leading-tight">{userProfile.name?.split(' ')[0] || 'Student'}</h3>
-                      <p className="text-white/80 text-xs truncate">{userProfile.email || 'No Email'}</p>
+                      <h3 className="font-semibold text-lg truncate leading-tight">{userProfile?.name?.split(' ')[0] || 'Student'}</h3>
+                      <p className="text-white/80 text-xs truncate">{userProfile?.email || 'No Email'}</p>
                     </div>
                   </div>
                 </div>
@@ -155,7 +164,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                       <span>Role</span>
                     </div>
                     <span className="font-medium capitalize bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-[10px] tracking-wide">
-                      {userProfile.role || 'Student'}
+                      {userProfile?.role || 'Student'}
                     </span>
                   </div>
 
@@ -166,7 +175,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                     </div>
                     <span className="font-mono text-gray-900 text-xs font-semibold">
                       {(() => {
-                        const email = userProfile.email || '';
+                        const email = userProfile?.email || '';
                         const match = email.match(/\.(\d+)@/);
                         return match ? match[1] : '---';
                       })()}
@@ -177,16 +186,16 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                   <div className="py-2 mt-2 space-y-1 border-t border-gray-100">
                     <div className="flex items-center justify-between text-xs p-2 rounded-lg text-gray-700">
                       <span>Branch</span>
-                      <span className="font-semibold text-gray-900">{userProfile.branch || '---'}</span>
+                      <span className="font-semibold text-gray-900">{userProfile?.branch || '---'}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs p-2 rounded-lg text-gray-700">
                       <span>Section</span>
-                      <span className="font-semibold text-gray-900">{userProfile.section || '---'}</span>
+                      <span className="font-semibold text-gray-900">{userProfile?.section || '---'}</span>
                     </div>
                     <div className="flex items-center justify-between text-xs p-2 rounded-lg text-gray-700">
                       <span>Year</span>
                       <span className="font-semibold text-gray-900">
-                        {userProfile.year ? `${userProfile.year}${['st', 'nd', 'rd'][userProfile.year - 1] || 'th'} Year` : '---'}
+                        {userProfile?.year ? `${userProfile.year}${['st', 'nd', 'rd'][Number(userProfile.year) - 1] || 'th'} Year` : '---'}
                       </span>
                     </div>
                   </div>
@@ -194,13 +203,14 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
 
                 {/* Footer */}
                 <div className="p-3 bg-gray-50/50 space-y-2 border-t border-gray-100">
-                  {!userProfile.section ? (
+                  {(!userProfile?.section || userProfile?.section === '---') ? (
                     <button
                       onClick={() => setProfileDialogOpen(true)}
-                      className="w-full flex items-center justify-center space-x-2 bg-orange-600 text-white hover:bg-orange-700 py-2.5 rounded-lg transition-all text-sm font-semibold shadow-md active:scale-95"
+                      className="w-full flex items-center justify-center space-x-2 bg-orange-500 text-white hover:bg-orange-600 py-2.5 rounded-lg transition-all text-sm font-semibold shadow-sm active:scale-95 group overflow-hidden relative"
                     >
-                      <Shield className="w-4 h-4" />
-                      <span>Complete Profile</span>
+                      <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform" />
+                      <UserCircle className="w-4 h-4 relative z-10" />
+                      <span className="relative z-10">Complete Profile</span>
                     </button>
                   ) : (
                     <button
@@ -208,7 +218,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
                       className="w-full flex items-center justify-center space-x-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 py-2.5 rounded-lg transition-all text-sm font-semibold shadow-sm active:scale-95"
                     >
                       <UserCircle className="w-4 h-4 text-orange-500" />
-                      <span>Edit Profile</span>
+                      <span>View Profile</span>
                     </button>
                   )}
                   <button

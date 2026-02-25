@@ -1,6 +1,7 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/tests';
+const API_URL = '${API_URL}/tests';
 
 export interface Question {
     _id: string;
@@ -51,3 +52,4 @@ export const getStudentSubmissions = async (studentId: string) => {
     const response = await axios.get(`${API_URL}/submissions/${studentId}`);
     return response.data;
 };
+

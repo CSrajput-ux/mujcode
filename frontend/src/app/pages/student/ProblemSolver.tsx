@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import StudentLayout from '../../components/StudentLayout';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
@@ -68,7 +69,7 @@ export default function ProblemSolver() {
 
     const fetchProblem = async () => {
         try {
-            const res = await fetch(`http://localhost:5000/api/problems/number/${id}`);
+            const res = await fetch(`${API_URL}/problems/number/${id}`);
             const data = await res.json();
             setProblem(data.problem);
             setLoading(false);
@@ -87,7 +88,7 @@ export default function ProblemSolver() {
                 return;
             }
 
-            const res = await fetch(`http://localhost:5000/api/judge/submissions/${user.id}/${id}`);
+            const res = await fetch(`${API_URL}/judge/submissions/${user.id}/${id}`);
             const data = await res.json();
 
             if (res.ok) {
@@ -107,7 +108,7 @@ export default function ProblemSolver() {
 
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const res = await fetch('http://localhost:5000/api/judge/submit', {
+            const res = await fetch('${API_URL}/judge/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -136,7 +137,7 @@ export default function ProblemSolver() {
 
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const res = await fetch('http://localhost:5000/api/judge/submit', {
+            const res = await fetch('${API_URL}/judge/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -161,7 +162,7 @@ export default function ProblemSolver() {
     const pollResult = async (submissionId: string, mode: string = 'run') => {
         const interval = setInterval(async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/judge/status/${submissionId}`);
+                const res = await fetch(`${API_URL}/judge/status/${submissionId}`);
                 const data = await res.json();
 
                 if (data.verdict !== 'Pending') {
@@ -621,3 +622,4 @@ export default function ProblemSolver() {
         </StudentLayout>
     );
 }
+

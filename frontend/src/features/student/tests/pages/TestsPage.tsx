@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useEffect, useState } from 'react';
 import StudentLayout from '../../shared/components/StudentLayout';
 import { Card, CardContent } from '@/app/components/ui/card';
@@ -54,7 +55,7 @@ export default function Tests() {
   // --- MOCK TEST HANDLERS ---
   const handleStartMockTest = async (mockTestId: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/mock-tests/${mockTestId}`);
+      const res = await fetch(`${API_URL}/mock-tests/${mockTestId}`);
       const data = await res.json();
       if (res.ok) {
         setActiveMockTest(data.mockTest);
@@ -373,3 +374,4 @@ export default function Tests() {
     </StudentLayout>
   );
 }
+

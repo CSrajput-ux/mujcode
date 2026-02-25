@@ -21,10 +21,22 @@ exports.updateProfile = async (req, res) => {
         }
 
         // Update profile - Whitelisted fields only
-        if (section !== undefined) profile.section = section;
+        // Update profile - Whitelisted fields only with LOCKING logic
+        // Students can only set Section, Year, and Semester ONCE.
+        if (section && (!profile.section || profile.section === '---')) {
+            profile.section = section;
+        }
+        if (year && !profile.year) {
+            const y = parseInt(year);
+            if (!isNaN(y)) profile.year = y;
+        }
+        if (semester && !profile.semester) {
+            const s = parseInt(semester);
+            if (!isNaN(s)) profile.semester = s;
+        }
+
+        // Other fields (Branch/Course/Dept) - allow multiple updates for now unless specified
         if (branch !== undefined) profile.branch = branch;
-        if (year !== undefined) profile.year = year;
-        if (semester !== undefined) profile.semester = semester;
         if (course !== undefined) profile.course = course;
         if (department !== undefined) profile.department = department;
         if (req.body.school !== undefined) profile.school = req.body.school;

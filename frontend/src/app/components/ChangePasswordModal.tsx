@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useState } from 'react';
 import { Lock, X, Eye, EyeOff } from 'lucide-react';
 import { Button } from './ui/button';
@@ -40,7 +41,7 @@ export default function ChangePasswordModal({ isOpen, onClose, onSuccess, userEm
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/auth/change-password', {
+            const response = await fetch('${API_URL}/auth/change-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -178,3 +179,4 @@ export default function ChangePasswordModal({ isOpen, onClose, onSuccess, userEm
         </div>
     );
 }
+

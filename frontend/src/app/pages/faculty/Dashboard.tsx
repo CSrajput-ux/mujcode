@@ -7,21 +7,58 @@ import {
   Clock,
   BookOpen,
   Award,
-  CheckCircle
+  CheckCircle,
+  XCircle,
+  Loader2
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getMentorRequests, approveMentorRequest, rejectMentorRequest, MentorRequest } from '../../../shared/services/api/facultyMentorService';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function FacultyDashboard() {
-  useEffect(() => {
-    const storedUser = sessionStorage.getItem('user');
-    if (storedUser) {
-      try {
-        JSON.parse(storedUser);
-      } catch (e) {
-        console.error('Failed to parse user data', e);
-      }
+  const [requests, setRequests] = useState<MentorRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const fetchRequests = async () => {
+    try {
+      setLoading(true);
+      const data = await getMentorRequests();
+      setRequests(data);
+    } catch (error) {
+      console.error('Failed to fetch requests', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchRequests();
   }, []);
+
+  const handleApprove = async (requestId: string) => {
+    try {
+      setActionLoading(requestId);
+      await approveMentorRequest(requestId);
+      setRequests(prev => prev.filter(r => r._id !== requestId));
+    } catch (error) {
+      alert('Failed to approve request');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleReject = async (requestId: string) => {
+    try {
+      setActionLoading(requestId);
+      await rejectMentorRequest(requestId);
+      setRequests(prev => prev.filter(r => r._id !== requestId));
+    } catch (error) {
+      alert('Failed to reject request');
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   const stats = [
     { icon: <FileText className="w-6 h-6" />, label: 'Tests Created', value: '28', color: 'bg-blue-500' },
@@ -34,12 +71,6 @@ export default function FacultyDashboard() {
     { action: 'Created test', item: 'Data Structures Final', time: '2 hours ago' },
     { action: 'Approved access', item: '15 students for Quiz Module', time: '5 hours ago' },
     { action: 'Graded assignment', item: 'Database Lab 3', time: '1 day ago' }
-  ];
-
-  const pendingApprovals = [
-    { student: 'John Smith', request: 'Course Access: Advanced Algorithms', time: '10 min ago' },
-    { student: 'Emily Davis', request: 'Test Access: Midterm Exam', time: '1 hour ago' },
-    { student: 'Michael Chen', request: 'Course Access: Machine Learning', time: '2 hours ago' }
   ];
 
   return (
@@ -78,26 +109,60 @@ export default function FacultyDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {pendingApprovals.map((approval, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <p className="font-medium text-gray-900">{approval.student}</p>
-                    <p className="text-sm text-gray-600">{approval.request}</p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">{approval.time}</span>
-                  <div className="flex space-x-2">
-                    <Button size="sm" className="bg-green-500 hover:bg-green-600">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Approve
-                    </Button>
-                    <Button size="sm" variant="outline">Deny</Button>
-                  </div>
-                </div>
+            {loading ? (
+              <div className="flex items-center justify-center py-8 text-gray-500">
+                <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                Loading requests...
               </div>
-            ))}
+            ) : requests.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <CheckCircle className="w-10 h-10 mx-auto mb-2 opacity-20" />
+                <p>No pending mentor requests</p>
+              </div>
+            ) : (
+              requests.map((request) => (
+                <div key={request._id} className="p-3 bg-gray-50 rounded-lg border border-gray-100 transition-all hover:bg-gray-100">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <p className="font-bold text-gray-900">{request.studentName}</p>
+                      <p className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full inline-block mt-1">
+                        Reg ID: {request.registrationId} • Section {request.section}
+                      </p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Mentor Request: {request.academicYear} • {request.semester}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
+                    <span className="text-xs text-gray-500 flex items-center">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {formatDistanceToNow(new Date(request.createdAt), { addSuffix: true })}
+                    </span>
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 h-8"
+                        onClick={() => handleApprove(request._id)}
+                        disabled={actionLoading === request._id}
+                      >
+                        {actionLoading === request._id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3 mr-1" />}
+                        Approve
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8"
+                        onClick={() => handleReject(request._id)}
+                        disabled={actionLoading === request._id}
+                      >
+                        <XCircle className="w-3 h-3 mr-1" />
+                        Deny
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
 

@@ -1,0 +1,705 @@
+[
+    {
+        "reg": "2427030034",
+        "name": "ADITYA SRIVASTAVA",
+        "sec": "A",
+        "batch": "BATCH-1",
+        "email": "aditya.2427030034@muj.manipal.edu",
+        "phone": "8929596430"
+    },
+    {
+        "reg": "2427030245",
+        "name": "VYOM .",
+        "sec": "A",
+        "batch": "BATCH-1",
+        "email": "vyom.2427030245@muj.manipal.edu",
+        "phone": "9729556124"
+    },
+    {
+        "reg": "2427030360",
+        "name": "VEER ADITYA MATHURIA",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "veer.2427030360@muj.manipal.edu",
+        "phone": "9711274558"
+    },
+    {
+        "reg": "2427030368",
+        "name": "SAUMYA TANDON",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "saumya.2427030368@muj.manipal.edu",
+        "phone": "8506007860"
+    },
+    {
+        "reg": "2427030380",
+        "name": "BHOOMI TIWARI",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "bhoomi.2427030380@muj.manipal.edu",
+        "phone": "9871466932"
+    },
+    {
+        "reg": "2427030847",
+        "name": "UJJWAL AGARWAL",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "ujjwal.2427030847@muj.manipal.edu",
+        "phone": "8453121674"
+    },
+    {
+        "reg": "2427030584",
+        "name": "ARYAVEER SINGH KUSHWAHA",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "aryaveer.2427030584@muj.manipal.edu",
+        "phone": "9820050511"
+    },
+    {
+        "reg": "2427030616",
+        "name": "ANIKET KUMAR SINGH",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "aniket.2427030616@muj.manipal.edu",
+        "phone": "7004403333"
+    },
+    {
+        "reg": "2427030635",
+        "name": "AKSHAT JHA",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "akshat.2427030635@muj.manipal.edu",
+        "phone": "9110190555"
+    },
+    {
+        "reg": "2427030704",
+        "name": "ARHAM MAJID KHAN",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "arham.2427030704@muj.manipal.edu",
+        "phone": "8368595555"
+    },
+    {
+        "reg": "2427030732",
+        "name": "DEVYANI VERMA",
+        "sec": "A",
+        "batch": "BATCH-2",
+        "email": "devyani.2427030732@muj.manipal.edu",
+        "phone": "9794022222"
+    },
+    {
+        "reg": "2427030007",
+        "name": "LAKSHYA AGARWAL",
+        "sec": "B",
+        "batch": "BATCH-1",
+        "email": "lakshya.2427030007@muj.manipal.edu",
+        "phone": "7139266155"
+    },
+    {
+        "reg": "2427030204",
+        "name": "ARUSHI SRIVASTAVA",
+        "sec": "B",
+        "batch": "BATCH-1",
+        "email": "arushi.2427030204@muj.manipal.edu",
+        "phone": "7975149385"
+    },
+    {
+        "reg": "2427030352",
+        "name": "TEJAS SINHA",
+        "sec": "B",
+        "batch": "BATCH-1",
+        "email": "tejas.2427030352@muj.manipal.edu",
+        "phone": "8368784029"
+    },
+    {
+        "reg": "2427030474",
+        "name": "VISHESH JAISWAL",
+        "sec": "B",
+        "batch": "BATCH-2",
+        "email": "vishesh.2427030474@muj.manipal.edu",
+        "phone": "8707772987"
+    },
+    {
+        "reg": "2427030580",
+        "name": "BISHWADEEP MUKHERJEE",
+        "sec": "B",
+        "batch": "BATCH-2",
+        "email": "bishwadeep.2427030580@muj.manipal.edu",
+        "phone": "8648295351"
+    },
+    {
+        "reg": "2427030730",
+        "name": "PANKHUDI RAINA",
+        "sec": "B",
+        "batch": "BATCH-2",
+        "email": "pankhudi.2427030730@muj.manipal.edu",
+        "phone": "9935002522"
+    },
+    {
+        "reg": "2430030171",
+        "name": "MEHUL SINGH",
+        "sec": "B",
+        "batch": "BATCH-2",
+        "email": "mehul.2430030171@muj.manipal.edu",
+        "phone": "8825302414"
+    },
+    {
+        "reg": "2427030010",
+        "name": "VISUNU BIRIGU",
+        "sec": "C",
+        "batch": "BATCH-1",
+        "email": "vishnu.2427030010@muj.manipal.edu",
+        "phone": "8791182650"
+    },
+    {
+        "reg": "2427030211",
+        "name": "AYUSH SRIVASTAVA",
+        "sec": "C",
+        "batch": "BATCH-1",
+        "email": "ayush.2427030211@muj.manipal.edu",
+        "phone": "7004003878"
+    },
+    {
+        "reg": "2427030300",
+        "name": "HARSH SRIVASTAVA",
+        "sec": "C",
+        "batch": "BATCH-1",
+        "email": "harsh.2427030300@muj.manipal.edu",
+        "phone": "9430983857"
+    },
+    {
+        "reg": "2427030318",
+        "name": "PIYUSH ROY",
+        "sec": "C",
+        "batch": "BATCH-1",
+        "email": "piyush.2427030318@muj.manipal.edu",
+        "phone": "9678153276"
+    },
+    {
+        "reg": "2427030330",
+        "name": "CHAITANYA GOEL",
+        "sec": "C",
+        "batch": "BATCH-1",
+        "email": "chaitanya.2427030330@muj.manipal.edu",
+        "phone": "9891940738"
+    },
+    {
+        "reg": "2427030160",
+        "name": "TEJAS TAKKAR",
+        "sec": "C",
+        "batch": "BATCH-2",
+        "email": "tejas.2427030160@muj.manipal.edu",
+        "phone": "9838885667"
+    },
+    {
+        "reg": "2427030513",
+        "name": "AHANA BAJPAI",
+        "sec": "D",
+        "batch": "BATCH-2",
+        "email": "ahana.2427030513@muj.manipal.edu",
+        "phone": "9711556664"
+    },
+    {
+        "reg": "2427030358",
+        "name": "KARAN SINGH",
+        "sec": "D",
+        "batch": "BATCH-2",
+        "email": "karan.2427030358@muj.manipal.edu",
+        "phone": "8459217947"
+    },
+    {
+        "reg": "2427030209",
+        "name": "UTKARSH UMANG",
+        "sec": "D",
+        "batch": "BATCH-1",
+        "email": "utkarsh.2427030209@muj.manipal.edu",
+        "phone": "9899838947"
+    },
+    {
+        "reg": "2427030250",
+        "name": "PAWNI",
+        "sec": "D",
+        "batch": "BATCH-1",
+        "email": "pawni.2427030250@muj.manipal.edu"
+    },
+    {
+        "reg": "2427030395",
+        "name": "SHREYAS SRIVASTAVA",
+        "sec": "D",
+        "batch": "BATCH-1",
+        "email": "shreyas.2427030395@muj.manipal.edu",
+        "phone": "9968282155"
+    },
+    {
+        "reg": "2427030451",
+        "name": "SMITA YADAV",
+        "sec": "D",
+        "batch": "BATCH-1",
+        "email": "smita.2427030451@muj.manipal.edu",
+        "phone": "8901551908"
+    },
+    {
+        "reg": "2427030539",
+        "name": "NINAD GUPTA",
+        "sec": "D",
+        "batch": "BATCH-2",
+        "email": "ninad.2427030539@muj.manipal.edu",
+        "phone": "7877273825"
+    },
+    {
+        "reg": "2427030652",
+        "name": "NAVYANSH KESARWANI",
+        "sec": "E",
+        "batch": "BATCH-2",
+        "email": "navyansh.2427030652@muj.manipal.edu",
+        "phone": "9140997020"
+    },
+    {
+        "reg": "2427030829",
+        "name": "ADITYA HANS",
+        "sec": "E",
+        "batch": "BATCH-2",
+        "email": "aditya.2427030829@muj.manipal.edu",
+        "phone": "9451020967"
+    },
+    {
+        "reg": "2427030212",
+        "name": "ADITYA SINGH",
+        "sec": "E",
+        "batch": "BATCH-1",
+        "email": "aditya.2427030212@muj.manipal.edu",
+        "phone": "8809343130"
+    },
+    {
+        "reg": "2427030234",
+        "name": "SHREYANSH GERA",
+        "sec": "E",
+        "batch": "BATCH-1",
+        "email": "shreyansh.2427030234@muj.manipal.edu",
+        "phone": "8130080370"
+    },
+    {
+        "reg": "2427030309",
+        "name": "SYED SAMAD YAQOOB",
+        "sec": "F",
+        "batch": "BATCH-1",
+        "email": "syed.2427030309@muj.manipal.edu",
+        "phone": "8539910032"
+    },
+    {
+        "reg": "2427030416",
+        "name": "MUKUL GOYAL",
+        "sec": "F",
+        "batch": "BATCH-1",
+        "email": "mukul.2427030416@muj.manipal.edu",
+        "phone": "9212622559"
+    },
+    {
+        "reg": "2427030540",
+        "name": "GAUTAM SAHU",
+        "sec": "F",
+        "batch": "BATCH-2",
+        "email": "gautam.2427030540@muj.manipal.edu",
+        "phone": "9811652533"
+    },
+    {
+        "reg": "2427030604",
+        "name": "CHINMAYA",
+        "sec": "F",
+        "batch": "BATCH-2",
+        "email": "chinmaya.2427030604@muj.manipal.edu",
+        "phone": "9810583662"
+    },
+    {
+        "reg": "2427030675",
+        "name": "ADITYA JHA",
+        "sec": "F",
+        "batch": "BATCH-2",
+        "email": "aditya.2427030675@muj.manipal.edu",
+        "phone": "8090279212"
+    },
+    {
+        "reg": "2427030727",
+        "name": "SHOURYA VIJAYVARGIYA",
+        "sec": "F",
+        "batch": "BATCH-2",
+        "email": "shourya.2427030727@muj.manipal.edu",
+        "phone": "9098307385"
+    },
+    {
+        "reg": "2427030384",
+        "name": "ARNAV P BHATI",
+        "sec": "F",
+        "batch": "BATCH-1",
+        "email": "arnav.2427030384@muj.manipal.edu",
+        "phone": "3024095410"
+    },
+    {
+        "reg": "2427030526",
+        "name": "VARUN RATHORE",
+        "sec": "F",
+        "batch": "BATCH-2",
+        "email": "varun.2427030526@muj.manipal.edu",
+        "phone": "9782215876"
+    },
+    {
+        "reg": "2427010200",
+        "name": "BHAVISHYA YADAV",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "bhavishya.2427010200@muj.manipal.edu",
+        "phone": "9992957317"
+    },
+    {
+        "reg": "2427030126",
+        "name": "SIDDHAM SINGH",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "siddham.2427030126@muj.manipal.edu",
+        "phone": "7099022519"
+    },
+    {
+        "reg": "2427030161",
+        "name": "GAJENDRA ASHOK CHAUDHARI",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "gajendra.2427030161@muj.manipal.edu",
+        "phone": "7507295333"
+    },
+    {
+        "reg": "2427030397",
+        "name": "RISHI BHARDWAJ",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "rishi.2427030397@muj.manipal.edu",
+        "phone": "7891093333"
+    },
+    {
+        "reg": "2427030438",
+        "name": "JASKIRAT SINGH",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "jaskirat.2427030438@muj.manipal.edu",
+        "phone": "9899529993"
+    },
+    {
+        "reg": "2427030581",
+        "name": "KAMYA PATHAK",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "kamya.2427030581@muj.manipal.edu",
+        "phone": "7728991150"
+    },
+    {
+        "reg": "2427030607",
+        "name": "AADESH SANJAY CHAUDHARY",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "aadesh.2427030607@muj.manipal.edu",
+        "phone": "9175825377"
+    },
+    {
+        "reg": "2427030615",
+        "name": "HARDIK GUPTA",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "hardik.2427030615@muj.manipal.edu",
+        "phone": "7877672992"
+    },
+    {
+        "reg": "2427030660",
+        "name": "KUNAL TYAGI",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "kunal.2427030660@muj.manipal.edu",
+        "phone": "9354900424"
+    },
+    {
+        "reg": "2427030718",
+        "name": "ADITI GUPTA",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "aditi.2427030718@muj.manipal.edu",
+        "phone": "9899535224"
+    },
+    {
+        "reg": "2427030803",
+        "name": "HEMANT MAHILA",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "hemant.2427030803@muj.manipal.edu",
+        "phone": "6375188245"
+    },
+    {
+        "reg": "2427030845",
+        "name": "LAKSHYA SHEKHAWAT",
+        "sec": "G",
+        "batch": "BATCH-2",
+        "email": "lakshya.2427030845@muj.manipal.edu",
+        "phone": "9413050634"
+    },
+    {
+        "reg": "2427030074",
+        "name": "AYUSH MISHRA",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "ayush.2427030074@muj.manipal.edu",
+        "phone": "9619807711"
+    },
+    {
+        "reg": "2427030208",
+        "name": "NINAD TEJAS",
+        "sec": "G",
+        "batch": "BATCH-1",
+        "email": "ninad.2427030208@muj.manipal.edu",
+        "phone": "8920759278"
+    },
+    {
+        "reg": "2427030183",
+        "name": "ANIKET KHOLE",
+        "sec": "H",
+        "batch": "BATCH-1",
+        "email": "aniket.2427030183@muj.manipal.edu",
+        "phone": "9826020225"
+    },
+    {
+        "reg": "2427030192",
+        "name": "PARAG PATRA",
+        "sec": "H",
+        "batch": "BATCH-1",
+        "email": "parag.2427030192@muj.manipal.edu",
+        "phone": "9606236664"
+    },
+    {
+        "reg": "2427030578",
+        "name": "GARGI DAS",
+        "sec": "H",
+        "batch": "BATCH-2",
+        "email": "gargi.2427030578@muj.manipal.edu",
+        "phone": "6290736601"
+    },
+    {
+        "reg": "2427030603",
+        "name": "KARTHIKEY",
+        "sec": "H",
+        "batch": "BATCH-2",
+        "email": "karthikey.2427030603@muj.manipal.edu",
+        "phone": "7357490345"
+    },
+    {
+        "reg": "2427030486",
+        "name": "NAMAN AGGARWAL",
+        "sec": "H",
+        "batch": "BATCH-2",
+        "email": "naman.2427030486@muj.manipal.edu",
+        "phone": "7042252325"
+    },
+    {
+        "reg": "2427030692",
+        "name": "KAVIN GAUR",
+        "sec": "H",
+        "batch": "BATCH-2",
+        "email": "kavin.2427030692@muj.manipal.edu",
+        "phone": "8114431969"
+    },
+    {
+        "reg": "2427030110",
+        "name": "ISHPREET KAUR",
+        "sec": "I",
+        "batch": "BATCH-1",
+        "email": "ishpreet.2427030110@muj.manipal.edu",
+        "phone": "8851419080"
+    },
+    {
+        "reg": "2427030315",
+        "name": "PRAKHAR NARAYAN SINGHAL",
+        "sec": "I",
+        "batch": "BATCH-1",
+        "email": "prakhar.2427030315@muj.manipal.edu",
+        "phone": "9113373909"
+    },
+    {
+        "reg": "2427030389",
+        "name": "OMKAAR RAMESH SHANE",
+        "sec": "I",
+        "batch": "BATCH-1",
+        "email": "omkaar.2427030389@muj.manipal.edu",
+        "phone": "9769713775"
+    },
+    {
+        "reg": "2427030401",
+        "name": "MAHESH G",
+        "sec": "I",
+        "batch": "BATCH-1",
+        "email": "mahesh.2427030401@muj.manipal.edu",
+        "phone": "9845995695"
+    },
+    {
+        "reg": "2427030694",
+        "name": "KUMAR SAMBHAV SINGH",
+        "sec": "I",
+        "batch": "BATCH-2",
+        "email": "kumar.2427030694@muj.manipal.edu",
+        "phone": "9460232831"
+    },
+    {
+        "reg": "2427030822",
+        "name": "ARNAV KHANDELWAL",
+        "sec": "I",
+        "batch": "BATCH-2",
+        "email": "arnav.2427030822@muj.manipal.edu",
+        "phone": "9415111172"
+    },
+    {
+        "reg": "2427030213",
+        "name": "AVINANDAN KUMAR",
+        "sec": "I",
+        "batch": "BATCH-1",
+        "email": "avinandan.2427030213@muj.manipal.edu",
+        "phone": "9939712014"
+    },
+    {
+        "reg": "2427030085",
+        "name": "KRISHNA TYAGI",
+        "sec": "I",
+        "batch": "BATCH-1",
+        "email": "krishna.2427030085@muj.manipal.edu",
+        "phone": "8886832370"
+    },
+    {
+        "reg": "2427010223",
+        "name": "HARSHAL SHARMA",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "harshal.2427010223@muj.manipal.edu",
+        "phone": "7415379210"
+    },
+    {
+        "reg": "2427030037",
+        "name": "DIVYANSHU PATEL",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "divyanshu.2427030037@muj.manipal.edu",
+        "phone": "9424140838"
+    },
+    {
+        "reg": "2427030148",
+        "name": "ANKIT VINAY BANGADKAR",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "ankit.2427030148@muj.manipal.edu",
+        "phone": "7720049940"
+    },
+    {
+        "reg": "2427030321",
+        "name": "PEDDAKUPPIDINTI LOKESWAR",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "p.2427030321@muj.manipal.edu",
+        "phone": "9849497499"
+    },
+    {
+        "reg": "2427030393",
+        "name": "KALYA RIKHIL",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "kalya.2427030393@muj.manipal.edu",
+        "phone": "9849497499"
+    },
+    {
+        "reg": "2427030106",
+        "name": "VARUN BHARDWAJ",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "varun.2427030106@muj.manipal.edu",
+        "phone": "9910238223"
+    },
+    {
+        "reg": "2427030731",
+        "name": "DEVANG SHARMA",
+        "sec": "J",
+        "batch": "BATCH-2",
+        "email": "devang.2427030731@muj.manipal.edu",
+        "phone": "9969560318"
+    },
+    {
+        "reg": "2427030385",
+        "name": "SHUBHANSH KHARE",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "shubhansh.2427030385@muj.manipal.edu",
+        "phone": "9415057635"
+    },
+    {
+        "reg": "2427030386",
+        "name": "ISHAN ROY",
+        "sec": "J",
+        "batch": "BATCH-1",
+        "email": "ishan.2427030386@muj.manipal.edu",
+        "phone": "9826326020"
+    },
+    {
+        "reg": "2427030244",
+        "name": "AYUSH GARG",
+        "sec": "K",
+        "batch": "BATCH-1",
+        "email": "ayush.2427030244@muj.manipal.edu",
+        "phone": "9812452548"
+    },
+    {
+        "reg": "2427030310",
+        "name": "KUMAR UMANG",
+        "sec": "K",
+        "batch": "BATCH-1",
+        "email": "kumar.2427030310@muj.manipal.edu",
+        "phone": "7903918980"
+    },
+    {
+        "reg": "2427030446",
+        "name": "ADITYA SHARMA",
+        "sec": "K",
+        "batch": "BATCH-1",
+        "email": "aditya.2427030446@muj.manipal.edu",
+        "phone": "9460924523"
+    },
+    {
+        "reg": "2427030451",
+        "name": "NAMAN BANSAL",
+        "sec": "K",
+        "batch": "BATCH-1",
+        "email": "naman.2427030451@muj.manipal.edu",
+        "phone": "9971937935"
+    },
+    {
+        "reg": "2427030624",
+        "name": "BHAVISHYA GARG",
+        "sec": "K",
+        "batch": "BATCH-2",
+        "email": "bhavishya.2427030624@muj.manipal.edu",
+        "phone": "7015708092"
+    },
+    {
+        "reg": "2427030722",
+        "name": "ADITYA SINGH",
+        "sec": "K",
+        "batch": "BATCH-2",
+        "email": "aditya.2427030722@muj.manipal.edu",
+        "phone": "7439956591"
+    },
+    {
+        "reg": "2427030745",
+        "name": "KARTIKEYA SINGH",
+        "sec": "K",
+        "batch": "BATCH-2",
+        "email": "kartikeya.2427030745@muj.manipal.edu",
+        "phone": "8882089866"
+    },
+    {
+        "reg": "2427030656",
+        "name": "PRATYUSH SONI",
+        "sec": "K",
+        "batch": "BATCH-2",
+        "email": "pratyush.2427030656@muj.manipal.edu",
+        "phone": "6376617492"
+    }
+]

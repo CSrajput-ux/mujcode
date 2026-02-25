@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Award, Lock, CheckCircle2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -23,9 +24,9 @@ export default function StudentStats() {
 
                 // Parallel Fetch: User Stats + Global Problem Stats
                 const [userStatsRes, globalStatsRes, badgesRes] = await Promise.all([
-                    fetch(`http://localhost:5000/api/student/problem-stats/${userId}`),
-                    fetch(`http://localhost:5000/api/problems/stats`),
-                    fetch(`http://localhost:5000/api/student/badges/${userId}`)
+                    fetch(`${API_URL}/student/problem-stats/${userId}`),
+                    fetch(`${API_URL}/problems/stats`),
+                    fetch(`${API_URL}/student/badges/${userId}`)
                 ]);
 
                 const userStats = await userStatsRes.json();
@@ -236,3 +237,4 @@ export default function StudentStats() {
         </div>
     );
 }
+

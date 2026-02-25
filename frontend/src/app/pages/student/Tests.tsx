@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useEffect, useState } from 'react';
 import StudentLayout from '../../components/StudentLayout';
 import { Card, CardContent } from '../../components/ui/card';
@@ -118,7 +119,7 @@ export default function Tests() {
   // Mock Test Handlers
   const handleStartMockTest = async (mockTestId: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/mock-tests/${mockTestId}/start`, {
+      const res = await fetch(`${API_URL}/mock-tests/${mockTestId}/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ studentId })
@@ -142,7 +143,7 @@ export default function Tests() {
 
   const handleSubmitMockTest = async (answers: any[], timeTaken: number) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/mock-tests/${mockTestAttemptId}/submit`, {
+      const res = await fetch(`${API_URL}/mock-tests/${mockTestAttemptId}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -457,3 +458,4 @@ export default function Tests() {
     </StudentLayout>
   );
 }
+

@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import StudentLayout from '../../shared/components/StudentLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { TrendingUp, Target, Award, BookOpen } from 'lucide-react';
@@ -34,11 +35,11 @@ export default function Analytics() {
     try {
       // Fetch all analytics data
       const [rankRes, trendRes, topicRes, improvementRes, summaryRes] = await Promise.all([
-        fetch(`http://localhost:5000/api/student/rankings/${studentId}`),
-        fetch(`http://localhost:5000/api/student/analytics/trend/${studentId}`),
-        fetch(`http://localhost:5000/api/student/analytics/topics/${studentId}`),
-        fetch(`http://localhost:5000/api/student/analytics/improvement/${studentId}`),
-        fetch(`http://localhost:5000/api/student/analytics/summary/${studentId}`)
+        fetch(`${API_URL}/student/rankings/${studentId}`),
+        fetch(`${API_URL}/student/analytics/trend/${studentId}`),
+        fetch(`${API_URL}/student/analytics/topics/${studentId}`),
+        fetch(`${API_URL}/student/analytics/improvement/${studentId}`),
+        fetch(`${API_URL}/student/analytics/summary/${studentId}`)
       ]);
 
       const [rankData, trendData, topicData, improvementData, summaryData] = await Promise.all([
@@ -251,3 +252,4 @@ export default function Analytics() {
     </StudentLayout>
   );
 }
+

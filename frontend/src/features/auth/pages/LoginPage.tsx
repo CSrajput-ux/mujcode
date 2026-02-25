@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock, GraduationCap, Users, Shield, Building2 } from 'lucide-react';
@@ -48,7 +49,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('${API_URL}/auth/login', {
         method: 'POST',
         credentials: 'include', // CRITICAL: Send/receive cookies
         headers: { 'Content-Type': 'application/json' },

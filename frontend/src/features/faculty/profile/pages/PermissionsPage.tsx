@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useState, useEffect } from 'react';
 import {
     ShieldCheck, ShieldAlert, Clock, Filter,
@@ -58,7 +59,7 @@ export default function FacultyPermissions() {
         course: 'all'
     });
 
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = '${API_URL}';
 
     useEffect(() => {
         fetchInitialData();
@@ -329,3 +330,4 @@ export default function FacultyPermissions() {
         </div>
     );
 }
+

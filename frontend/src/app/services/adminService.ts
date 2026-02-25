@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_URL as BASE_API_URL } from '@/shared/config/apiConfig';
 
-const API_URL = 'http://localhost:5000/api/admin';
+const API_URL = `${BASE_API_URL}/admin`;
 
 // ==================== STUDENTS ====================
 
@@ -129,6 +130,6 @@ export const updatePlacement = async (id: string, data: any) => {
 // ==================== COURSES (for faculty assignment) ====================
 
 export const getCourses = async () => {
-    const response = await axios.get('http://localhost:5000/api/student/courses');
+    const response = await axios.get(`${BASE_API_URL}/student/courses`);
     return response.data;
 };

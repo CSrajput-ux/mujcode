@@ -1,6 +1,7 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || '${API_BASE_URL}';
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
@@ -62,3 +63,4 @@ const facultyActivityService = {
 };
 
 export default facultyActivityService;
+

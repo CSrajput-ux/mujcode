@@ -1,5 +1,5 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useState, useEffect } from 'react';
-import uniService from '@/app/services/universityService';
 import {
     Dialog,
     DialogContent,
@@ -12,7 +12,9 @@ import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select';
-import { User, Mail, Building2 } from 'lucide-react';
+import { User, Building2, Lock, Save, GraduationCap, Mail } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 interface EditProfileModalProps {
     open: boolean;
@@ -20,85 +22,30 @@ interface EditProfileModalProps {
     onSuccess: () => void;
 }
 
-import { useAuth } from '@/contexts/AuthContext';
-
 export default function EditProfileModal({ open, onOpenChange, onSuccess }: EditProfileModalProps) {
     const { user, refreshUser } = useAuth();
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
-        departmentId: '',
-        programId: '',
-        branchId: '',
-        sectionId: '',
-        academicYearId: '',
         year: '',
         semester: '',
-        // Legacy
         section: '',
-        branch: '',
-        course: '',
-        department: '',
-        school: ''
     });
 
     useEffect(() => {
-        if (user) {
-            setFormData(prev => ({
-                ...prev,
+        if (user && open) {
+            setFormData({
                 year: user.year ? user.year.toString() : '',
                 semester: user.semester ? user.semester.toString() : '',
-                section: user.section || '',
-                branch: user.branch || '',
-                course: user.course || '',
-                department: user.department || '',
-                school: user.school || ''
-            }));
+                section: user.section && user.section !== '---' ? user.section : '',
+            });
         }
     }, [user, open]);
 
-    const [schools, setSchools] = useState<any[]>([]);
-    const [departments, setDepartments] = useState<any[]>([]);
-    const [programs, setPrograms] = useState<any[]>([]);
-    const [branches, setBranches] = useState<any[]>([]);
-    const [sections, setSections] = useState<any[]>([]);
-    const [academicYears, setAcademicYears] = useState<any[]>([]);
-
-    useEffect(() => {
-        if (open) {
-            uniService.getFaculties().then(setSchools);
-            uniService.getAcademicYears().then(setAcademicYears);
-
-            // If school is already selected/saved, load its departments
-            if (formData.school) {
-                uniService.getDepartments(formData.school).then(setDepartments);
-            }
-        }
-    }, [open, formData.school]);
-
-    useEffect(() => {
-        if (formData.departmentId) {
-            uniService.getPrograms(parseInt(formData.departmentId)).then(setPrograms);
-        } else {
-            setPrograms([]);
-        }
-    }, [formData.departmentId]);
-
-    useEffect(() => {
-        if (formData.programId) {
-            uniService.getBranches(parseInt(formData.programId)).then(setBranches);
-        } else {
-            setBranches([]);
-        }
-    }, [formData.programId]);
-
-    useEffect(() => {
-        if (formData.branchId) {
-            uniService.getSections(parseInt(formData.branchId)).then(setSections);
-        } else {
-            setSections([]);
-        }
-    }, [formData.branchId]);
+    // Determine lock status
+    const isYearLocked = !!user?.year;
+    const isSemesterLocked = !!user?.semester;
+    const isSectionLocked = !!user?.section && user?.section !== '---';
 
     // Extract College ID from email
     const getCollegeId = (email: string | undefined) => {
@@ -109,36 +56,37 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!formData.year || !formData.semester || !formData.section) {
+            toast.error('Please fill in all academic details');
+            return;
+        }
+
         setLoading(true);
 
         try {
-            // NOTE: Token is handled by HttpOnly cookies, headers not needed if using credentials: include
-            // But existing API might expect Bearer token if not fully migrated.
-            // Assuming AuthContext handles auth, we should use fetch with credentials.
-            // However, the submit logic here calls an endpoint manually.
-
-            // Let's try to use the fetch with credentials
-            const res = await fetch(`http://localhost:5000/api/student/profile`, {
+            const res = await fetch(`${API_URL}/student/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
-                    // Authorization header removed as we use cookies now
                 },
-                credentials: 'include',
-                body: JSON.stringify(formData)
+                body: JSON.stringify(formData),
+                credentials: 'include'
             });
 
             if (res.ok) {
-                await refreshUser(); // Update context
+                await refreshUser();
+                toast.success('Academic profile updated and locked!');
+                window.dispatchEvent(new Event('profileUpdated'));
                 onSuccess();
                 onOpenChange(false);
             } else {
                 const errorData = await res.json();
-                alert(errorData.error || 'Failed to update profile');
+                toast.error(errorData.error || 'Failed to update profile');
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Error connecting to server');
+            toast.error('Error connecting to server');
         } finally {
             setLoading(false);
         }
@@ -146,180 +94,156 @@ export default function EditProfileModal({ open, onOpenChange, onSuccess }: Edit
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="w-[95vw] sm:max-w-[450px] p-0 overflow-hidden border-none max-h-[90vh] flex flex-col">
-                <DialogHeader className="p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white shrink-0">
-                    <DialogTitle className="text-xl font-bold">Edit Profile</DialogTitle>
-                    <DialogDescription className="text-orange-50/90 text-sm">
-                        Update your academic information. Some fields are controlled by administration.
-                    </DialogDescription>
+            <DialogContent className="w-[95vw] sm:max-w-[450px] p-0 overflow-hidden border-none max-h-[90vh] flex flex-col shadow-2xl">
+                <DialogHeader className="p-6 bg-gradient-to-br from-orange-500 to-orange-600 text-white shrink-0 relative overflow-hidden">
+                    <div className="absolute -right-6 -bottom-6 opacity-10">
+                        <GraduationCap className="w-32 h-32" />
+                    </div>
+                    <div className="flex items-center space-x-4 relative z-10">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold backdrop-blur-md shadow-inner border border-white/30">
+                            {user?.name ? user.name.charAt(0).toUpperCase() : 'S'}
+                        </div>
+                        <div>
+                            <DialogTitle className="text-2xl font-bold">{user?.name || 'Student Profile'}</DialogTitle>
+                            <DialogDescription className="text-orange-50/90 text-sm font-medium">
+                                Academic Profile Record
+                            </DialogDescription>
+                        </div>
+                    </div>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="p-5 space-y-5 bg-white overflow-y-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Permanent Fields - Read Only */}
-                        <div className="space-y-3 md:col-span-2">
-                            <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Account Information (Locked)</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div className="space-y-2">
-                                    <Label className="text-gray-600">Full Name</Label>
-                                    <div className="relative">
-                                        <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                        <Input value={user?.name || ''} disabled className="pl-10 bg-gray-50 border-gray-200 text-gray-500 font-medium cursor-not-allowed h-9" />
+                <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+                    <div className="p-6 space-y-6 bg-white overflow-y-auto flex-1">
+                        {/* Static Info Section */}
+                        <div className="space-y-4">
+                            <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center">
+                                <User className="w-3 h-3 mr-2" />
+                                Personal info
+                            </h4>
+                            <div className="grid grid-cols-1 gap-3">
+                                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 overflow-hidden">
+                                    <Label className="text-[10px] uppercase text-gray-400 font-bold mb-1 block">College Email</Label>
+                                    <div className="text-gray-900 font-semibold flex items-center text-sm truncate">
+                                        <Mail className="w-3 h-3 mr-2 text-orange-500" />
+                                        {user?.email || '---'}
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    <Label className="text-gray-600">College Email</Label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                        <Input value={user?.email || ''} disabled className="pl-10 bg-gray-50 border-gray-200 text-gray-500 font-medium cursor-not-allowed h-9" />
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                        <Label className="text-[10px] uppercase text-gray-400 font-bold mb-1 block">Registration ID</Label>
+                                        <div className="text-gray-900 font-bold font-mono text-orange-600 text-sm">{getCollegeId(user?.email)}</div>
                                     </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-gray-600">Registration ID</Label>
-                                    <div className="relative">
-                                        <Building2 className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                                        <Input value={getCollegeId(user?.email)} disabled className="pl-10 bg-gray-50 border-gray-200 text-gray-500 font-medium cursor-not-allowed h-9" />
+                                    <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 overflow-hidden">
+                                        <Label className="text-[10px] uppercase text-gray-400 font-bold mb-1 block">Department</Label>
+                                        <div className="text-gray-900 font-semibold text-sm truncate">{user?.department || 'CSE'}</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-
-                        {/* Editable Fields */}
-                        <div className="space-y-4 md:col-span-2 pt-3 border-t border-gray-100">
-                            <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Academic Details</h4>
-
-                            <div className="space-y-2">
-                                <Label>School (Faculty)</Label>
-                                <Select
-                                    value={formData.school}
-                                    onValueChange={(val) => {
-                                        setFormData({ ...formData, school: val, departmentId: '', department: '', programId: '', branchId: '', sectionId: '' });
-                                        uniService.getDepartments(val).then(setDepartments);
-                                    }}
-                                >
-                                    <SelectTrigger className="h-9"><SelectValue placeholder="Select School" /></SelectTrigger>
-                                    <SelectContent>
-                                        {schools.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
+                        {/* Academic Section */}
+                        <div className="space-y-4 pt-4 border-t border-gray-100">
+                            <div className="flex items-center justify-between">
+                                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center">
+                                    <Building2 className="w-3 h-3 mr-2" />
+                                    Academic Details
+                                </h4>
+                                {(isYearLocked && isSemesterLocked && isSectionLocked) && (
+                                    <div className="flex items-center gap-1 text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-100">
+                                        <Lock className="w-3 h-3" />
+                                        LOCKED
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="space-y-2">
-                                <Label>Department</Label>
-                                <Select
-                                    value={formData.departmentId}
-                                    onValueChange={(val) => {
-                                        const d = departments.find(x => x.id === parseInt(val));
-                                        setFormData({ ...formData, departmentId: val, department: d?.name || '', programId: '', branchId: '', sectionId: '' });
-                                    }}
-                                >
-                                    <SelectTrigger className="h-9"><SelectValue placeholder="Select Department" /></SelectTrigger>
-                                    <SelectContent>
-                                        {departments.map(d => <SelectItem key={d.id} value={d.id.toString()}>{d.name}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label>Program</Label>
-                                <Select
-                                    value={formData.programId}
-                                    disabled={!formData.departmentId}
-                                    onValueChange={(val) => {
-                                        const p = programs.find(x => x.id === parseInt(val));
-                                        setFormData({ ...formData, programId: val, course: p?.name || '', branchId: '', sectionId: '' });
-                                    }}
-                                >
-                                    <SelectTrigger className="h-9"><SelectValue placeholder="Select Program" /></SelectTrigger>
-                                    <SelectContent>
-                                        {programs.map(p => <SelectItem key={p.id} value={p.id.toString()}>{p.name}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label>Branch</Label>
+                                    <Label className="text-xs font-semibold text-gray-700">Academic Year</Label>
                                     <Select
-                                        value={formData.branchId}
-                                        disabled={!formData.programId}
-                                        onValueChange={(val) => {
-                                            const b = branches.find(x => x.id === parseInt(val));
-                                            setFormData({ ...formData, branchId: val, branch: b?.name || '', sectionId: '' });
-                                        }}
+                                        disabled={isYearLocked || loading}
+                                        value={formData.year}
+                                        onValueChange={(v) => setFormData(p => ({ ...p, year: v }))}
                                     >
-                                        <SelectTrigger className="h-9"><SelectValue placeholder="Select Branch" /></SelectTrigger>
+                                        <SelectTrigger className="h-10 bg-white border-gray-200">
+                                            <SelectValue placeholder="Select Year" />
+                                        </SelectTrigger>
                                         <SelectContent>
-                                            {branches.map(b => <SelectItem key={b.id} value={b.id.toString()}>{b.name}</SelectItem>)}
+                                            <SelectItem value="1">1st Year</SelectItem>
+                                            <SelectItem value="2">2nd Year</SelectItem>
+                                            <SelectItem value="3">3rd Year</SelectItem>
+                                            <SelectItem value="4">4th Year</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Section</Label>
+                                    <Label className="text-xs font-semibold text-gray-700">Semester</Label>
                                     <Select
-                                        value={formData.sectionId}
-                                        disabled={!formData.branchId}
-                                        onValueChange={(val) => {
-                                            const s = sections.find(x => x.id === parseInt(val));
-                                            setFormData({ ...formData, sectionId: val, section: s?.name || '' });
-                                        }}
+                                        disabled={isSemesterLocked || loading}
+                                        value={formData.semester}
+                                        onValueChange={(v) => setFormData(p => ({ ...p, semester: v }))}
                                     >
-                                        <SelectTrigger className="h-9"><SelectValue placeholder="Select Section" /></SelectTrigger>
+                                        <SelectTrigger className="h-10 bg-white border-gray-200">
+                                            <SelectValue placeholder="Select Sem" />
+                                        </SelectTrigger>
                                         <SelectContent>
-                                            {sections.map(s => <SelectItem key={s.id} value={s.id.toString()}>{s.name}</SelectItem>)}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="space-y-2">
-                                    <Label>Academic Year</Label>
-                                    <Select
-                                        value={formData.academicYearId}
-                                        onValueChange={(val) => setFormData({ ...formData, academicYearId: val })}
-                                    >
-                                        <SelectTrigger className="h-9"><SelectValue placeholder="Select Year" /></SelectTrigger>
-                                        <SelectContent>
-                                            {academicYears.map(y => <SelectItem key={y.id} value={y.id.toString()}>{y.name}</SelectItem>)}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label>Semester</Label>
-                                    <Select value={formData.semester} onValueChange={(val) => setFormData({ ...formData, semester: val })}>
-                                        <SelectTrigger className="h-9"><SelectValue placeholder="Semester" /></SelectTrigger>
-                                        <SelectContent>
-                                            {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                                                <SelectItem key={sem} value={sem.toString()}>Semester {sem}</SelectItem>
+                                            {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
+                                                <SelectItem key={s} value={s.toString()}>Semester {s}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
+
+                                <div className="space-y-2 col-span-2">
+                                    <Label className="text-xs font-semibold text-gray-700">Section</Label>
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="Enter Section (e.g. A, B, C)"
+                                            disabled={isSectionLocked || loading}
+                                            value={formData.section}
+                                            onChange={(e) => setFormData(p => ({ ...p, section: e.target.value.toUpperCase() }))}
+                                            className="h-10 bg-white border-gray-200 pr-10"
+                                            maxLength={2}
+                                        />
+                                        {isSectionLocked && (
+                                            <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        {!(isYearLocked && isSemesterLocked && isSectionLocked) && (
+                            <div className="p-3 bg-amber-50 text-amber-700 text-[11px] rounded-xl border border-amber-100 flex gap-2">
+                                <div className="shrink-0 mt-0.5 font-bold">⚠️ NOTE:</div>
+                                <div>Academic details (Year, Semester, Section) can only be set ONE TIME.</div>
+                            </div>
+                        )}
                     </div>
 
-
-                    <DialogFooter className="pt-4">
+                    <DialogFooter className="p-4 bg-gray-50 border-t border-gray-100 gap-2 shrink-0">
                         <Button
                             type="button"
                             variant="ghost"
                             onClick={() => onOpenChange(false)}
-                            disabled={loading}
-                            className="text-gray-500 hover:text-gray-700"
+                            className="text-gray-500 hover:bg-gray-200 font-bold"
                         >
-                            Cancel
+                            Close
                         </Button>
-                        <Button type="submit" disabled={loading} className="bg-orange-600 hover:bg-orange-700 text-white min-w-[120px]">
-                            {loading ? 'Saving...' : 'Save Changes'}
-                        </Button>
+                        {!(isYearLocked && isSemesterLocked && isSectionLocked) && (
+                            <Button
+                                type="submit"
+                                disabled={loading}
+                                className="bg-orange-600 hover:bg-orange-700 text-white px-6 font-bold shadow-lg shadow-orange-200"
+                            >
+                                {loading ? 'Saving...' : 'Save & Lock'}
+                                <Save className="w-4 h-4 ml-2" />
+                            </Button>
+                        )}
                     </DialogFooter>
                 </form>
             </DialogContent>
         </Dialog>
     );
 }
+

@@ -15,10 +15,10 @@ import {
   Ticket,
   UserCircle
 } from 'lucide-react';
-import { useState } from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import CompleteProfileDialog from './CompleteProfileDialog';
-import EditProfileModal from './EditProfileModal';
+import { useState, useEffect } from 'react';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import CompleteProfileDialog from '@/app/components/CompleteProfileDialog';
+import EditProfileModal from '../common/EditProfileModal';
 import logoImage from '@/assets/image-removebg-preview.png';
 
 interface StudentLayoutProps {
@@ -34,8 +34,13 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
   const [userProfile, setUserProfile] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
 
   const refreshProfile = () => {
-    setUserProfile(JSON.parse(localStorage.getItem('user') || '{}'));
+    setUserProfile(JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}'));
   };
+
+  useEffect(() => {
+    window.addEventListener('profileUpdated', refreshProfile);
+    return () => window.removeEventListener('profileUpdated', refreshProfile);
+  }, []);
 
   const menuItems = [
     { icon: <LayoutDashboard className="w-5 h-5" />, label: 'Dashboard', path: '/student/dashboard' },

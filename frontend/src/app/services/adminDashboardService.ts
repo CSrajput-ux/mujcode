@@ -1,6 +1,7 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/admin/dashboard';
+const API_URL = '${API_URL}/admin/dashboard';
 
 export interface DashboardStats {
     totalStudents: number;
@@ -65,3 +66,4 @@ export const getPlacements = async (params?: {
     const response = await axios.get(`${API_URL}/placements`, { params });
     return response.data.data;
 };
+

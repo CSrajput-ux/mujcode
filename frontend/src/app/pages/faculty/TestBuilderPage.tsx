@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -6,7 +7,7 @@ import MCQBuilder from './builders/MCQBuilder';
 import CodingBuilder from './builders/CodingBuilder';
 import TheoryBuilder from './builders/TheoryBuilder';
 
-const API_URL = 'http://localhost:5000/api/tests';
+const API_URL = '${API_URL}/tests';
 
 interface Test {
     _id: string;
@@ -85,3 +86,4 @@ export default function TestBuilderPage() {
             );
     }
 }
+

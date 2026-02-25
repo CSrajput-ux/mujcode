@@ -1,4 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { API_URL } from '@/shared/config/apiConfig';
+
+interface StellaProfile {
+    photo_url?: string;
+    designation?: string;
+    department?: string;
+    phone?: string;
+    linkedin?: string;
+    detail_url?: string;
+}
 
 interface User {
     id: number;
@@ -13,6 +23,7 @@ interface User {
     year?: string;
     semester?: string;
     course?: string;
+    stellaProfile?: StellaProfile;
 }
 
 interface AuthContextType {
@@ -50,7 +61,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 headers['Authorization'] = `Bearer ${token}`;
             }
 
-            const response = await fetch('http://localhost:5000/api/auth/me', {
+            const response = await fetch(`${API_URL}/auth/me`, {
                 method: 'GET',
                 credentials: 'include', // Keep cookies for fallback
                 headers: headers
@@ -92,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
             sessionStorage.removeItem('token'); // Clear session token
 
-            await fetch('http://localhost:5000/api/auth/logout', {
+            await fetch(`${API_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });

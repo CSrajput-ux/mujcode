@@ -1,6 +1,7 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/assignments';
+const API_URL = '${API_URL}/assignments';
 
 export interface Assignment {
     _id: string;
@@ -49,3 +50,4 @@ export const gradeSubmission = async (submissionId: string, marks: number, feedb
 export const seedAssignments = async () => {
     await axios.post(`${API_URL}/seed`);
 };
+

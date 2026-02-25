@@ -1,6 +1,7 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = '${API_URL}';
 
 export interface MCQQuestion {
     _id?: string;
@@ -102,3 +103,4 @@ export const deleteTheoryQuestion = async (questionId: string) => {
     const response = await axios.delete(`${API_URL}/questions/theory/${questionId}`);
     return response.data;
 };
+

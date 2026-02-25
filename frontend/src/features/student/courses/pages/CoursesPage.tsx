@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import StudentLayout from '../../shared/components/StudentLayout';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
@@ -32,7 +33,7 @@ export default function Courses() {
       const studentId = user.college_id || user.id || 'guest';
 
       // Try student-specific endpoint first, fallback to general courses
-      let apiUrl = `http://localhost:5000/api/student/courses/${studentId}`;
+      let apiUrl = `${API_URL}/student/courses/${studentId}`;
       console.log('🔍 Fetching courses for student:', studentId, 'from:', apiUrl);
 
       let res = await fetch(apiUrl);
@@ -41,7 +42,7 @@ export default function Courses() {
       // If student endpoint fails, try getting all courses
       if (!res.ok) {
         console.warn('⚠️ Student endpoint failed, trying general courses endpoint...');
-        apiUrl = 'http://localhost:5000/api/student/courses';
+        apiUrl = '${API_URL}/student/courses';
         res = await fetch(apiUrl);
       }
 
@@ -262,3 +263,4 @@ export default function Courses() {
     </StudentLayout>
   );
 }
+

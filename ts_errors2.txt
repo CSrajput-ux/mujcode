@@ -1,0 +1,22 @@
+﻿src/app/App.tsx(6,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(22,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(38,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(57,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(65,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(70,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(85,15): error TS1005: '</' expected.
+src/app/App.tsx(86,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(87,11): error TS2657: JSX expressions must have one parent element.
+src/app/App.tsx(92,11): error TS2657: JSX expressions must have one parent element.
+src/app/App.tsx(161,11): error TS2657: JSX expressions must have one parent element.
+src/app/App.tsx(165,11): error TS2657: JSX expressions must have one parent element.
+src/app/App.tsx(168,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(268,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(270,11): error TS2657: JSX expressions must have one parent element.
+src/app/App.tsx(277,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(285,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(288,1): error TS1185: Merge conflict marker encountered.
+src/app/App.tsx(289,9): error TS1128: Declaration or statement expected.
+src/app/App.tsx(290,7): error TS1109: Expression expected.
+src/app/App.tsx(291,5): error TS1109: Expression expected.
+src/app/App.tsx(292,3): error TS1109: Expression expected.

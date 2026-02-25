@@ -1,17 +1,21 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import StudentLayout from '../../shared/components/StudentLayout';
 import YearlyActivity from '@/app/components/YearlyActivity';
 import StudentStats from '../../dashboard/components/StudentStats';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
 import {
   Trophy,
   Users,
   Calendar,
-  Clock
+  Clock,
+  Plus,
+  Lock
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { FeatureErrorBoundary } from '@/app/components/FeatureErrorBoundary';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { MentorSelectionModal } from '../components/MentorSelectionModal';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -20,54 +24,107 @@ export default function Dashboard() {
     { label: 'Branch Rank', value: '#-', total: '/ -' },
     { label: 'Section Rank', value: '#-', total: '/ -' }
   ]);
-  const [loadingRanks, setLoadingRanks] = useState(true);
-  const [mentors, setMentors] = useState<{ name: string, subject: string, avatar: string, department: string }[]>([]);
+  const [mentors, setMentors] = useState<{ name: string, subject?: string, avatar: string, department: string, id: string, status?: 'pending' | 'approved' }[]>([]);
+  const [isLocked, setIsLocked] = useState(false);
   const [loadingMentors, setLoadingMentors] = useState(true);
+  const [mentorModalOpen, setMentorModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        if (!user?.id) {
-          setLoadingRanks(false);
-          return;
-        }
+        if (!user?.id) return;
 
-        const userId = user.id;
-
-        const res = await fetch(`http://localhost:5000/api/student/rankings/${userId}`);
+        const token = sessionStorage.getItem('token');
+        const res = await fetch(`${API_URL}/student/rankings/${user.id}`, {
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+          },
+          credentials: 'include'
+        });
         const data = await res.json();
-
         if (res.ok && data.ranks) {
           setRanks(data.ranks);
         }
-        setLoadingRanks(false);
       } catch (error) {
         console.error('Error fetching rankings:', error);
-        setLoadingRanks(false);
       }
     };
 
-    const fetchMentors = async () => {
+    const fetchMentorStatus = async () => {
       try {
         if (!user) return;
+        setLoadingMentors(true);
 
-        const studentProfile = user.StudentProfile || {}; // user type might need updating to include StudentProfile types if strictly typed, but user is typically any or has index signature in some contexts. 
-        // Actually AuthContext User interface has optional fields. 
-        // Let's assume StudentProfile might be on user if backend sends it. 
-        // Wait, AuthContext User interface:
-        // interface User { id, name, email, ... branch, section, semester }
-        // It does NOT have StudentProfile. It has direct fields.
+        const token = sessionStorage.getItem('token');
+        const res = await fetch('${API_URL}/student/mentor-status', {
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : ''
+          },
+          credentials: 'include'
+        });
+        const data = await res.json();
 
-        // Use default values if profile is missing
-        const semester = user.semester || 'Semester 1';
-        const section = user.section || 'A';
-        const branch = user.branch || 'CSE';
+        if (res.ok) {
+          const allMentors: any[] = [];
 
-        const res = await fetch(`http://localhost:5000/api/faculty/teaching-map?semester=${semester}&section=${section}&branch=${branch}`);
+          // 1. Approved Mentors
+          if (data.selectedMentors && data.selectedMentors.length > 0) {
+            allMentors.push(...data.selectedMentors.map((f: any) => ({
+              id: f._id,
+              name: f.name,
+              avatar: f.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2),
+              department: f.department,
+              status: 'approved'
+            })));
+          }
+
+          // 2. Pending Requests
+          if (data.requests && data.requests.length > 0) {
+            const pending = data.requests
+              .filter((r: any) => r.status === 'pending')
+              .map((r: any) => ({
+                id: r.facultyId?._id,
+                name: r.facultyId?.name || 'Unknown Faculty',
+                avatar: (r.facultyId?.name || 'U').split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2),
+                department: r.facultyId?.department || '---',
+                status: 'pending'
+              }));
+
+            pending.forEach((p: any) => {
+              if (!allMentors.some(m => m.id === p.id)) {
+                allMentors.push(p);
+              }
+            });
+          }
+
+          if (allMentors.length > 0) {
+            setMentors(allMentors);
+            setIsLocked(data.mentorSelectionLocked);
+            setLoadingMentors(false);
+          } else {
+            fetchTeachingMap();
+          }
+        } else {
+          fetchTeachingMap();
+        }
+      } catch (error) {
+        console.error('Error fetching mentor status:', error);
+        fetchTeachingMap();
+      }
+    };
+
+    const fetchTeachingMap = async () => {
+      try {
+        const semester = user?.semester || 'Semester 1';
+        const section = user?.section || 'A';
+        const branch = user?.branch || 'CSE';
+
+        const res = await fetch(`${API_URL}/faculty/teaching-map?semester=${semester}&section=${section}&branch=${branch}`);
         const data = await res.json();
 
         if (res.ok && Array.isArray(data)) {
           const mappedMentors = data.map((f: any) => ({
+            id: f.facultyId,
             name: f.facultyName,
             subject: f.subjects.join(', '),
             avatar: f.facultyName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2),
@@ -77,14 +134,14 @@ export default function Dashboard() {
         }
         setLoadingMentors(false);
       } catch (error) {
-        console.error('Error fetching mentors:', error);
+        console.error('Error fetching teaching map:', error);
         setLoadingMentors(false);
       }
     };
 
     if (user) {
       fetchRankings();
-      fetchMentors();
+      fetchMentorStatus();
     }
   }, [user]);
 
@@ -98,11 +155,13 @@ export default function Dashboard() {
     <StudentLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.name?.split(' ')[0] || 'Student'} 👋
-          </h1>
-          <p className="text-gray-600">Here's your learning progress overview</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome back, {user?.name?.split(' ')[0] || 'Student'} 👋
+            </h1>
+            <p className="text-gray-600">Here's your learning progress overview</p>
+          </div>
         </div>
 
         {/* New LeetCode-style Stats & Badges */}
@@ -131,38 +190,87 @@ export default function Dashboard() {
           </Card>
 
           {/* Faculty Mentors */}
-          <Card className="shadow-md border-t-4 border-t-purple-500">
-            <CardHeader>
+          <Card className="shadow-md border-t-4 border-t-purple-500 relative overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="flex items-center space-x-2">
                 <Users className="w-5 h-5 text-purple-600" />
                 <span className="text-lg">Faculty Mentors</span>
               </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {loadingMentors ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="h-16 bg-gray-50 rounded-lg animate-pulse" />
-                  ))}
-                </div>
-              ) : mentors.length > 0 ? (
-                mentors.map((mentor, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-3 bg-purple-50/50 rounded-lg border border-purple-100/50 hover:bg-purple-100 transition-colors group">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-sm transition-transform group-hover:scale-110">
-                      {mentor.avatar}
-                    </div>
-                    <div className="overflow-hidden">
-                      <p className="font-bold text-gray-900 truncate text-sm">{mentor.name}</p>
-                      <p className="text-[11px] text-purple-600 font-semibold truncate uppercase">{mentor.subject}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-gray-400 italic text-sm border-2 border-dashed border-gray-100 rounded-xl">
-                  No faculty assigned for your section yet.
+              {!isLocked && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-purple-600 hover:text-purple-700 hover:bg-purple-50 p-2"
+                  onClick={() => setMentorModalOpen(true)}
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Select
+                </Button>
+              )}
+              {isLocked && (
+                <div className="flex items-center text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full shadow-sm animate-in fade-in zoom-in duration-300">
+                  <Lock className="w-3 h-3 mr-1" />
+                  LOCKED
                 </div>
               )}
+            </CardHeader>
+            <CardContent>
+              <div className="max-h-[300px] overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+                {loadingMentors ? (
+                  <div className="space-y-3">
+                    {[1, 2, 3].map(i => (
+                      <div key={i} className="h-16 bg-gray-50 rounded-lg animate-pulse" />
+                    ))}
+                  </div>
+                ) : mentors.length > 0 ? (
+                  mentors.map((mentor, index) => (
+                    <div key={index} className="flex items-center space-x-3 p-3 bg-purple-50/50 rounded-lg border border-purple-100/50 hover:bg-purple-100 transition-colors group relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping" />
+                      </div>
+                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-sm transition-transform group-hover:scale-110">
+                        {mentor.avatar}
+                      </div>
+                      <div className="overflow-hidden flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-bold text-gray-900 truncate text-sm">{mentor.name}</p>
+                          {mentor.status === 'pending' && (
+                            <span className="text-[9px] bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded font-bold animate-pulse">PENDING</span>
+                          )}
+                          {mentor.status === 'approved' && (
+                            <span className="text-[9px] bg-green-100 text-green-600 px-1.5 py-0.5 rounded font-bold">APPROVED</span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-purple-600 font-semibold truncate uppercase">
+                          {mentor.subject || mentor.department}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="text-gray-400 italic text-sm border-2 border-dashed border-gray-100 rounded-xl p-6 flex flex-col items-center">
+                      <Users className="w-8 h-8 text-gray-200 mb-2" />
+                      <p>No mentors assigned yet.</p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-4 border-purple-200 text-purple-600 hover:bg-purple-50"
+                        onClick={() => setMentorModalOpen(true)}
+                      >
+                        Choose Mentors
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </CardContent>
+
+            <MentorSelectionModal
+              open={mentorModalOpen}
+              onOpenChange={setMentorModalOpen}
+              onSuccess={() => window.location.reload()} // Refresh to update lock status and mentors
+            />
           </Card>
 
           {/* Upcoming Tests */}
@@ -204,3 +312,4 @@ export default function Dashboard() {
     </StudentLayout>
   );
 }
+

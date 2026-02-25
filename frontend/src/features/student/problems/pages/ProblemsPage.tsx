@@ -1,13 +1,14 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import StudentLayout from '../../shared/components/StudentLayout';
 import { Card, CardContent } from '@/app/components/ui/card';
+import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
 import { Input } from '@/app/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select';
-import { Search, CheckCircle2 } from 'lucide-react';
+import { Search, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function Problems() {
-  const [problems, setProblems] = useState<any[]>([]);
   const [filteredProblems, setFilteredProblems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<string[]>([]);
@@ -20,44 +21,51 @@ export default function Problems() {
   const [searchQuery, setSearchQuery] = useState('');
   const [solvedProblemIds, setSolvedProblemIds] = useState<number[]>([]);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProblems, setTotalProblems] = useState(0);
+  const limit = 50;
+
 
   useEffect(() => {
-    fetchProblems();
     fetchMetadata();
   }, []);
 
   useEffect(() => {
-    applyFilters();
-  }, [selectedCategory, selectedDifficulty, selectedTopic, searchQuery, problems]);
+    fetchProblems(currentPage);
+  }, [currentPage, selectedCategory, selectedDifficulty, selectedTopic, searchQuery]);
 
-  const fetchProblems = async () => {
+  const fetchProblems = async (page: number) => {
     try {
+      setLoading(true);
       const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-      console.log('🔍 Fetching problems for userId:', user.id);
+      // Construct URL with filters and pagination
+      const params = new URLSearchParams();
+      if (user.id) params.append('userId', user.id);
+      params.append('page', page.toString());
+      params.append('limit', limit.toString());
+      if (selectedCategory !== 'All') params.append('category', selectedCategory);
+      if (selectedDifficulty !== 'All') params.append('difficulty', selectedDifficulty);
+      if (selectedTopic !== 'All') params.append('topic', selectedTopic);
+      if (searchQuery) params.append('search', searchQuery);
 
-      // Pass userId to get solved status for each problem
-      const url = user.id
-        ? `http://localhost:5000/api/problems?userId=${user.id}`
-        : 'http://localhost:5000/api/problems';
+      const url = `${API_URL}/problems?${params.toString()}`;
 
       const res = await fetch(url);
       const data = await res.json();
 
-      console.log('📊 Received problems count:', data.problems?.length);
-      console.log('✅ Solved problems:', data.problems?.filter((p: any) => p.status === 'solved'));
-
       if (res.ok) {
-        setProblems(data.problems);
         setFilteredProblems(data.problems);
+        setTotalPages(data.pagination.totalPages);
+        setTotalProblems(data.pagination.total);
 
-        // Extract solved problem IDs for backward compatibility
+        // Extract solved problem IDs
         const solved = data.problems
           .filter((p: any) => p.status === 'solved')
           .map((p: any) => p.number);
         setSolvedProblemIds(solved);
-
-        console.log('🎯 Solved problemIds array:', solved);
       }
 
       setLoading(false);
@@ -69,7 +77,7 @@ export default function Problems() {
 
   const fetchMetadata = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/problems/metadata');
+      const res = await fetch('${API_URL}/problems/metadata');
       const data = await res.json();
       if (res.ok) {
         setCategories(data.categories || []);
@@ -80,33 +88,10 @@ export default function Problems() {
     }
   };
 
-  const applyFilters = () => {
-    let filtered = [...problems];
-
-    // Category filter
-    if (selectedCategory !== 'All') {
-      filtered = filtered.filter(p => p.category === selectedCategory);
-    }
-
-    // Difficulty filter
-    if (selectedDifficulty !== 'All') {
-      filtered = filtered.filter(p => p.difficulty === selectedDifficulty);
-    }
-
-    // Topic filter
-    if (selectedTopic !== 'All') {
-      filtered = filtered.filter(p => p.topic === selectedTopic);
-    }
-
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(p =>
-        p.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    setFilteredProblems(filtered);
-  };
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedDifficulty, selectedTopic, searchQuery]);
 
   const difficultyColors = {
     Easy: 'text-green-600 bg-green-50',
@@ -269,11 +254,41 @@ export default function Problems() {
           </CardContent>
         </Card>
 
-        {/* Summary */}
-        <div className="text-sm text-gray-500 text-center">
-          Showing {filteredProblems.length} of {problems.length} problems
+        {/* Pagination & Summary */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 py-4">
+          <div className="text-sm text-gray-500 order-2 md:order-1">
+            Showing {filteredProblems.length > 0 ? (currentPage - 1) * limit + 1 : 0} to {Math.min(currentPage * limit, totalProblems)} of {totalProblems} problems
+          </div>
+
+          <div className="flex items-center space-x-2 order-1 md:order-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1 || loading}
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Previous
+            </Button>
+
+            <div className="flex items-center space-x-1 px-4">
+              <span className="text-sm font-medium text-gray-900">Page {currentPage}</span>
+              <span className="text-sm text-gray-400">of {totalPages}</span>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages || loading}
+            >
+              Next
+              <ChevronRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
         </div>
       </div>
     </StudentLayout>
   );
 }
+

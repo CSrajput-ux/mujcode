@@ -1,3 +1,4 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import React, { useEffect, useState, useRef } from 'react';
 import { useProctoring, Violation } from '../hooks/useProctoring';
 import { toast } from 'sonner';
@@ -34,7 +35,7 @@ const SecureExamGuard: React.FC<SecureExamGuardProps> = ({
     // Socket Connection
     useEffect(() => {
         if (isExamActive) {
-            const socket = io('http://localhost:5000', {
+            const socket = io('${API_BASE_URL}', {
                 transports: ['websocket'],
                 autoConnect: true
             });
@@ -256,3 +257,4 @@ const SecureExamGuard: React.FC<SecureExamGuardProps> = ({
 };
 
 export default SecureExamGuard;
+

@@ -10,7 +10,7 @@ const checkUser = async () => {
 
         const emails = [
             'chhotu.2427030521@muj.manipal.edu',
-            'dr.rishigupta@jaipur.manipal.edu',
+            'dr.rishi.gupta@jaipur.manipal.edu',
             'chhotu.singh@jaipur.manipal.edu'
         ];
 

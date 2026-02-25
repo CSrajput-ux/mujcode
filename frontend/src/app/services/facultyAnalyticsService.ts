@@ -1,6 +1,7 @@
+import { API_URL, API_BASE_URL, UPLOADS_URL } from '@/shared/config/apiConfig';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/faculty/analytics';
+const API_URL = '${API_URL}/faculty/analytics';
 
 export const getDashboardStats = async () => {
     const response = await axios.get(`${API_URL}/dashboard-stats`);
@@ -26,3 +27,4 @@ export const getFacultyInsights = async () => {
     const response = await axios.get(`${API_URL}/insights`);
     return response.data;
 };
+
